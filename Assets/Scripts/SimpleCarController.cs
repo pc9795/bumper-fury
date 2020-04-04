@@ -5,26 +5,17 @@ public class SimpleCarController : MonoBehaviour
 {
     private float horizontalInput;
     private float verticalInput;
-    private float steeringAngle;
+    private float steerAngle;
     public WheelCollider backRightWheelCollider, backLeftWheelCollider;
     public WheelCollider frontRightWheelCollider, frontLeftWheelCollider;
     public Transform backRightWheel, backLeftWheel;
     public Transform frontRightWheel, frontLeftWheel;
-    // How fast we can turn
     public float maxSteerAngle = 30;
-    public float motorForce = 200;
+    public float motorForce = 50;
+    public float breakingForce = 30;
+    public float turnSensitivity = 1;
 
-    void Start()
-    {
-
-    }
-
-    void Update()
-    {
-
-    }
-
-    public void GetInput()
+    public void ProcessInput()
     {
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
@@ -32,39 +23,30 @@ public class SimpleCarController : MonoBehaviour
 
     private void Steer()
     {
-        // Case where colliders are not defined in the inspector.
-        if (frontRightWheelCollider == null || frontLeftWheelCollider == null
-        || backRightWheelCollider == null || backLeftWheelCollider == null)
-        {
-            return;
-        }
         // Calculate steering angle from the input.
-        steeringAngle = maxSteerAngle * horizontalInput;
-        // Steer the wheel
-        frontLeftWheelCollider.steerAngle = steeringAngle;
-        frontRightWheelCollider.steerAngle = steeringAngle;
-        backLeftWheelCollider.steerAngle = steeringAngle;
-        backRightWheelCollider.steerAngle = steeringAngle;
+        steerAngle = maxSteerAngle * horizontalInput * turnSensitivity;
+        // Steer the wheel. Only front wheels.
+        frontLeftWheelCollider.steerAngle = Mathf.Lerp(frontLeftWheelCollider.steerAngle, steerAngle, 0.5f);
+        frontRightWheelCollider.steerAngle = Mathf.Lerp(frontRightWheelCollider.steerAngle, steerAngle, 0.5f);
     }
 
-    private void Accelerate()
+    private void Move()
     {
-        // Case where colliders are not defined in the inspector.
-        if (frontRightWheelCollider == null || frontLeftWheelCollider == null
-        || backRightWheelCollider == null || backLeftWheelCollider == null)
-        {
-            return;
-        }
         // Calculate the force from the input.
-        float force = verticalInput * motorForce;
-        // Accelerate the wheel
         // This will be fixing FPS as 50 because at 50 FPS Time.deltaTime will be 0.2 and multiplying it with 
         // 500 makes it 1.
-        frontLeftWheelCollider.motorTorque = verticalInput * motorForce * Time.deltaTime * 500;
-        frontRightWheelCollider.motorTorque = verticalInput * motorForce * Time.deltaTime * 500;
-        backLeftWheelCollider.motorTorque = verticalInput * motorForce * Time.deltaTime * 500;
-        backRightWheelCollider.motorTorque = verticalInput * motorForce * Time.deltaTime * 500;
-
+        float force = verticalInput * motorForce * Time.deltaTime * 500;
+        // Accelerate the wheel. Only front wheels.
+        frontLeftWheelCollider.motorTorque = force;
+        frontRightWheelCollider.motorTorque = force;
+        backLeftWheelCollider.motorTorque = force;
+        backRightWheelCollider.motorTorque = force;
+        // If motor there is no motor force applied then apply a breaking force to stop the vechicle.
+        force = force == 0 ? breakingForce : 0;
+        frontLeftWheelCollider.brakeTorque = force;
+        frontRightWheelCollider.brakeTorque = force;
+        backLeftWheelCollider.brakeTorque = force;
+        backRightWheelCollider.brakeTorque = force;
     }
 
     private void UpdateWheelPoses()
@@ -87,13 +69,11 @@ public class SimpleCarController : MonoBehaviour
         transform.rotation = quaternion;
     }
 
-    private void FixedUpdate()
+    private void LateUpdate()
     {
-        GetInput();
+        ProcessInput();
         Steer();
-        Accelerate();
+        Move();
         UpdateWheelPoses();
     }
-
-
 }

@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-public class FlameTornadoAttack : MonoBehaviour
+public class FlameTornado : MonoBehaviour
 {
     public GameObject flameTornado;
     private GameObject flameTornadoInstance;
@@ -13,7 +15,7 @@ public class FlameTornadoAttack : MonoBehaviour
 
     void Start()
     {
-        parentRigidBody = GetComponent<Rigidbody>();
+        parentRigidBody = transform.parent.GetComponent<Rigidbody>();
     }
 
     void Update()

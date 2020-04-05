@@ -1,11 +1,8 @@
 ﻿using UnityEngine;
 
-
-public class SimpleCarController : MonoBehaviour
+public class PlayerCarController : MonoBehaviour
 {
-    private float horizontalInput;
-    private float verticalInput;
-    private float steerAngle;
+    //Public fields
     public WheelCollider backRightWheelCollider, backLeftWheelCollider;
     public WheelCollider frontRightWheelCollider, frontLeftWheelCollider;
     public Transform backRightWheel, backLeftWheel;
@@ -15,6 +12,40 @@ public class SimpleCarController : MonoBehaviour
     public float breakingForce = 30;
     public float turnSensitivity = 1;
 
+    //Private fields
+    private float horizontalInput;
+    private float verticalInput;
+    private float steerAngle;
+    private ProjectileShooter projectileShotter;
+    private PlayerStatsController playerStats;
+
+    //Unity methods
+    void LateUpdate()
+    {
+        ProcessInput();
+        Steer();
+        Move();
+        UpdateWheelPoses();
+    }
+
+    void Start()
+    {
+        projectileShotter = GetComponent<ProjectileShooter>();
+        playerStats = GetComponent<PlayerStatsController>();
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        Collider collider = collision.collider;
+        AICarController aICar = collider.GetComponentInParent<AICarController>();
+        //If it is an AI car
+        if (aICar != null)
+        {
+            playerStats.UpdateEnergy(20);
+        }
+    }
+
+    //Custom methods
     public void ProcessInput()
     {
         horizontalInput = Input.GetAxis("Horizontal");
@@ -23,6 +54,15 @@ public class SimpleCarController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.X))
         {
             Reset();
+        }
+        //Shooting
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (projectileShotter.CanShoot() && playerStats.EnergyFull())
+            {
+                playerStats.ConsumeEnergy();
+                projectileShotter.Shoot();
+            }
         }
     }
 
@@ -78,13 +118,5 @@ public class SimpleCarController : MonoBehaviour
 
         transform.position = pos;
         transform.rotation = quaternion;
-    }
-
-    private void LateUpdate()
-    {
-        ProcessInput();
-        Steer();
-        Move();
-        UpdateWheelPoses();
     }
 }

@@ -2,16 +2,19 @@
 
 public class ElementContainer : MonoBehaviour
 {
+    //Public fields
     public GameObject element;
+    
+    //Private fields
     private GameObject elementInstance;
-    private Rigidbody parentRigidBody;
+    private Rigidbody rigidBody;
     private float groundLevel = 0.6f;
 
+    //Unity methods
     void Start()
     {
-        // Its parent should be a rigid body.
-        parentRigidBody = transform.parent.GetComponent<Rigidbody>();
-        Vector3 position = parentRigidBody.transform.position;
+        rigidBody = GetComponent<Rigidbody>();
+        Vector3 position = rigidBody.transform.position;
         position.y = groundLevel;
         elementInstance = Instantiate(element, position, Quaternion.identity);
     }

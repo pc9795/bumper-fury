@@ -19,6 +19,17 @@ public class SimpleCarController : MonoBehaviour
     {
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
+        //Reset
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            Reset();
+        }
+    }
+
+    private void Reset()
+    {
+        Vector3 rotation = transform.rotation.eulerAngles;
+        transform.rotation = Quaternion.Euler(new Vector3(0, rotation.y, 0));
     }
 
     private void Steer()

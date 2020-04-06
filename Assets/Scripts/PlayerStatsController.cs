@@ -8,12 +8,14 @@ public class PlayerStatsController : MonoBehaviour
     private float _health;
     private float _energy;
     private float _maxEnergy;
+    private int _score;
 
-    //Public fields
+    //Getters and Setters
     public float health { get { return _health; } }
     public float energy { get { return _energy; } }
     public float maxHealth { get { return _maxHealth; } }
     public float maxEnergy { get { return _maxEnergy; } }
+    public int score { get { return _score; } }
 
     // Unity methods
     void Start()
@@ -43,6 +45,11 @@ public class PlayerStatsController : MonoBehaviour
         _health += health;
     }
 
+    public void UpdateScore(int score)
+    {
+        _score += score;
+    }
+
     public bool EnergyFull()
     {
         return _energy == _maxEnergy;
@@ -52,4 +59,5 @@ public class PlayerStatsController : MonoBehaviour
     {
         _energy = 0;
     }
+
 }

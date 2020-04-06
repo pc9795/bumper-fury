@@ -41,7 +41,8 @@ public class PlayerCarController : MonoBehaviour
         //If it is an AI car
         if (aICar != null)
         {
-            playerStats.UpdateEnergy(20);
+            playerStats.UpdateEnergy(100);
+            playerStats.UpdateScore(10);
         }
     }
 

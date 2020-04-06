@@ -1,29 +1,34 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class InGameMenuController : MonoBehaviour
+public class PlayerScoreView : MonoBehaviour
 {
-    //Public fields
-    public Image healthBar;
-    public Image energyBar;
-
     //Private fields
+    private Text text;
     private PlayerStatsController playerStats;
+ 
+    void Start()
+    {
+        text = GetComponent<Text>();
+    }
 
     //Unity methods
     void Update()
     {
+        int score = 0;
         if (playerStats == null)
         {
             InitFromGameManager();
-            return;
         }
-        energyBar.fillAmount = playerStats.energy / playerStats.maxEnergy;
-        healthBar.fillAmount = playerStats.health / playerStats.maxHealth;
+        else
+        {
+            score = playerStats.score;
+        }
+        text.text = "Score: " + score;
     }
 
-    //Custom Methods
-    void InitFromGameManager()
+    //Custom methods
+    private void InitFromGameManager()
     {
         GameObject player = GameManager.INSTANCE.GetPlayer();
         if (player == null)
@@ -32,6 +37,4 @@ public class InGameMenuController : MonoBehaviour
         }
         playerStats = player.GetComponent<PlayerStatsController>();
     }
-
-
 }

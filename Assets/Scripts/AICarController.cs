@@ -9,11 +9,13 @@ public class AICarController : MonoBehaviour
     private Rigidbody _rigidbody;
     private int _score;
     private int _health;
+    private int _energy;
 
     //Getters and Setters
     new public Rigidbody rigidbody { get { return _rigidbody; } }
     public int score { get { return _score; } }
     public int health { get { return _health; } }
+    public int energy { get { return _energy; } }
 
     //Unity methods
     void Start()
@@ -21,8 +23,9 @@ public class AICarController : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
     }
 
-    void Update()
+    //Custom methods
+    public void DamageHealth(int damage)
     {
-
+        _health -= damage;
     }
 }

@@ -3,8 +3,8 @@
 public class GameManager : MonoBehaviour
 {
     public static GameManager INSTANCE;
-    public GameObject player;
-    public GameObject[] aiCars;
+    private GameObject player;
+    private GameObject[] aiCars;
 
     //Unity methods
     void Awake()

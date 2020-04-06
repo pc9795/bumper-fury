@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 2121344920502197721}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.8807304, y: 0.35254765, z: -1.4966354}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 8222385207652660706}
   m_RootOrder: 0
@@ -61,6 +61,51 @@ WheelCollider:
     m_AsymptoteValue: 1
     m_Stiffness: 5
   m_Enabled: 1
+--- !u!1 &2189164690318061998
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5624727549498142893}
+  - component: {fileID: 3425280285832556315}
+  m_Layer: 0
+  m_Name: Nitro
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5624727549498142893
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2189164690318061998}
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
+  m_LocalPosition: {x: -0.007, y: 0.299, z: -2.269}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 7482592359094566099}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!114 &3425280285832556315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2189164690318061998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dc3c90228338994fbfe40142364cc06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nitroFlame: {fileID: 100002, guid: b8f9e29cc9e6dcf4387b96b6dacc819e, type: 3}
+  flameDuration: 5
 --- !u!1 &2909257548232003539
 GameObject:
   m_ObjectHideFlags: 0
@@ -87,7 +132,7 @@ Transform:
   m_GameObject: {fileID: 2909257548232003539}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.81089973, y: 0.34589964, z: 1.1887913}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 8222385207652660706}
   m_RootOrder: 3
@@ -473,6 +518,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7482592359094566099}
+  - component: {fileID: 114429341331231406}
   m_Layer: 0
   m_Name: car_8
   m_TagString: Untagged
@@ -496,9 +542,34 @@ Transform:
   - {fileID: 7482710419043796513}
   - {fileID: 5121097874959235413}
   - {fileID: 8222385207652660706}
+  - {fileID: 5624727549498142893}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114429341331231406
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7484429186200737341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5db697258d7e38543a159eb75352d98f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  backRightWheelCollider: {fileID: 7947975204216465661}
+  backLeftWheelCollider: {fileID: 3166845764394477152}
+  frontRightWheelCollider: {fileID: 7278444153591762616}
+  frontLeftWheelCollider: {fileID: 3930179836136206571}
+  backRightWheel: {fileID: 7478736582754972055}
+  backLeftWheel: {fileID: 7482563663330823821}
+  frontRightWheel: {fileID: 7482443969880023511}
+  frontLeftWheel: {fileID: 7478385344938621831}
+  maxSteerAngle: 30
+  motorForce: 50
+  breakingForce: 30
+  turnSensitivity: 1
 --- !u!1 &7484734614816967459
 GameObject:
   m_ObjectHideFlags: 0
@@ -805,7 +876,7 @@ Transform:
   m_GameObject: {fileID: 8885653286689435526}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.88073015, y: 0.35254765, z: -1.4966316}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 8222385207652660706}
   m_RootOrder: 1
@@ -866,7 +937,7 @@ Transform:
   m_GameObject: {fileID: 9094115865894414673}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.8109, y: 0.34589964, z: 1.1887913}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 8222385207652660706}
   m_RootOrder: 2

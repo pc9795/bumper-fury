@@ -120,6 +120,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1887421942877823272}
+  - component: {fileID: 114451683849259980}
   m_Layer: 0
   m_Name: car_6
   m_TagString: Untagged
@@ -143,9 +144,35 @@ Transform:
   - {fileID: 1886650775206366406}
   - {fileID: 3710838520512532675}
   - {fileID: 3019837935843036358}
+  - {fileID: 5653493776944374625}
+  - {fileID: 4463135380051168542}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114451683849259980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1883830763510874012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5db697258d7e38543a159eb75352d98f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  backRightWheelCollider: {fileID: 4293028514988994041}
+  backLeftWheelCollider: {fileID: 8216183629558444237}
+  frontRightWheelCollider: {fileID: 6047439738804258951}
+  frontLeftWheelCollider: {fileID: 120250554339167325}
+  backRightWheel: {fileID: 1887208965892849522}
+  backLeftWheel: {fileID: 1886608609771275072}
+  frontRightWheel: {fileID: 1886708639097137830}
+  frontLeftWheel: {fileID: 1887439437140339692}
+  maxSteerAngle: 30
+  motorForce: 50
+  breakingForce: 30
+  turnSensitivity: 1
 --- !u!1 &1883925119223486472
 GameObject:
   m_ObjectHideFlags: 0
@@ -649,7 +676,7 @@ Transform:
   m_GameObject: {fileID: 1925478765520041266}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.7984495, y: 0.34059972, z: 1.1058569}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 3019837935843036358}
   m_RootOrder: 3
@@ -710,7 +737,7 @@ Transform:
   m_GameObject: {fileID: 1961476150358947490}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.88904285, y: 0.36216033, z: -1.5137882}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 3019837935843036358}
   m_RootOrder: 1
@@ -745,6 +772,51 @@ WheelCollider:
     m_AsymptoteValue: 1
     m_Stiffness: 5
   m_Enabled: 1
+--- !u!1 &2574163589745800535
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5653493776944374625}
+  - component: {fileID: 1393662310267500300}
+  m_Layer: 0
+  m_Name: LeftNitro
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5653493776944374625
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2574163589745800535}
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
+  m_LocalPosition: {x: -0.505, y: 0.343, z: -2.088}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1887421942877823272}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!114 &1393662310267500300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2574163589745800535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dc3c90228338994fbfe40142364cc06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nitroFlame: {fileID: 100002, guid: b8f9e29cc9e6dcf4387b96b6dacc819e, type: 3}
+  flameDuration: 5
 --- !u!1 &4631476255764704982
 GameObject:
   m_ObjectHideFlags: 0
@@ -771,7 +843,7 @@ Transform:
   m_GameObject: {fileID: 4631476255764704982}
   m_LocalRotation: {x: -0, y: 0.30646235, z: -0, w: 0.95188284}
   m_LocalPosition: {x: -0.7984495, y: 0.34059972, z: 1.1058569}
-  m_LocalScale: {x: 0.010000001, y: 0.01, z: 0.010000001}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 3019837935843036358}
   m_RootOrder: 2
@@ -806,6 +878,51 @@ WheelCollider:
     m_AsymptoteValue: 1
     m_Stiffness: 5
   m_Enabled: 1
+--- !u!1 &6611158956247974838
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4463135380051168542}
+  - component: {fileID: 7459540766909363131}
+  m_Layer: 0
+  m_Name: RightNitro
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4463135380051168542
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6611158956247974838}
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
+  m_LocalPosition: {x: 0.505, y: 0.343, z: -2.088}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1887421942877823272}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!114 &7459540766909363131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6611158956247974838}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dc3c90228338994fbfe40142364cc06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nitroFlame: {fileID: 100002, guid: b8f9e29cc9e6dcf4387b96b6dacc819e, type: 3}
+  flameDuration: 5
 --- !u!1 &6880128327283705506
 GameObject:
   m_ObjectHideFlags: 0
@@ -832,7 +949,7 @@ Transform:
   m_GameObject: {fileID: 6880128327283705506}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.8896141, y: 0.3580463, z: -1.5168726}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 3019837935843036358}
   m_RootOrder: 0

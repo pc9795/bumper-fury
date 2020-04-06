@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
 
-public class ElementContainer : MonoBehaviour
+public class ElementalContainer : MonoBehaviour
 {
     //Public fields
     public GameObject element;
-    
+    public float groundLevel = 0.6f;
+
     //Private fields
     private GameObject elementInstance;
     private Rigidbody rigidBody;
-    private float groundLevel = 0.6f;
 
     //Unity methods
     void Start()

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class PlayerCarController : MonoBehaviour
+public class SimpleCarController : MonoBehaviour
 {
     //Public fields
     public WheelCollider backRightWheelCollider, backLeftWheelCollider;
@@ -12,77 +12,27 @@ public class PlayerCarController : MonoBehaviour
     public float breakingForce = 30;
     public float turnSensitivity = 1;
 
-    //Private fields
-    private float horizontalInput;
-    private float verticalInput;
-    private float steerAngle;
-    private ProjectileShooter projectileShotter;
-    private PlayerStatsController playerStats;
-
     //Unity methods
-    void LateUpdate()
-    {
-        ProcessInput();
-        Steer();
-        Move();
-        UpdateWheelPoses();
-    }
-
     void Start()
     {
-        projectileShotter = GetComponent<ProjectileShooter>();
-        playerStats = GetComponent<PlayerStatsController>();
+
     }
 
-    void OnCollisionEnter(Collision collision)
+    void Update()
     {
-        Collider collider = collision.collider;
-        AICarController aICar = collider.GetComponentInParent<AICarController>();
-        //If it is an AI car
-        if (aICar != null)
-        {
-            playerStats.UpdateEnergy(100);
-            playerStats.UpdateScore(10);
-        }
+
     }
 
-    //Custom methods
-    public void ProcessInput()
-    {
-        horizontalInput = Input.GetAxis("Horizontal");
-        verticalInput = Input.GetAxis("Vertical");
-        //Reset
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            Reset();
-        }
-        //Shooting
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            if (projectileShotter.CanShoot() && playerStats.EnergyFull())
-            {
-                playerStats.ConsumeEnergy();
-                projectileShotter.Shoot();
-            }
-        }
-    }
-
-    private void Reset()
-    {
-        Vector3 rotation = transform.rotation.eulerAngles;
-        transform.rotation = Quaternion.Euler(new Vector3(0, rotation.y, 0));
-    }
-
-    private void Steer()
+    public void Steer(float horizontalInput)
     {
         // Calculate steering angle from the input.
-        steerAngle = maxSteerAngle * horizontalInput * turnSensitivity;
+        float steerAngle = maxSteerAngle * horizontalInput * turnSensitivity;
         // Steer the wheel. Only front wheels.
         frontLeftWheelCollider.steerAngle = Mathf.Lerp(frontLeftWheelCollider.steerAngle, steerAngle, 0.5f);
         frontRightWheelCollider.steerAngle = Mathf.Lerp(frontRightWheelCollider.steerAngle, steerAngle, 0.5f);
     }
 
-    private void Move()
+    public void Move(float verticalInput)
     {
         // Calculate the force from the input.
         // This will be fixing FPS as 50 because at 50 FPS Time.deltaTime will be 0.2 and multiplying it with 
@@ -100,8 +50,7 @@ public class PlayerCarController : MonoBehaviour
         backLeftWheelCollider.brakeTorque = force;
         backRightWheelCollider.brakeTorque = force;
     }
-
-    private void UpdateWheelPoses()
+    public void UpdateWheelPoses()
     {
         UpdateWheelPose(frontRightWheelCollider, frontRightWheel);
         UpdateWheelPose(frontLeftWheelCollider, frontLeftWheel);

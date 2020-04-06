@@ -2,31 +2,34 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ScoreboardController : MonoBehaviour
+public class Scoreboard : MonoBehaviour
 {
     //Public fields
     public GameObject listItem;
     public GameObject parentPanel;
 
     //Private fields
-    PlayerStatsController playerStats;
-    List<AICarController> aICars;
+    StatsController playerStats;
+    List<StatsController> aICarStats;
     List<GameObject> scoreBoardItems = new List<GameObject>();
 
     //Unity methods
     void LateUpdate()
     {
-        if (playerStats == null || aICars == null)
+        if (playerStats == null || aICarStats == null)
         {
             InitFromGameManager();
             return;
         }
+        //Add player score
         List<ScoreBoardEntry> scores = new List<ScoreBoardEntry>();
         scores.Add(new ScoreBoardEntry("Player", playerStats.score));
-        foreach (AICarController aiCar in aICars)
+
+        foreach (StatsController aiCarStats in aICarStats)
         {
-            scores.Add(new ScoreBoardEntry(aiCar.id, aiCar.score));
+            scores.Add(new ScoreBoardEntry(aiCarStats.displayName, aiCarStats.score));
         }
+        //Descending order
         scores.Sort(delegate (ScoreBoardEntry entry1, ScoreBoardEntry entry2) { return entry2.score - entry1.score; });
         CleanScoreboard();
         DisplayScoreboard(scores);
@@ -46,6 +49,7 @@ public class ScoreboardController : MonoBehaviour
             this.score = score;
         }
     }
+
     void InitFromGameManager()
     {
         GameObject player = GameManager.INSTANCE.GetPlayer();
@@ -53,16 +57,16 @@ public class ScoreboardController : MonoBehaviour
         {
             return;
         }
-        playerStats = player.GetComponent<PlayerStatsController>();
+        playerStats = player.GetComponent<StatsController>();
         GameObject[] aICarGameObjects = GameManager.INSTANCE.GetAICars();
         if (aICarGameObjects == null)
         {
             return;
         }
-        aICars = new List<AICarController>();
+        aICarStats = new List<StatsController>();
         foreach (GameObject aiCarGameObject in aICarGameObjects)
         {
-            aICars.Add(aiCarGameObject.GetComponentInParent<AICarController>());
+            aICarStats.Add(aiCarGameObject.GetComponentInParent<StatsController>());
         }
     }
 
@@ -91,6 +95,5 @@ public class ScoreboardController : MonoBehaviour
             listItemInstance.transform.SetParent(parentPanel.transform);
             scoreBoardItems.Add(listItemInstance);
         }
-
     }
 }

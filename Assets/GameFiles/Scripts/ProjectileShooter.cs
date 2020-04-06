@@ -4,14 +4,14 @@ public class ProjectileShooter : MonoBehaviour
 {
     //Public fields
     public GameObject projectileType;
-    public float speed;
-    public float radius;
-    public float power;
+    public float speed = 10;
+    public float radius = 15;
+    public float power = 30000;
+    public float duration = 8;
 
     //Private fields
     private GameObject projectileInstance;
     private Rigidbody rigidBody;
-    private float duration = 8; //todo check for public
     private Vector3 direction;
     private float groundLevel = 0.6f; //todo check for public
 
@@ -30,14 +30,22 @@ public class ProjectileShooter : MonoBehaviour
         Collider[] colliders = Physics.OverlapSphere(projectileInstance.transform.position, radius);
         foreach (Collider collider in colliders)
         {
-            AICarController aICar = collider.GetComponentInParent<AICarController>();
-            if (aICar != null && aICar.rigidbody != null)
+            //Collision will occur with models so have to look for behaviors in parent.
+            AICar aICar = collider.GetComponentInParent<AICar>();
+            if (aICar == null)
             {
-                //todo check the upward modifier settings.
-                //todo give them energy they are hit.
-                aICar.rigidbody.AddExplosionForce(power, projectileInstance.transform.position, radius, 3.0f);
+                continue;
             }
+            Rigidbody aICarRigidBody = aICar.GetComponent<Rigidbody>();
+            if (aICarRigidBody == null)
+            {
+                continue;
+            }
+            //todo check the upward modifier settings.
+            //todo give them energy they are hit.
+            aICarRigidBody.AddExplosionForce(power, projectileInstance.transform.position, radius, 3.0f);
         }
+        //Move with the local space
         projectileInstance.transform.position += direction * speed * Time.deltaTime;
     }
 
@@ -53,12 +61,11 @@ public class ProjectileShooter : MonoBehaviour
         {
             return;
         }
-        //Instantiate a new flame tornado
+        //Instantiate a new projectile instance
         Vector3 position = rigidBody.transform.position;
         position.y = groundLevel;
         projectileInstance = Instantiate(projectileType, position, Quaternion.identity);
         Destroy(projectileInstance, duration);
         direction = rigidBody.transform.forward;
-
     }
 }

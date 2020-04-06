@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerScoreView : MonoBehaviour
+public class PlayerScore : MonoBehaviour
 {
     //Private fields
     private Text text;
-    private PlayerStatsController playerStats;
- 
+    private StatsController playerStats;
+
     void Start()
     {
         text = GetComponent<Text>();
@@ -15,6 +15,7 @@ public class PlayerScoreView : MonoBehaviour
     //Unity methods
     void Update()
     {
+        //By default will print 0
         int score = 0;
         if (playerStats == null)
         {
@@ -31,10 +32,11 @@ public class PlayerScoreView : MonoBehaviour
     private void InitFromGameManager()
     {
         GameObject player = GameManager.INSTANCE.GetPlayer();
+        //Player is not initialized yet. Earyly Exit
         if (player == null)
         {
             return;
         }
-        playerStats = player.GetComponent<PlayerStatsController>();
+        playerStats = player.GetComponent<StatsController>();
     }
 }

@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class InGameMenuController : MonoBehaviour
+public class HUD : MonoBehaviour
 {
     //Public fields
     public Image healthBar;
     public Image energyBar;
 
     //Private fields
-    private PlayerStatsController playerStats;
+    private StatsController playerStats;
 
     //Unity methods
     void Update()
@@ -18,6 +18,7 @@ public class InGameMenuController : MonoBehaviour
             InitFromGameManager();
             return;
         }
+        //Need values in 0 - 1 scale.
         energyBar.fillAmount = playerStats.energy / playerStats.maxEnergy;
         healthBar.fillAmount = playerStats.health / playerStats.maxHealth;
     }
@@ -26,12 +27,11 @@ public class InGameMenuController : MonoBehaviour
     void InitFromGameManager()
     {
         GameObject player = GameManager.INSTANCE.GetPlayer();
+        //Player is not initialized yet. Earyly Exit
         if (player == null)
         {
             return;
         }
-        playerStats = player.GetComponent<PlayerStatsController>();
+        playerStats = player.GetComponent<StatsController>();
     }
-
-
 }

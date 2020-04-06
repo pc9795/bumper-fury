@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 
-public class PlayerStatsController : MonoBehaviour
+public class StatsController : MonoBehaviour
 {
+    //Public fields
+    public string displayName;
 
     //Private fields
     private float _maxHealth;

@@ -1302,7 +1302,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55118cedecfdfc54a98cc4b846740b6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  element: {fileID: 1323933383960778334, guid: b8930be77a93a3e42b999ec1775b37c2, type: 3}
+  element: {fileID: 7564370448982209011, guid: 69759d51317cade439eacb00e3ad9050, type: 3}
 --- !u!114 &833056727
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1315,10 +1315,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78fb9bd2149194748890ae5f608b515b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectileType: {fileID: 8653119836572959423, guid: 825d7e6b935441544a97652c0937b76d,
+  projectileType: {fileID: 1060718018706899589, guid: 3949a310cfdef3446b8b1cb7d49a1db6,
     type: 3}
-  speed: 0
-  radius: 50
+  speed: 10
+  radius: 15
   power: 30000
 --- !u!114 &838616842 stripped
 MonoBehaviour:

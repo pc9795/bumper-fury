@@ -335,6 +335,92 @@ MonoBehaviour:
   listItem: {fileID: 8707990868089894911, guid: 74a605882954f0444b27c106718d0314,
     type: 3}
   parentPanel: {fileID: 185145108}
+--- !u!1 &218543038
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 218543039}
+  - component: {fileID: 218543041}
+  - component: {fileID: 218543040}
+  - component: {fileID: 218543042}
+  m_Layer: 5
+  m_Name: Notifications
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &218543039
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 218543038}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 537583212}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 110, y: 5}
+  m_SizeDelta: {x: 200, y: 150}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &218543040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 218543038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abc123f07071c1b42bf7765f6e9dfde0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  listItem: {fileID: 8707990868089894911, guid: 74a605882954f0444b27c106718d0314,
+    type: 3}
+  parentPanel: {fileID: 218543038}
+  capcity: 7
+  expireTimeInSecs: 300
+--- !u!222 &218543041
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 218543038}
+  m_CullTransparentMesh: 0
+--- !u!114 &218543042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 218543038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1297475563, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 10
+    m_Right: 0
+    m_Top: 10
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  m_Spacing: 0
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
 --- !u!1 &283865838
 GameObject:
   m_ObjectHideFlags: 0
@@ -563,6 +649,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displayName: AICar 4
+  maxHealth: 100
+  health: 100
+  energy: 0
+  maxEnergy: 100
+  score: 0
+  isOutOflevel: 0
 --- !u!114 &387352852
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -596,10 +688,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   halfDamageIndicator: {fileID: 6476947184579106723, guid: 0633f2f949f20c24890a19d958419b6a,
     type: 3}
-  halfDamageIndicationDuration: 3
   fullDamageIndicator: {fileID: 6338004245128731735, guid: ddd0958b2b9c0de468ccd7bd60048c27,
     type: 3}
-  fullDamageIndicationDuration: 4
+  explosion: {fileID: 7409209947098858319, guid: 27c55b606bbd42142b4f4c7aad209c7c,
+    type: 3}
+  explostionDuration: 6
 --- !u!114 &387352854
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -734,6 +827,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cadebd38b667a84f81dc2ee66007516, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelBounds:
+    m_Center: {x: 0, y: 50, z: 0}
+    m_Extent: {x: 60, y: 70, z: 60}
+  deathTimer: 3
 --- !u!4 &450503788
 Transform:
   m_ObjectHideFlags: 0
@@ -876,6 +973,7 @@ RectTransform:
   - {fileID: 130410475}
   - {fileID: 185145109}
   - {fileID: 1204371517}
+  - {fileID: 218543039}
   m_Father: {fileID: 2086783032}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1074,6 +1172,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displayName: Prashant
+  maxHealth: 100
+  health: 100
+  energy: 0
+  maxEnergy: 100
+  score: 0
+  isOutOflevel: 0
 --- !u!114 &833056726
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1121,10 +1225,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   halfDamageIndicator: {fileID: 6476947184579106723, guid: 0633f2f949f20c24890a19d958419b6a,
     type: 3}
-  halfDamageIndicationDuration: 3
   fullDamageIndicator: {fileID: 6338004245128731735, guid: ddd0958b2b9c0de468ccd7bd60048c27,
     type: 3}
-  fullDamageIndicationDuration: 4
+  explosion: {fileID: 7409209947098858319, guid: 27c55b606bbd42142b4f4c7aad209c7c,
+    type: 3}
+  explostionDuration: 6
 --- !u!114 &838616842 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8552630418417795359, guid: d6fcf8f4e3ee28d49a49bc66845bd212,
@@ -1612,6 +1717,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displayName: AICar 2
+  maxHealth: 100
+  health: 100
+  energy: 0
+  maxEnergy: 100
+  score: 0
+  isOutOflevel: 0
 --- !u!114 &1495346062
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1626,10 +1737,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   halfDamageIndicator: {fileID: 6476947184579106723, guid: 0633f2f949f20c24890a19d958419b6a,
     type: 3}
-  halfDamageIndicationDuration: 3
   fullDamageIndicator: {fileID: 6338004245128731735, guid: ddd0958b2b9c0de468ccd7bd60048c27,
     type: 3}
-  fullDamageIndicationDuration: 4
+  explosion: {fileID: 7409209947098858319, guid: 27c55b606bbd42142b4f4c7aad209c7c,
+    type: 3}
+  explostionDuration: 6
 --- !u!114 &1495346063
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1863,6 +1975,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displayName: AICar 1
+  maxHealth: 100
+  health: 100
+  energy: 0
+  maxEnergy: 100
+  score: 0
+  isOutOflevel: 0
 --- !u!114 &1718234109
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1910,10 +2028,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   halfDamageIndicator: {fileID: 6476947184579106723, guid: 0633f2f949f20c24890a19d958419b6a,
     type: 3}
-  halfDamageIndicationDuration: 3
   fullDamageIndicator: {fileID: 6338004245128731735, guid: ddd0958b2b9c0de468ccd7bd60048c27,
     type: 3}
-  fullDamageIndicationDuration: 4
+  explosion: {fileID: 7409209947098858319, guid: 27c55b606bbd42142b4f4c7aad209c7c,
+    type: 3}
+  explostionDuration: 6
 --- !u!54 &1718234112
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2342,6 +2461,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displayName: AICar 3
+  maxHealth: 100
+  health: 100
+  energy: 0
+  maxEnergy: 100
+  score: 0
+  isOutOflevel: 0
 --- !u!114 &2077917861
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2389,10 +2514,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   halfDamageIndicator: {fileID: 6476947184579106723, guid: 0633f2f949f20c24890a19d958419b6a,
     type: 3}
-  halfDamageIndicationDuration: 3
   fullDamageIndicator: {fileID: 6338004245128731735, guid: ddd0958b2b9c0de468ccd7bd60048c27,
     type: 3}
-  fullDamageIndicationDuration: 4
+  explosion: {fileID: 7409209947098858319, guid: 27c55b606bbd42142b4f4c7aad209c7c,
+    type: 3}
+  explostionDuration: 6
 --- !u!54 &2077917864
 Rigidbody:
   m_ObjectHideFlags: 0

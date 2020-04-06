@@ -5,29 +5,46 @@ using UnityEngine.UI;
 public class Scoreboard : MonoBehaviour
 {
     //Public fields
+    //It should have a text component.
     public GameObject listItem;
     public GameObject parentPanel;
 
     //Private fields
     StatsController playerStats;
-    List<StatsController> aICarStats;
+    Dictionary<string, StatsController> aICarStatsDict;
     List<GameObject> scoreBoardItems = new List<GameObject>();
 
     //Unity methods
     void LateUpdate()
     {
-        if (playerStats == null || aICarStats == null)
+        if (playerStats == null || aICarStatsDict == null)
         {
             InitFromGameManager();
             return;
         }
         //Add player score
         List<ScoreBoardEntry> scores = new List<ScoreBoardEntry>();
-        scores.Add(new ScoreBoardEntry("Player", playerStats.score));
-
-        foreach (StatsController aiCarStats in aICarStats)
+        if (playerStats != null)
         {
-            scores.Add(new ScoreBoardEntry(aiCarStats.displayName, aiCarStats.score));
+            scores.Add(new ScoreBoardEntry("Player", playerStats.score));
+        }
+        else
+        {
+            //-1 is a special value which will result in printing K.O.
+            scores.Add(new ScoreBoardEntry("Player", -1));
+        }
+        foreach (KeyValuePair<string, StatsController> keyValuePair in aICarStatsDict)
+        {
+            if (keyValuePair.Value != null)
+            {
+                scores.Add(new ScoreBoardEntry(keyValuePair.Key, keyValuePair.Value.score));
+            }
+            else
+            {
+                //-1 is a special value which will result in printing K.O.
+                scores.Add(new ScoreBoardEntry(keyValuePair.Key, -1));
+            }
+
         }
         //Descending order
         scores.Sort(delegate (ScoreBoardEntry entry1, ScoreBoardEntry entry2) { return entry2.score - entry1.score; });
@@ -63,14 +80,15 @@ public class Scoreboard : MonoBehaviour
         {
             return;
         }
-        aICarStats = new List<StatsController>();
+        aICarStatsDict = new Dictionary<string, StatsController>();
         foreach (GameObject aiCarGameObject in aICarGameObjects)
         {
-            aICarStats.Add(aiCarGameObject.GetComponentInParent<StatsController>());
+            StatsController stats = aiCarGameObject.GetComponentInParent<StatsController>();
+            aICarStatsDict.Add(stats.displayName, stats);
         }
     }
 
-    void CleanScoreboard()
+    private void CleanScoreboard()
     {
         foreach (GameObject scoreBoarItem in scoreBoardItems)
         {
@@ -80,7 +98,7 @@ public class Scoreboard : MonoBehaviour
     }
 
 
-    void DisplayScoreboard(List<ScoreBoardEntry> entries)
+    private void DisplayScoreboard(List<ScoreBoardEntry> entries)
     {
         if (entries.Count < 0)
         {
@@ -91,7 +109,7 @@ public class Scoreboard : MonoBehaviour
             ScoreBoardEntry entry = entries[i];
             GameObject listItemInstance = Instantiate(listItem);
             Text text = listItemInstance.GetComponent<Text>();
-            text.text = (i + 1) + ". " + entry.name + " (" + entry.score + ")";
+            text.text = (i + 1) + ". " + entry.name + " (" + (entry.score != -1 ? "" + entry.score : "K.O.") + ")";
             listItemInstance.transform.SetParent(parentPanel.transform);
             scoreBoardItems.Add(listItemInstance);
         }

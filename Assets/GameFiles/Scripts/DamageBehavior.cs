@@ -6,10 +6,13 @@ public class DamageBehavior : MonoBehaviour
     //These are expected to be looping animations.
     public GameObject halfDamageIndicator;
     public GameObject fullDamageIndicator;
+    public GameObject explosion;
+    public int explostionDuration;
 
     //Pirvate fields;
     private GameObject halfDamageIndicatorInstance;
     private GameObject fullDamageIndicationDurationInstance;
+    private GameObject explosionInstance;
     private StatsController stats;
 
     //Unity methods
@@ -21,38 +24,51 @@ public class DamageBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (stats.health == 0)
+        if (stats.isOutOflevel)
         {
-            if (halfDamageIndicatorInstance)
+            if (!explosionInstance)
             {
-                Destroy(halfDamageIndicatorInstance);
-            }
-            if (!fullDamageIndicationDurationInstance)
-            {
-                fullDamageIndicationDurationInstance = Instantiate(fullDamageIndicator, transform.position, Quaternion.identity);
+                //Explosion is one time thing.
+                explosionInstance = Instantiate(explosion, transform.position, Quaternion.identity);
+                Destroy(explosionInstance, explostionDuration);
             }
 
         }
-        if (stats.health > 0 && stats.health <= 50)
+        else
         {
-            if (fullDamageIndicationDurationInstance)
+            if (stats.health == 0)
             {
-                Destroy(fullDamageIndicationDurationInstance);
+                if (halfDamageIndicatorInstance)
+                {
+                    Destroy(halfDamageIndicatorInstance);
+                }
+                if (!fullDamageIndicationDurationInstance)
+                {
+                    fullDamageIndicationDurationInstance = Instantiate(fullDamageIndicator, transform.position, Quaternion.identity);
+                }
+
             }
-            if (!halfDamageIndicatorInstance)
+            if (stats.health > 0 && stats.health <= 50)
             {
-                halfDamageIndicatorInstance = Instantiate(halfDamageIndicator, transform.position, Quaternion.identity);
+                if (fullDamageIndicationDurationInstance)
+                {
+                    Destroy(fullDamageIndicationDurationInstance);
+                }
+                if (!halfDamageIndicatorInstance)
+                {
+                    halfDamageIndicatorInstance = Instantiate(halfDamageIndicator, transform.position, Quaternion.identity);
+                }
             }
-        }
-        if (stats.health > 50 && stats.health <= 100)
-        {
-            if (halfDamageIndicatorInstance)
+            if (stats.health > 50 && stats.health <= 100)
             {
-                Destroy(halfDamageIndicatorInstance);
-            }
-            if (fullDamageIndicationDurationInstance)
-            {
-                Destroy(fullDamageIndicationDurationInstance);
+                if (halfDamageIndicatorInstance)
+                {
+                    Destroy(halfDamageIndicatorInstance);
+                }
+                if (fullDamageIndicationDurationInstance)
+                {
+                    Destroy(fullDamageIndicationDurationInstance);
+                }
             }
         }
         //If any of the indicators exist move them according to the local space.
@@ -65,6 +81,11 @@ public class DamageBehavior : MonoBehaviour
         {
             halfDamageIndicatorInstance.transform.position = transform.position;
             halfDamageIndicatorInstance.transform.forward = transform.forward;
+        }
+        if (explosionInstance)
+        {
+            explosionInstance.transform.position = transform.position;
+            explosionInstance.transform.forward = transform.forward;
         }
     }
 }

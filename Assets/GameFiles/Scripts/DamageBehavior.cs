@@ -3,10 +3,9 @@
 public class DamageBehavior : MonoBehaviour
 {
     //Public fields
+    //These are expected to be looping animations.
     public GameObject halfDamageIndicator;
-    public int halfDamageIndicationDuration;
     public GameObject fullDamageIndicator;
-    public int fullDamageIndicationDuration;
 
     //Pirvate fields;
     private GameObject halfDamageIndicatorInstance;
@@ -22,18 +21,39 @@ public class DamageBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //todo check for the conditions where both fires can run together.
-        //Check before playing with the structure of if statements.
-        if (stats.health == 0 && !fullDamageIndicationDurationInstance)
+        if (stats.health == 0)
         {
-            fullDamageIndicationDurationInstance = Instantiate(fullDamageIndicator, transform.position, Quaternion.identity);
-            Destroy(fullDamageIndicationDurationInstance, fullDamageIndicationDuration);
+            if (halfDamageIndicatorInstance)
+            {
+                Destroy(halfDamageIndicatorInstance);
+            }
+            if (!fullDamageIndicationDurationInstance)
+            {
+                fullDamageIndicationDurationInstance = Instantiate(fullDamageIndicator, transform.position, Quaternion.identity);
+            }
 
         }
-        if (stats.health > 0 && stats.health <= 50 && !halfDamageIndicatorInstance)
+        if (stats.health > 0 && stats.health <= 50)
         {
-            halfDamageIndicatorInstance = Instantiate(halfDamageIndicator, transform.position, Quaternion.identity);
-            Destroy(halfDamageIndicatorInstance, halfDamageIndicationDuration);
+            if (fullDamageIndicationDurationInstance)
+            {
+                Destroy(fullDamageIndicationDurationInstance);
+            }
+            if (!halfDamageIndicatorInstance)
+            {
+                halfDamageIndicatorInstance = Instantiate(halfDamageIndicator, transform.position, Quaternion.identity);
+            }
+        }
+        if (stats.health > 50 && stats.health <= 100)
+        {
+            if (halfDamageIndicatorInstance)
+            {
+                Destroy(halfDamageIndicatorInstance);
+            }
+            if (fullDamageIndicationDurationInstance)
+            {
+                Destroy(fullDamageIndicationDurationInstance);
+            }
         }
         //If any of the indicators exist move them according to the local space.
         if (fullDamageIndicationDurationInstance)

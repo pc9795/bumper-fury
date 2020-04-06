@@ -104,7 +104,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7dc3c90228338994fbfe40142364cc06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nitroFlame: {fileID: 100002, guid: b8f9e29cc9e6dcf4387b96b6dacc819e, type: 3}
+  nitroFlame: {fileID: 4754156415606324424, guid: 41d4cc826339e2d40ac87127957f3903,
+    type: 3}
   flameDuration: 5
 --- !u!1 &2426659867442843351
 GameObject:
@@ -278,7 +279,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7dc3c90228338994fbfe40142364cc06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nitroFlame: {fileID: 100002, guid: b8f9e29cc9e6dcf4387b96b6dacc819e, type: 3}
+  nitroFlame: {fileID: 4754156415606324424, guid: 41d4cc826339e2d40ac87127957f3903,
+    type: 3}
   flameDuration: 5
 --- !u!1 &5318643317286869581
 GameObject:

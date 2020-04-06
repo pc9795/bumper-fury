@@ -8,12 +8,14 @@ public class ProjectileShooter : MonoBehaviour
     public float radius = 15;
     public float power = 30000;
     public float duration = 8;
-
+    //TODO if the parent has a offset then need of this
+    public float groundLevel = 0.6f;
+    
     //Private fields
     private GameObject projectileInstance;
     private Rigidbody rigidBody;
     private Vector3 direction;
-    private float groundLevel = 0.6f; //todo check for public
+    
 
     //Unity methods
     void Start()
@@ -41,8 +43,8 @@ public class ProjectileShooter : MonoBehaviour
             {
                 continue;
             }
-            //todo check the upward modifier settings.
-            //todo give them energy they are hit.
+            //TODO check the upward modifier settings.
+            //TODO calculate damage on the basis of impact and return back it to the parent so that it can calculate score.
             aICarRigidBody.AddExplosionForce(power, projectileInstance.transform.position, radius, 3.0f);
         }
         //Move with the local space

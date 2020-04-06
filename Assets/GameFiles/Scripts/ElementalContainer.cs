@@ -4,6 +4,7 @@ public class ElementalContainer : MonoBehaviour
 {
     //Public fields
     public GameObject element;
+    //TODO if the parent has a offset then need of this
     public float groundLevel = 0.6f;
 
     //Private fields

@@ -34,8 +34,13 @@ public class PlayerCar : MonoBehaviour
         //If it is an AI car
         if (aICar != null)
         {
-            playerStats.UpdateEnergy(100);
-            playerStats.UpdateScore(10);
+            //TODO do this calculations according to an impact score.
+            playerStats.CollectEnergy(100);
+            //TODO do this calculations according to an impact score.
+            playerStats.AddScore(10);
+            StatsController aICarStats = aICar.GetComponent<StatsController>();
+            //TODO do this calculations according to an impact score.
+            aICarStats.DamageHealth(20);
         }
     }
 
@@ -52,7 +57,7 @@ public class PlayerCar : MonoBehaviour
         //Shooting
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (projectileShotter.CanShoot() && playerStats.EnergyFull())
+            if (projectileShotter.CanShoot() && playerStats.IsEnergyFull())
             {
                 playerStats.ConsumeEnergy();
                 projectileShotter.Shoot();

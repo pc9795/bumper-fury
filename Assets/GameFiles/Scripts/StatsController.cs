@@ -29,7 +29,7 @@ public class StatsController : MonoBehaviour
     }
 
     // Custom methods
-    public void UpdateEnergy(int energy)
+    public void CollectEnergy(int energy)
     {
         if (_energy == _maxEnergy)
         {
@@ -38,7 +38,7 @@ public class StatsController : MonoBehaviour
         _energy += energy;
     }
 
-    public void UpdateHealth(int health)
+    public void CollectHealth(int health)
     {
         if (_health == _maxHealth)
         {
@@ -47,12 +47,12 @@ public class StatsController : MonoBehaviour
         _health += health;
     }
 
-    public void UpdateScore(int score)
+    public void AddScore(int score)
     {
         _score += score;
     }
 
-    public bool EnergyFull()
+    public bool IsEnergyFull()
     {
         return _energy == _maxEnergy;
     }
@@ -60,6 +60,15 @@ public class StatsController : MonoBehaviour
     public void ConsumeEnergy()
     {
         _energy = 0;
+    }
+
+    public void DamageHealth(int damage)
+    {
+        if (_health == 0)
+        {
+            return;
+        }
+        _health -= damage;
     }
 
 }

@@ -581,6 +581,7 @@ MonoBehaviour:
   radius: 15
   power: 30000
   duration: 8
+  groundLevel: 0.6
 --- !u!114 &387352853
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -593,10 +594,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d20dc1b41c14734faf3f0d3df17206c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  halfDamageIndicator: {fileID: 0}
-  halfDamageIndicationDuration: 0
-  fullDamageIndicator: {fileID: 0}
-  fullDamageIndicationDuration: 0
+  halfDamageIndicator: {fileID: 6476947184579106723, guid: 0633f2f949f20c24890a19d958419b6a,
+    type: 3}
+  halfDamageIndicationDuration: 3
+  fullDamageIndicator: {fileID: 6338004245128731735, guid: ddd0958b2b9c0de468ccd7bd60048c27,
+    type: 3}
+  fullDamageIndicationDuration: 4
 --- !u!114 &387352854
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1103,6 +1106,7 @@ MonoBehaviour:
   radius: 15
   power: 30000
   duration: 8
+  groundLevel: 0.6
 --- !u!114 &833056728
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1115,10 +1119,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d20dc1b41c14734faf3f0d3df17206c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  halfDamageIndicator: {fileID: 0}
-  halfDamageIndicationDuration: 0
-  fullDamageIndicator: {fileID: 0}
-  fullDamageIndicationDuration: 0
+  halfDamageIndicator: {fileID: 6476947184579106723, guid: 0633f2f949f20c24890a19d958419b6a,
+    type: 3}
+  halfDamageIndicationDuration: 3
+  fullDamageIndicator: {fileID: 6338004245128731735, guid: ddd0958b2b9c0de468ccd7bd60048c27,
+    type: 3}
+  fullDamageIndicationDuration: 4
 --- !u!114 &838616842 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8552630418417795359, guid: d6fcf8f4e3ee28d49a49bc66845bd212,
@@ -1618,10 +1624,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d20dc1b41c14734faf3f0d3df17206c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  halfDamageIndicator: {fileID: 0}
-  halfDamageIndicationDuration: 0
-  fullDamageIndicator: {fileID: 0}
-  fullDamageIndicationDuration: 0
+  halfDamageIndicator: {fileID: 6476947184579106723, guid: 0633f2f949f20c24890a19d958419b6a,
+    type: 3}
+  halfDamageIndicationDuration: 3
+  fullDamageIndicator: {fileID: 6338004245128731735, guid: ddd0958b2b9c0de468ccd7bd60048c27,
+    type: 3}
+  fullDamageIndicationDuration: 4
 --- !u!114 &1495346063
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1640,6 +1648,7 @@ MonoBehaviour:
   radius: 15
   power: 30000
   duration: 8
+  groundLevel: 0.6
 --- !u!114 &1495346064
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1872,6 +1881,7 @@ MonoBehaviour:
   radius: 15
   power: 30000
   duration: 8
+  groundLevel: 0.6
 --- !u!114 &1718234110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1898,10 +1908,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d20dc1b41c14734faf3f0d3df17206c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  halfDamageIndicator: {fileID: 0}
-  halfDamageIndicationDuration: 0
-  fullDamageIndicator: {fileID: 0}
-  fullDamageIndicationDuration: 0
+  halfDamageIndicator: {fileID: 6476947184579106723, guid: 0633f2f949f20c24890a19d958419b6a,
+    type: 3}
+  halfDamageIndicationDuration: 3
+  fullDamageIndicator: {fileID: 6338004245128731735, guid: ddd0958b2b9c0de468ccd7bd60048c27,
+    type: 3}
+  fullDamageIndicationDuration: 4
 --- !u!54 &1718234112
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2310,7 +2322,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2077917857}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.9595466, y: 0.6, z: 4.4357376}
+  m_LocalPosition: {x: -4.49, y: 0.6, z: 4.4357376}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 430308278}
@@ -2348,6 +2360,7 @@ MonoBehaviour:
   radius: 15
   power: 30000
   duration: 8
+  groundLevel: 0.6
 --- !u!114 &2077917862
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2374,10 +2387,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d20dc1b41c14734faf3f0d3df17206c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  halfDamageIndicator: {fileID: 0}
-  halfDamageIndicationDuration: 0
-  fullDamageIndicator: {fileID: 0}
-  fullDamageIndicationDuration: 0
+  halfDamageIndicator: {fileID: 6476947184579106723, guid: 0633f2f949f20c24890a19d958419b6a,
+    type: 3}
+  halfDamageIndicationDuration: 3
+  fullDamageIndicator: {fileID: 6338004245128731735, guid: ddd0958b2b9c0de468ccd7bd60048c27,
+    type: 3}
+  fullDamageIndicationDuration: 4
 --- !u!54 &2077917864
 Rigidbody:
   m_ObjectHideFlags: 0

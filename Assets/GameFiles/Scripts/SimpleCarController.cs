@@ -13,16 +13,6 @@ public class SimpleCarController : MonoBehaviour
     public float turnSensitivity = 1;
 
     //Unity methods
-    void Start()
-    {
-
-    }
-
-    void Update()
-    {
-
-    }
-
     public void Steer(float horizontalInput)
     {
         // Calculate steering angle from the input.

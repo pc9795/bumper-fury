@@ -17,6 +17,7 @@ public class StatsController : MonoBehaviour
     [HideInInspector]
     public bool isOutOflevel;
 
+    //Private fields
     private bool dead;
 
     // Unity methods
@@ -92,7 +93,7 @@ public class StatsController : MonoBehaviour
         dead = true;
     }
 
-    public bool isAlive()
+    public bool IsAlive()
     {
         return !dead;
     }

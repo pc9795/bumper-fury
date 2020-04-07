@@ -22,14 +22,14 @@ public class NitroBehavior : MonoBehaviour
     {
         //Get the integer part. It will be easy then.
         int speed = (int)rigidBody.velocity.magnitude;
-        
+
         //Create flames at a particular increment
         if (speed != 0 && speed % incrmentSize == 0 && !nitroFlameInstance)
         {
             nitroFlameInstance = Instantiate(nitroFlame, transform.position, Quaternion.identity);
             Destroy(nitroFlameInstance, flameDuration);
         }
-        
+
         //Move accordign to local space.
         if (nitroFlameInstance)
         {

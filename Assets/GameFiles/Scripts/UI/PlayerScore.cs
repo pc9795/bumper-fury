@@ -7,12 +7,12 @@ public class PlayerScore : MonoBehaviour
     private Text text;
     private StatsController playerStats;
 
+    //Unity methods
     void Start()
     {
         text = GetComponent<Text>();
     }
 
-    //Unity methods
     void Update()
     {
         //By default will print 0

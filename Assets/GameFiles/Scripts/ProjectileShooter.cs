@@ -10,12 +10,13 @@ public class ProjectileShooter : MonoBehaviour
     public float duration = 8;
     //TODO if the parent has a offset then need of this
     public float groundLevel = 0.6f;
-    
+
     //Private fields
     private GameObject projectileInstance;
     private Rigidbody rigidBody;
     private Vector3 direction;
-    
+    private int damageDone = 0;
+
 
     //Unity methods
     void Start()
@@ -38,14 +39,15 @@ public class ProjectileShooter : MonoBehaviour
             {
                 continue;
             }
-            Rigidbody aICarRigidBody = aICar.GetComponent<Rigidbody>();
-            if (aICarRigidBody == null)
-            {
-                continue;
-            }
+
             //TODO check the upward modifier settings.
-            //TODO calculate damage on the basis of impact and return back it to the parent so that it can calculate score.
+            Rigidbody aICarRigidBody = aICar.GetComponent<Rigidbody>();
             aICarRigidBody.AddExplosionForce(power, projectileInstance.transform.position, radius, 3.0f);
+
+            //TODO calculate damage on the basis of impact
+            StatsController aiCarStats = aICar.GetComponent<StatsController>();
+            aiCarStats.DamageHealth(1);
+            damageDone += 1;
         }
         //Move with the local space
         projectileInstance.transform.position += direction * speed * Time.deltaTime;
@@ -69,5 +71,12 @@ public class ProjectileShooter : MonoBehaviour
         projectileInstance = Instantiate(projectileType, position, Quaternion.identity);
         Destroy(projectileInstance, duration);
         direction = rigidBody.transform.forward;
+    }
+
+    public int CollectDamageDone()
+    {
+        int returnValue = damageDone;
+        damageDone = 0;
+        return returnValue;
     }
 }

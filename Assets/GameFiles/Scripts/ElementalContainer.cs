@@ -24,4 +24,12 @@ public class ElementalContainer : MonoBehaviour
     {
         elementInstance.transform.position = transform.position;
     }
+
+    void OnDestroy()
+    {
+        if (elementInstance)
+        {
+            Destroy(elementInstance);
+        }
+    }
 }

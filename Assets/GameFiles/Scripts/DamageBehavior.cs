@@ -88,4 +88,21 @@ public class DamageBehavior : MonoBehaviour
             explosionInstance.transform.forward = transform.forward;
         }
     }
+
+    //Clean Up
+    void OnDestroy()
+    {
+        if (explosionInstance)
+        {
+            Destroy(explosionInstance);
+        }
+        if (fullDamageIndicationDurationInstance)
+        {
+            Destroy(fullDamageIndicationDurationInstance);
+        }
+        if (halfDamageIndicatorInstance)
+        {
+            Destroy(halfDamageIndicatorInstance);
+        }
+    }
 }

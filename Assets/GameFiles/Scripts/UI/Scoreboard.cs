@@ -5,8 +5,7 @@ using UnityEngine.UI;
 public class Scoreboard : MonoBehaviour
 {
     //Public fields
-    //It should have a text component.
-    public GameObject listItem;
+    public GameObject listItem; //It should have a text component.
     public GameObject parentPanel;
 
     //Private fields

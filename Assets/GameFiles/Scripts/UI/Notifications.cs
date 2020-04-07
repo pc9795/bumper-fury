@@ -5,8 +5,7 @@ using UnityEngine.UI;
 public class Notifications : MonoBehaviour
 {
     //Public fields
-    //It should have a text component
-    public GameObject listItem;
+    public GameObject listItem; //It should have a Text component
     public GameObject parentPanel;
     public int capcity = 7;
     public int expireTimeInSecs = 10;

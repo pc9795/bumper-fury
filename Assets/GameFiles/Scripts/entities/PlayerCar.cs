@@ -24,6 +24,8 @@ public class PlayerCar : MonoBehaviour
         carController.Steer(horizontalInput);
         carController.Move(verticalInput);
         carController.UpdateWheelPoses();
+        int damageDoneWithProjectile = projectileShotter.CollectDamageDone();
+        playerStats.AddScore(damageDoneWithProjectile / 2);
     }
 
     void OnCollisionEnter(Collision collision)
@@ -34,13 +36,16 @@ public class PlayerCar : MonoBehaviour
         //If it is an AI car
         if (aICar != null)
         {
-            //TODO do this calculations according to an impact score.
-            playerStats.CollectEnergy(100);
-            //TODO do this calculations according to an impact score.
-            playerStats.AddScore(10);
             StatsController aICarStats = aICar.GetComponent<StatsController>();
-            //TODO do this calculations according to an impact score.
-            aICarStats.DamageHealth(20);
+            if (aICarStats.IsAlive())
+            {
+                //TODO do this calculations according to an impact score.
+                playerStats.CollectEnergy(100);
+                //TODO do this calculations according to an impact score.
+                playerStats.AddScore(10);
+                //TODO do this calculations according to an impact score.
+                aICarStats.DamageHealth(20);
+            }
         }
     }
 

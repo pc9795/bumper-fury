@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     private GameObject player;
     private GameObject[] aiCars;
     private Queue<Notification> messageQueue = new Queue<Notification>();
+    private Difficulty difficulty;
 
     //Unity methods
     void Awake()
@@ -82,4 +83,18 @@ public class GameManager : MonoBehaviour
         return messageQueue.Dequeue();
     }
 
+    public enum Difficulty
+    {
+        EASY, MEDIUM, HARD
+    }
+
+    public void SetDifficulty(Difficulty difficulty)
+    {
+        this.difficulty = difficulty;
+    }
+
+    public Difficulty GetDifficulty()
+    {
+        return difficulty;
+    }
 }

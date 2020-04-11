@@ -24,15 +24,43 @@ public class GameManager : MonoBehaviour
         EASY, MEDIUM, HARD
     }
 
+    public class Tag
+    {
+        public static string PLAYER = "Player";
+        public static string AI = "AI";
+        public static string SPAWN_POINT = "Spawn Point";
+        public static string ITEM_POINT = "Item Point";
+        public static string TRAP_POINT = "Trap Point";
+    }
+
     public class Level
     {
         private string _sceneName;
+        private string _theme;
 
-        public Level(string sceneName)
+        public Level(string sceneName, string theme)
         {
             _sceneName = sceneName;
+            _theme = theme;
         }
         public string sceneName { get { return _sceneName; } }
+        public string theme { get { return _theme; } }
+    }
+
+    [System.Serializable]
+    public class Car
+    {
+        public GameObject modelPrefab;
+        public GameObject playablePrefab;
+        public string name;
+    }
+
+    [System.Serializable]
+    public class Elemental
+    {
+        public GameObject prefab;
+        public GameObject powerPrefab;
+        public string name;
     }
 
     //Public fields
@@ -43,10 +71,15 @@ public class GameManager : MonoBehaviour
     public static GameManager INSTANCE;
     [HideInInspector]
     public Difficulty difficulty { get; set; }
+    public List<Car> cars = new List<Car>();
+    public List<Elemental> elementals = new List<Elemental>();
     [HideInInspector]
-    public string selectedCarName { get; set; }
+    public int selectedCarIndex;
     [HideInInspector]
-    public string selectedElementName { get; set; }
+    public int selectedElementalIndex;
+    [HideInInspector]
+    public Level mainMenu;
+    public int countOfOpponents = 4;
 
     //Private fields
     private GameObject player;
@@ -54,20 +87,29 @@ public class GameManager : MonoBehaviour
     private Queue<Notification> messageQueue = new Queue<Notification>();
     private List<Level> levels = new List<Level>();
     private int currLevel = 0;
-    private Level mainMenu;
+    private GameObject[] spawnPoints;
+    private GameObject[] trapPoints;
+    private GameObject[] itemPoints;
+    private string[] aiNames = { "Cormac", "Wilhelm", "Tyrel", "Ivan", "Seth", "Viktor", "Austin", "Roy",
+        "Warrick","Carter","August","Benedict","Cyan","Valen","Zared","Daron","Finlay","Kynon","Jordan","Xerxes" };
+    private int aiNameIndex;
 
     //Unity methods
     void Awake()
     {
         Init();
-        //Can look on better way to configure this.
-        levels.Add(new Level("FireLevel"));
-        levels.Add(new Level("WaterLevel"));
-        levels.Add(new Level("AirLevel"));
-        levels.Add(new Level("EarthLevel"));
-        levels.Add(new Level("FinalLevel"));
 
-        mainMenu = new Level("Main Menu");
+        //Configuring levels.
+        //Can look on better way to configure this.
+        levels.Add(new Level("FireLevel", "EDM 1"));
+        levels.Add(new Level("WaterLevel", "EDM 2"));
+        levels.Add(new Level("AirLevel", "EDM 3"));
+        levels.Add(new Level("EarthLevel", "EDM 1"));
+        mainMenu = new Level("Main Menu", "Theme");
+
+        //TODO: remove
+        AudioManager.INSTANCE.Play(levels[0].theme);
+        InitLevel();
     }
 
     //Custom methods
@@ -86,20 +128,12 @@ public class GameManager : MonoBehaviour
 
     public GameObject GetPlayer()
     {
-        if (player == null)
-        {
-            player = GameObject.FindGameObjectWithTag("Player");
-        }
         return player;
 
     }
 
     public GameObject[] GetAICars()
     {
-        if (aiCars == null || aiCars.Length == 0)
-        {
-            aiCars = GameObject.FindGameObjectsWithTag("AI");
-        }
         return aiCars;
     }
 
@@ -119,18 +153,147 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
+        AudioManager.INSTANCE.Stop(mainMenu.theme);
         SceneManager.LoadScene(levels[0].sceneName);
+        AudioManager.INSTANCE.Play(levels[0].theme);
+        InitLevel();
+    }
+
+    private void InitLevel()
+    {
+        spawnPoints = GameObject.FindGameObjectsWithTag(Tag.SPAWN_POINT);
+        trapPoints = GameObject.FindGameObjectsWithTag(Tag.TRAP_POINT);
+        itemPoints = GameObject.FindGameObjectsWithTag(Tag.ITEM_POINT);
+        LoadPlayer();
+        LoadAIOpponents();
+        PlaceObjectsOnSpawnPoints();
     }
 
     public void NextLevel()
     {
+        AudioManager.INSTANCE.Stop(levels[currLevel].theme);
         currLevel++;
         currLevel %= levels.Count;
         SceneManager.LoadScene(levels[currLevel].sceneName);
+        AudioManager.INSTANCE.Play(levels[currLevel].theme);
+        InitLevel();
     }
 
     public void MainMenu()
     {
+        AudioManager.INSTANCE.Stop(levels[currLevel].theme);
         SceneManager.LoadScene(mainMenu.sceneName);
+        //Becuase there is no load/save functionality therefore all the progress will be lost. So setting the level to 0 again.
+        currLevel = 0;
+        AudioManager.INSTANCE.Play(mainMenu.theme);
+    }
+
+    //TODO: ponder
+    public int GetScoreFromDamage(int damage)
+    {
+        return damage / 2;
+    }
+
+    //TODO: ponder
+    public int GetEnergyFromDamage(int damage)
+    {
+        return damage * 5;
+    }
+
+    private void LoadPlayer()
+    {
+        player = GameObject.FindGameObjectWithTag("Player");
+        PlayerCar car = player.GetComponent<PlayerCar>();
+
+        ElementalContainer elementalContainer = car.GetComponent<ElementalContainer>();
+        elementalContainer.element = elementals[selectedElementalIndex].prefab;
+        elementalContainer.Init();
+
+        //No need to init as projectile instance is not created till the player is initialized. So there is no risk of 
+        //updates.
+        ProjectileShooter projectileShooter = car.GetComponent<ProjectileShooter>();
+        projectileShooter.projectileType = elementals[selectedElementalIndex].powerPrefab;
+
+        car.modelPrefab = cars[selectedCarIndex].playablePrefab;
+        car.Init();
+        NitroBehavior[] nitroBehaviors = car.GetComponentsInChildren<NitroBehavior>();
+        foreach (NitroBehavior nitroBehavior in nitroBehaviors)
+        {
+            nitroBehavior.Init();
+        }
+    }
+
+    private void LoadAIOpponents()
+    {
+        GameObject aITempalte = GameObject.FindGameObjectWithTag("AI");
+        aiCars = new GameObject[countOfOpponents];
+
+        int elementIndex = Random.Range(0, elementals.Count);
+        int carIndex = Random.Range(0, cars.Count);
+
+        for (int i = 0; i < aiCars.Length; i++)
+        {
+            aiCars[i] = Instantiate(aITempalte, aITempalte.transform.position, Quaternion.identity);
+            AICar car = aiCars[i].GetComponent<AICar>();
+
+            //Template doesn't have gravity by default
+            Rigidbody rigidbody = car.GetComponent<Rigidbody>();
+            rigidbody.useGravity = true;
+
+            //Setting name of the ai character.
+            StatsController stats = car.GetComponent<StatsController>();
+            stats.displayName = aiNames[aiNameIndex];
+            //Cycle names
+            aiNameIndex++;
+            aiNameIndex %= aiNames.Length;
+
+            ElementalContainer elementalContainer = car.GetComponent<ElementalContainer>();
+            elementalContainer.element = elementals[elementIndex].prefab;
+            elementalContainer.Init();
+
+            //No need to init as projectile instance is not created till the player is initialized. So there is no risk of 
+            //updates.
+            ProjectileShooter projectileShooter = car.GetComponent<ProjectileShooter>();
+            projectileShooter.projectileType = elementals[elementIndex].powerPrefab;
+
+            car.modelPrefab = cars[carIndex].playablePrefab;
+            car.Init();
+            NitroBehavior[] nitroBehaviors = car.GetComponentsInChildren<NitroBehavior>();
+            foreach (NitroBehavior nitroBehavior in nitroBehaviors)
+            {
+                nitroBehavior.Init();
+            }
+
+            //Cycle elementals and models
+            carIndex++;
+            carIndex %= cars.Count;
+            elementIndex++;
+            elementIndex %= elementals.Count;
+        }
+    }
+
+    private void PlaceObjectsOnSpawnPoints()
+    {
+        if (spawnPoints == null || spawnPoints.Length < (aiCars.Length + 1))
+        {
+            print("The no of spawn points are less than the no of objects to place.");
+            return;
+        }
+
+        int spawnIndex = Random.Range(0, spawnPoints.Length);
+        player.transform.position = spawnPoints[spawnIndex].transform.position;
+        player.transform.forward = spawnPoints[spawnIndex].transform.forward;
+        spawnIndex++;
+        spawnIndex %= spawnPoints.Length;
+
+        foreach (GameObject aiCar in aiCars)
+        {
+            aiCar.transform.position = spawnPoints[spawnIndex].transform.position;
+            aiCar.transform.forward = spawnPoints[spawnIndex].transform.forward;
+            //Cycle spawn points
+            spawnIndex++;
+            spawnIndex %= spawnPoints.Length;
+        }
+
     }
 }

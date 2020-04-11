@@ -12,24 +12,22 @@ public class ElementalContainer : MonoBehaviour
     private Rigidbody rigidBody;
 
     //Unity methods
-    void Start()
-    {
-        rigidBody = GetComponent<Rigidbody>();
-        Vector3 position = rigidBody.transform.position;
-        position.y = groundLevel;
-        elementInstance = Instantiate(element, position, Quaternion.identity);
-    }
-
-    void Update()
-    {
-        elementInstance.transform.position = transform.position;
-    }
-
     void OnDestroy()
     {
         if (elementInstance)
         {
             Destroy(elementInstance);
         }
+    }
+
+    //Custom methods
+
+    //Lazy init because the actual elemental is set dynamically.
+    public void Init()
+    {
+        rigidBody = GetComponent<Rigidbody>();
+        Vector3 position = rigidBody.transform.position;
+        position.y = groundLevel;
+        elementInstance = Instantiate(element, position, Quaternion.identity, transform);
     }
 }

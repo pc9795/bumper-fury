@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - AI
+  - Spawn Point
+  - Item Point
+  - Trap Point
   layers:
   - Default
   - TransparentFX

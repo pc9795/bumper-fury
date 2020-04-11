@@ -36562,8 +36562,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8653119836573327007}
+  - component: {fileID: 3681458759292374924}
   m_Layer: 0
-  m_Name: WaterBubble
+  m_Name: WaterBubble1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -36585,3 +36586,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3681458759292374924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8653119836572959423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dc6d21aab4b8984f96d10581480ed4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 0
+  radius: 50
+  power: 30000
+  duration: 8
+  upwardRift: 3
+  groundLevel: 0.6
+  baseDamage: 1

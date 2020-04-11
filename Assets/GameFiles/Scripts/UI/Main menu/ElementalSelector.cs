@@ -1,18 +1,7 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ElementalSelector : MonoBehaviour
 {
-    [System.Serializable]
-    public class Elemental
-    {
-        public GameObject prefab;
-        public string name;
-    }
-    //Public fields
-    public List<Elemental> elementals = new List<Elemental>();
-    public int selectedIndex = 0;
-
     //Private fields
     private GameObject selectedElementalInstance;
     private bool elementalChanged;
@@ -26,7 +15,9 @@ public class ElementalSelector : MonoBehaviour
             return;
         }
         Destroy(selectedElementalInstance);
-        selectedElementalInstance = Instantiate(elementals[selectedIndex].prefab, transform.position, Quaternion.identity);
+        selectedElementalInstance = Instantiate(
+            GameManager.INSTANCE.elementals[GameManager.INSTANCE.selectedElementalIndex].prefab,
+            transform.position, Quaternion.identity);
         elementalChanged = false;
     }
 
@@ -42,22 +33,18 @@ public class ElementalSelector : MonoBehaviour
     //Custom methods
     public void NextElemental()
     {
-        selectedIndex++;
-        selectedIndex %= elementals.Count;
+        GameManager.INSTANCE.selectedElementalIndex++;
+        GameManager.INSTANCE.selectedElementalIndex %= GameManager.INSTANCE.elementals.Count;
         elementalChanged = true;
     }
     public void PreviousElemental()
     {
-        selectedIndex--;
-        selectedIndex = selectedIndex < 0 ? 0 : selectedIndex;
+        GameManager.INSTANCE.selectedElementalIndex--;
+        GameManager.INSTANCE.selectedElementalIndex =
+            GameManager.INSTANCE.selectedElementalIndex < 0 ? 0 : GameManager.INSTANCE.selectedElementalIndex;
         elementalChanged = true;
 
     }
-    public void SelectElemental()
-    {
-        GameManager.INSTANCE.selectedElementName = elementals[selectedIndex].name;
-    }
-
     public void Activate()
     {
         active = true;
@@ -65,8 +52,10 @@ public class ElementalSelector : MonoBehaviour
         {
             Destroy(selectedElementalInstance);
         }
-        selectedIndex = 0;
-        selectedElementalInstance = Instantiate(elementals[selectedIndex].prefab, transform.position, Quaternion.identity);
+        GameManager.INSTANCE.selectedElementalIndex = 0;
+        selectedElementalInstance = Instantiate(
+            GameManager.INSTANCE.elementals[GameManager.INSTANCE.selectedElementalIndex].prefab,
+            transform.position, Quaternion.identity);
         selectedElementalInstance.transform.Rotate(new Vector3(0, -260, -0));
 
     }

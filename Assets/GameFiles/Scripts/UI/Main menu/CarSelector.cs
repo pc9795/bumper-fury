@@ -1,18 +1,7 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CarSelector : MonoBehaviour
 {
-    [System.Serializable]
-    public class Car
-    {
-        public GameObject prefab;
-        public string name;
-    }
-    //Public fields
-    public List<Car> cars = new List<Car>();
-    public int selectedIndex = 0;
-
     //Private fields
     private GameObject selectedCarInstance;
     private bool carChanged;
@@ -34,7 +23,8 @@ public class CarSelector : MonoBehaviour
             return;
         }
         Destroy(selectedCarInstance);
-        selectedCarInstance = Instantiate(cars[selectedIndex].prefab, transform.position, Quaternion.identity);
+        selectedCarInstance = Instantiate(
+            GameManager.INSTANCE.cars[GameManager.INSTANCE.selectedCarIndex].modelPrefab, transform.position, Quaternion.identity);
         selectedCarInstance.transform.Rotate(new Vector3(0, -260, -0));
         carChanged = false;
     }
@@ -51,22 +41,18 @@ public class CarSelector : MonoBehaviour
     //Custom methods
     public void NextCar()
     {
-        selectedIndex++;
-        selectedIndex %= cars.Count;
+        GameManager.INSTANCE.selectedCarIndex++;
+        GameManager.INSTANCE.selectedCarIndex %= GameManager.INSTANCE.cars.Count;
         carChanged = true;
     }
     public void PreviousCar()
     {
-        selectedIndex--;
-        selectedIndex = selectedIndex < 0 ? 0 : selectedIndex;
+        GameManager.INSTANCE.selectedCarIndex--;
+        GameManager.INSTANCE.selectedCarIndex =
+            GameManager.INSTANCE.selectedCarIndex < 0 ? 0 : GameManager.INSTANCE.selectedCarIndex;
         carChanged = true;
 
     }
-    public void SelectCar()
-    {
-        GameManager.INSTANCE.selectedCarName = cars[selectedIndex].name;
-    }
-
     public void Activate()
     {
         active = true;
@@ -74,8 +60,9 @@ public class CarSelector : MonoBehaviour
         {
             Destroy(selectedCarInstance);
         }
-        selectedIndex = 0;
-        selectedCarInstance = Instantiate(cars[selectedIndex].prefab, transform.position, Quaternion.identity);
+        GameManager.INSTANCE.selectedCarIndex = 0;
+        selectedCarInstance = Instantiate(
+            GameManager.INSTANCE.cars[GameManager.INSTANCE.selectedCarIndex].modelPrefab, transform.position, Quaternion.identity);
         selectedCarInstance.transform.Rotate(new Vector3(0, -260, -0));
 
     }

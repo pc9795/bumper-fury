@@ -32,7 +32,6 @@ public class AudioManager : MonoBehaviour
             sound.source.pitch = sound.pitch;
             sound.source.loop = sound.loop;
         }
-        Play("Theme");
     }
 
     //Custom methods
@@ -66,6 +65,26 @@ public class AudioManager : MonoBehaviour
             return;
         }
         sound.source.Play();
+    }
+
+
+    public void Stop(string name)
+    {
+        Sound sound = null;
+        foreach (Sound _sound in sounds)
+        {
+            if (_sound.name == name)
+            {
+                sound = _sound;
+                break;
+            }
+        }
+        if (sound == null)
+        {
+            print("Requested sound:" + name + " not found!");
+            return;
+        }
+        sound.source.Stop();
     }
 
 }

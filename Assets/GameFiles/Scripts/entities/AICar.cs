@@ -2,20 +2,27 @@
 
 public class AICar : MonoBehaviour
 {
+    //Public fields
+    public GameObject modelPrefab;
+
     // Private fields
     private StatsController stats;
     private SimpleCarController carController;
+    private bool initialized;
+    private GameObject modelInstance;
 
     // Unity methods
     void Start()
     {
-        stats = GetComponent<StatsController>();
-        //Car controller will be in a model attached to this object.
-        carController = GetComponentInChildren<SimpleCarController>();
+        gameObject.tag = GameManager.Tag.AI;
     }
 
     void LateUpdate()
     {
+        if (!initialized)
+        {
+            return;
+        }
         //No updates if dead.
         if (!stats.IsAlive())
         {
@@ -27,8 +34,19 @@ public class AICar : MonoBehaviour
             Destroy(this.gameObject, GameManager.INSTANCE.deathTimer);
             stats.Die();
         }
+        //TODO: add AI
         carController.Steer(0);
         carController.Move(0);
         carController.UpdateWheelPoses();
     }
+
+    //Custom methods
+    public void Init()
+    {
+        stats = GetComponent<StatsController>();
+        modelInstance = Instantiate(modelPrefab, transform.position, Quaternion.identity, transform);
+        carController = modelInstance.GetComponent<SimpleCarController>();
+        initialized = true;
+    }
+
 }

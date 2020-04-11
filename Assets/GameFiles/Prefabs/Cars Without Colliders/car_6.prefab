@@ -163,7 +163,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 189311696169702762}
-  - component: {fileID: 1803538332966256526}
   m_Layer: 0
   m_Name: car_6
   m_TagString: Untagged
@@ -189,30 +188,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1803538332966256526
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 195167320740695006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5db697258d7e38543a159eb75352d98f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  backRightWheelCollider: {fileID: 0}
-  backLeftWheelCollider: {fileID: 0}
-  frontRightWheelCollider: {fileID: 0}
-  frontLeftWheelCollider: {fileID: 0}
-  backRightWheel: {fileID: 189537335740631856}
-  backLeftWheel: {fileID: 198014576071767810}
-  frontRightWheel: {fileID: 197883776423730916}
-  frontLeftWheel: {fileID: 189258484936023982}
-  maxSteerAngle: 30
-  motorForce: 50
-  breakingForce: 30
-  turnSensitivity: 1
 --- !u!1 &195238463986042778
 GameObject:
   m_ObjectHideFlags: 0

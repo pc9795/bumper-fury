@@ -708,8 +708,8 @@ MonoBehaviour:
   frontRightWheel: {fileID: 8444707275202547899}
   frontLeftWheel: {fileID: 8443833465389512593}
   maxSteerAngle: 30
-  motorForce: 50
-  breakingForce: 30
+  motorForce: 100
+  breakingForce: 400
   turnSensitivity: 1
 --- !u!1 &8441381084649360381
 GameObject:

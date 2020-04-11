@@ -29,10 +29,9 @@ public class DamageBehavior : MonoBehaviour
             if (!explosionInstance)
             {
                 //Explosion is one time thing.
-                explosionInstance = Instantiate(explosion, transform.position, Quaternion.identity);
+                explosionInstance = Instantiate(explosion, transform.position, Quaternion.identity, transform);
                 Destroy(explosionInstance, explostionDuration);
             }
-
         }
         else
         {
@@ -44,9 +43,9 @@ public class DamageBehavior : MonoBehaviour
                 }
                 if (!fullDamageIndicationDurationInstance)
                 {
-                    fullDamageIndicationDurationInstance = Instantiate(fullDamageIndicator, transform.position, Quaternion.identity);
+                    fullDamageIndicationDurationInstance =
+                        Instantiate(fullDamageIndicator, transform.position, Quaternion.identity, transform);
                 }
-
             }
             if (stats.health > 0 && stats.health <= 50)
             {
@@ -56,7 +55,8 @@ public class DamageBehavior : MonoBehaviour
                 }
                 if (!halfDamageIndicatorInstance)
                 {
-                    halfDamageIndicatorInstance = Instantiate(halfDamageIndicator, transform.position, Quaternion.identity);
+                    halfDamageIndicatorInstance =
+                        Instantiate(halfDamageIndicator, transform.position, Quaternion.identity, transform);
                 }
             }
             if (stats.health > 50 && stats.health <= 100)
@@ -70,22 +70,6 @@ public class DamageBehavior : MonoBehaviour
                     Destroy(fullDamageIndicationDurationInstance);
                 }
             }
-        }
-        //If any of the indicators exist move them according to the local space.
-        if (fullDamageIndicationDurationInstance)
-        {
-            fullDamageIndicationDurationInstance.transform.position = transform.position;
-            fullDamageIndicationDurationInstance.transform.forward = transform.forward;
-        }
-        if (halfDamageIndicatorInstance)
-        {
-            halfDamageIndicatorInstance.transform.position = transform.position;
-            halfDamageIndicatorInstance.transform.forward = transform.forward;
-        }
-        if (explosionInstance)
-        {
-            explosionInstance.transform.position = transform.position;
-            explosionInstance.transform.forward = transform.forward;
         }
     }
 

@@ -2,6 +2,10 @@
 
 public class MainMenu : MonoBehaviour
 {
+    void Start()
+    {
+        AudioManager.INSTANCE.Play(GameManager.INSTANCE.mainMenu.theme);
+    }
     //Custom methods
     public void Quit()
     {

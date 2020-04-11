@@ -75,7 +75,7 @@ public class Scoreboard : MonoBehaviour
         }
         playerStats = player.GetComponent<StatsController>();
         GameObject[] aICarGameObjects = GameManager.INSTANCE.GetAICars();
-        if (aICarGameObjects == null)
+        if (aICarGameObjects == null || aICarGameObjects.Length == 0)
         {
             return;
         }

@@ -2,30 +2,37 @@
 
 public class PlayerCar : MonoBehaviour
 {
+    //Public fields
+    public GameObject modelPrefab;
+
     //Private fields
     private float horizontalInput;
     private float verticalInput;
     private ProjectileShooter projectileShotter;
     private StatsController playerStats;
     private SimpleCarController carController;
+    private bool initialized;
+    private GameObject modelInstance;
 
     //Unity methods
+
     void Start()
     {
-        projectileShotter = GetComponent<ProjectileShooter>();
-        playerStats = GetComponent<StatsController>();
-        //Car controller will be in a model attached to this object.
-        carController = GetComponentInChildren<SimpleCarController>();
+        gameObject.tag = GameManager.Tag.PLAYER;
     }
 
     void LateUpdate()
     {
+        if (!initialized)
+        {
+            return;
+        }
         ProcessInput();
         carController.Steer(horizontalInput);
         carController.Move(verticalInput);
         carController.UpdateWheelPoses();
         int damageDoneWithProjectile = projectileShotter.CollectDamageDone();
-        playerStats.AddScore(damageDoneWithProjectile / 2);
+        playerStats.AddScore(GameManager.INSTANCE.GetScoreFromDamage(damageDoneWithProjectile));
     }
 
     void OnCollisionEnter(Collision collision)
@@ -39,12 +46,12 @@ public class PlayerCar : MonoBehaviour
             StatsController aICarStats = aICar.GetComponent<StatsController>();
             if (aICarStats.IsAlive())
             {
-                //TODO do this calculations according to an impact score.
-                playerStats.CollectEnergy(100);
-                //TODO do this calculations according to an impact score.
-                playerStats.AddScore(10);
-                //TODO do this calculations according to an impact score.
-                aICarStats.DamageHealth(20);
+                //TODO do this calculations according to the impact.
+                int damage = 20;
+
+                playerStats.CollectEnergy(GameManager.INSTANCE.GetEnergyFromDamage(damage));
+                playerStats.AddScore(GameManager.INSTANCE.GetScoreFromDamage(damage));
+                aICarStats.DamageHealth(damage);
             }
         }
     }
@@ -74,5 +81,15 @@ public class PlayerCar : MonoBehaviour
     {
         Vector3 rotation = transform.rotation.eulerAngles;
         transform.rotation = Quaternion.Euler(new Vector3(0, rotation.y, 0));
+    }
+
+    //Lazy init as model prefab is set dynamically.
+    public void Init()
+    {
+        projectileShotter = GetComponent<ProjectileShooter>();
+        playerStats = GetComponent<StatsController>();
+        modelInstance = Instantiate(modelPrefab, transform.position, Quaternion.identity, transform);
+        carController = modelInstance.GetComponent<SimpleCarController>();
+        initialized = true;
     }
 }

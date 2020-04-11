@@ -4,12 +4,6 @@ public class ProjectileShooter : MonoBehaviour
 {
     //Public fields
     public GameObject projectileType;
-    public float speed = 10;
-    public float radius = 15;
-    public float power = 30000;
-    public float duration = 8;
-    //TODO if the parent has a offset then need of this
-    public float groundLevel = 0.6f;
 
     //Private fields
     private GameObject projectileInstance;
@@ -22,6 +16,7 @@ public class ProjectileShooter : MonoBehaviour
     void Start()
     {
         rigidBody = GetComponent<Rigidbody>();
+
     }
 
     void Update()
@@ -30,7 +25,8 @@ public class ProjectileShooter : MonoBehaviour
         {
             return;
         }
-        Collider[] colliders = Physics.OverlapSphere(projectileInstance.transform.position, radius);
+        Projectile projectile = projectileInstance.GetComponent<Projectile>();
+        Collider[] colliders = Physics.OverlapSphere(projectileInstance.transform.position, projectile.radius);
         foreach (Collider collider in colliders)
         {
             //Collision will occur with models so have to look for behaviors in parent.
@@ -40,17 +36,17 @@ public class ProjectileShooter : MonoBehaviour
                 continue;
             }
 
-            //TODO check the upward modifier settings.
             Rigidbody aICarRigidBody = aICar.GetComponent<Rigidbody>();
-            aICarRigidBody.AddExplosionForce(power, projectileInstance.transform.position, radius, 3.0f);
+            aICarRigidBody.AddExplosionForce(projectile.power, projectileInstance.transform.position,
+                projectile.radius, projectile.upwardRift);
 
-            //TODO calculate damage on the basis of impact
             StatsController aiCarStats = aICar.GetComponent<StatsController>();
-            aiCarStats.DamageHealth(1);
-            damageDone += 1;
+            //TODO Modify base damage on the basis of impact
+            aiCarStats.DamageHealth(projectile.baseDamage);
+            damageDone += projectile.baseDamage;
         }
         //Move with the local space
-        projectileInstance.transform.position += direction * speed * Time.deltaTime;
+        projectileInstance.transform.position += direction * projectile.speed * Time.deltaTime;
     }
 
     // Custom methods
@@ -66,10 +62,11 @@ public class ProjectileShooter : MonoBehaviour
             return;
         }
         //Instantiate a new projectile instance
-        Vector3 position = rigidBody.transform.position;
-        position.y = groundLevel;
-        projectileInstance = Instantiate(projectileType, position, Quaternion.identity);
-        Destroy(projectileInstance, duration);
+        projectileInstance = Instantiate(projectileType, rigidBody.transform.position, Quaternion.identity);
+        Projectile projectile = projectileInstance.GetComponent<Projectile>();
+        Vector3 currPos = projectileInstance.transform.position;
+        projectileInstance.transform.position = new Vector3(currPos.x, projectile.groundLevel, currPos.z);
+        Destroy(projectileInstance, projectile.duration);
         direction = rigidBody.transform.forward;
     }
 

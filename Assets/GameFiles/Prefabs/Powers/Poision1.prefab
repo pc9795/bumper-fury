@@ -9186,8 +9186,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5709941357763103165}
+  - component: {fileID: 8072819191544345000}
   m_Layer: 0
-  m_Name: Poison
+  m_Name: Poision1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9211,6 +9212,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8072819191544345000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5709941357763597725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dc6d21aab4b8984f96d10581480ed4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 10
+  radius: 15
+  power: 30000
+  duration: 8
+  upwardRift: 3
+  groundLevel: 0.6
+  baseDamage: 1
 --- !u!1 &5709941357763597727
 GameObject:
   m_ObjectHideFlags: 0

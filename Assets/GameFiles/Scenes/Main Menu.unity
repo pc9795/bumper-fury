@@ -5735,20 +5735,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b4b950c26ce9eb47846f8a75e07a74c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  elementals:
-  - prefab: {fileID: 7564370448982209011, guid: 69759d51317cade439eacb00e3ad9050,
-      type: 3}
-    name: Air
-  - prefab: {fileID: 1909791520952839478, guid: 9700a62fc689c9944b0ce49caad3099b,
-      type: 3}
-    name: Earth
-  - prefab: {fileID: 1570590446640267102, guid: 04ef3e0d2776931459413edb51408215,
-      type: 3}
-    name: Fire
-  - prefab: {fileID: 1323933383960778334, guid: b8930be77a93a3e42b999ec1775b37c2,
-      type: 3}
-    name: Water
-  selectedIndex: 0
 --- !u!1 &1074891187
 GameObject:
   m_ObjectHideFlags: 0
@@ -6925,9 +6911,83 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelBounds:
-    m_Center: {x: 0, y: 50, z: 0}
-    m_Extent: {x: 50, y: 50, z: 50}
+    m_Center: {x: 0, y: 100, z: 0}
+    m_Extent: {x: 110, y: 110, z: 110}
   deathTimer: 3
+  cars:
+  - modelPrefab: {fileID: 1048014018787270843, guid: d9dcf39e0f78eca449ebe0b610f9c82e,
+      type: 3}
+    playablePrefab: {fileID: 5353773628259019364, guid: e54b37806e25c774db68fa255358ecce,
+      type: 3}
+    name: car_1
+  - modelPrefab: {fileID: 2892738898784810428, guid: 8109be6a9a0732444bf416ee2f8a13a0,
+      type: 3}
+    playablePrefab: {fileID: 333323942023560590, guid: 0120b1f44fbd1b340971c77139612ed8,
+      type: 3}
+    name: car_2
+  - modelPrefab: {fileID: 7920864585828995112, guid: 6dd583c0efb67eb458f89cb6a667fb12,
+      type: 3}
+    playablePrefab: {fileID: 1141737773037995874, guid: 62f59bbcbf2b92645975938ad2013e2f,
+      type: 3}
+    name: car_3
+  - modelPrefab: {fileID: 5809185389329419712, guid: 9075b04248948a7459edfce99eea65be,
+      type: 3}
+    playablePrefab: {fileID: 1912051103907573998, guid: 79a3eb4235f4d9e47b74e7744b8e3d46,
+      type: 3}
+    name: car_4
+  - modelPrefab: {fileID: 4639371790512837330, guid: 17b80cae132ff294cb79aea0fd40df63,
+      type: 3}
+    playablePrefab: {fileID: 4992450090535771985, guid: 2f3dad0d9fe85154eb110062e87d5ac0,
+      type: 3}
+    name: car_5
+  - modelPrefab: {fileID: 195167320740695006, guid: 626b337f4c4130a499b2ffc67788f144,
+      type: 3}
+    playablePrefab: {fileID: 1883830763510874012, guid: 5d83f85978eb10947923e0ee32fbd08b,
+      type: 3}
+    name: car_6
+  - modelPrefab: {fileID: 7460648843350119884, guid: b9323595259f7f440bcf5bb7f0dc2f6c,
+      type: 3}
+    playablePrefab: {fileID: 8527641750880285681, guid: cd4a44a9aca76654db71f44e5b54a149,
+      type: 3}
+    name: car_7
+  - modelPrefab: {fileID: 8983138253552568595, guid: 9b8a7b8ef65dcff458c3706f050ecd2a,
+      type: 3}
+    playablePrefab: {fileID: 7484429186200737341, guid: 26d3e62a961577e488cadde224af28c4,
+      type: 3}
+    name: car_8
+  - modelPrefab: {fileID: 8844283763677073391, guid: 3ce90454a1c841143af1f651ecefc697,
+      type: 3}
+    playablePrefab: {fileID: 8441330372843868765, guid: ad8bedadc4b92374186610a99a6a2d6b,
+      type: 3}
+    name: car_9
+  - modelPrefab: {fileID: 2319818629388148598, guid: 2c621b12bb98577429178ebe26c90619,
+      type: 3}
+    playablePrefab: {fileID: 2291354809958022488, guid: 17007a7a5d964e14fb803054279bf535,
+      type: 3}
+    name: car_10
+  elementals:
+  - prefab: {fileID: 7564370448982209011, guid: 69759d51317cade439eacb00e3ad9050,
+      type: 3}
+    powerPrefab: {fileID: 1060718018706899589, guid: 3949a310cfdef3446b8b1cb7d49a1db6,
+      type: 3}
+    name: Air
+  - prefab: {fileID: 1909791520952839478, guid: 9700a62fc689c9944b0ce49caad3099b,
+      type: 3}
+    powerPrefab: {fileID: 5709941357763597725, guid: 605abede527ddd14facdd125087db58b,
+      type: 3}
+    name: Earth
+  - prefab: {fileID: 1570590446640267102, guid: 04ef3e0d2776931459413edb51408215,
+      type: 3}
+    powerPrefab: {fileID: 7604017484036466910, guid: 44d8abc34d7aaf94f9e973cf4c772082,
+      type: 3}
+    name: Fire
+  - prefab: {fileID: 1323933383960778334, guid: b8930be77a93a3e42b999ec1775b37c2,
+      type: 3}
+    powerPrefab: {fileID: 8653119836572959423, guid: 825d7e6b935441544a97652c0937b76d,
+      type: 3}
+    name: Water
+  selectedCarIndex: 0
+  selectedElementalIndex: 0
 --- !u!4 &1368765582
 Transform:
   m_ObjectHideFlags: 0
@@ -6966,6 +7026,24 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 0
+    source: {fileID: 0}
+  - name: EDM 1
+    clip: {fileID: 8300000, guid: e6e7ae404edcbfd42bde150a84aaf06b, type: 3}
+    volume: 0.3
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: EDM 2
+    clip: {fileID: 8300000, guid: 83a545809c62fd248b6e125789daa119, type: 3}
+    volume: 0.3
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: EDM 3
+    clip: {fileID: 8300000, guid: 61eeab56ffd2b584fa4f7c8fc864ebb0, type: 3}
+    volume: 0.3
+    pitch: 1
+    loop: 1
     source: {fileID: 0}
 --- !u!1 &1382404336
 GameObject:
@@ -9490,37 +9568,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb3db71fb9450d34683fe99497d44723, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cars:
-  - prefab: {fileID: 1048014018787270843, guid: d9dcf39e0f78eca449ebe0b610f9c82e,
-      type: 3}
-    name: car_1
-  - prefab: {fileID: 2892738898784810428, guid: 8109be6a9a0732444bf416ee2f8a13a0,
-      type: 3}
-    name: car_2
-  - prefab: {fileID: 7920864585828995112, guid: 6dd583c0efb67eb458f89cb6a667fb12,
-      type: 3}
-    name: car_3
-  - prefab: {fileID: 5809185389329419712, guid: 9075b04248948a7459edfce99eea65be,
-      type: 3}
-    name: car_4
-  - prefab: {fileID: 4639371790512837330, guid: 17b80cae132ff294cb79aea0fd40df63,
-      type: 3}
-    name: car_5
-  - prefab: {fileID: 195167320740695006, guid: 626b337f4c4130a499b2ffc67788f144, type: 3}
-    name: car_6
-  - prefab: {fileID: 7460648843350119884, guid: b9323595259f7f440bcf5bb7f0dc2f6c,
-      type: 3}
-    name: car_7
-  - prefab: {fileID: 8983138253552568595, guid: 9b8a7b8ef65dcff458c3706f050ecd2a,
-      type: 3}
-    name: car_8
-  - prefab: {fileID: 8844283763677073391, guid: 3ce90454a1c841143af1f651ecefc697,
-      type: 3}
-    name: car_9
-  - prefab: {fileID: 2319818629388148598, guid: 2c621b12bb98577429178ebe26c90619,
-      type: 3}
-    name: car_10
-  selectedIndex: 0
 --- !u!1 &2105893699
 GameObject:
   m_ObjectHideFlags: 0

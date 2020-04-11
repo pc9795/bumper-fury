@@ -80,6 +80,8 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public Level mainMenu;
     public int countOfOpponents = 4;
+    [HideInInspector]
+    public bool inGame;
 
     //Private fields
     private GameObject player;
@@ -110,6 +112,7 @@ public class GameManager : MonoBehaviour
         //TODO: remove
         AudioManager.INSTANCE.Play(levels[0].theme);
         InitLevel();
+        inGame = true;
     }
 
     //Custom methods
@@ -157,6 +160,7 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(levels[0].sceneName);
         AudioManager.INSTANCE.Play(levels[0].theme);
         InitLevel();
+        inGame = true;
     }
 
     private void InitLevel()
@@ -167,6 +171,7 @@ public class GameManager : MonoBehaviour
         LoadPlayer();
         LoadAIOpponents();
         PlaceObjectsOnSpawnPoints();
+        ItemManager.INSTANCE.LoadItems(itemPoints);
     }
 
     public void NextLevel()
@@ -186,6 +191,7 @@ public class GameManager : MonoBehaviour
         //Becuase there is no load/save functionality therefore all the progress will be lost. So setting the level to 0 again.
         currLevel = 0;
         AudioManager.INSTANCE.Play(mainMenu.theme);
+        inGame = false;
     }
 
     //TODO: ponder

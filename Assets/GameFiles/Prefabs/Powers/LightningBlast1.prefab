@@ -9159,7 +9159,7 @@ MonoBehaviour:
   power: 30000
   duration: 8
   upwardRift: 3
-  groundLevel: 0.6
+  groundLevel: 0
   baseDamage: 1
 --- !u!1 &1060718018706899591
 GameObject:

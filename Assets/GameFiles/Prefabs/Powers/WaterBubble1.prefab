@@ -36603,5 +36603,5 @@ MonoBehaviour:
   power: 30000
   duration: 8
   upwardRift: 3
-  groundLevel: 0.6
+  groundLevel: 0
   baseDamage: 1

@@ -2,16 +2,7 @@
 
 public class MainMenu : MonoBehaviour
 {
-    public void Story()
-    {
-
-    }
-
-    public void Battle()
-    {
-
-    }
-
+    //Custom methods
     public void Quit()
     {
         Application.Quit();
@@ -19,16 +10,21 @@ public class MainMenu : MonoBehaviour
 
     public void StartEasyGame()
     {
-        GameManager.INSTANCE.SetDifficulty(GameManager.Difficulty.EASY);
+        GameManager.INSTANCE.difficulty = GameManager.Difficulty.EASY;
     }
 
     public void StartNormalGame()
     {
-        GameManager.INSTANCE.SetDifficulty(GameManager.Difficulty.MEDIUM);
+        GameManager.INSTANCE.difficulty = GameManager.Difficulty.MEDIUM;
     }
 
     public void StartHardGame()
     {
-        GameManager.INSTANCE.SetDifficulty(GameManager.Difficulty.HARD);
+        GameManager.INSTANCE.difficulty = GameManager.Difficulty.HARD;
+    }
+
+    public void ButtonSound()
+    {
+        AudioManager.INSTANCE.Play("Button Click");
     }
 }

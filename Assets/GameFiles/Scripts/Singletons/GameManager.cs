@@ -37,14 +37,17 @@ public class GameManager : MonoBehaviour
     {
         private string _sceneName;
         private string _theme;
+        private string _displayName;
 
-        public Level(string sceneName, string theme)
+        public Level(string sceneName, string theme, string displayName)
         {
             _sceneName = sceneName;
             _theme = theme;
+            _displayName = displayName;
         }
         public string sceneName { get { return _sceneName; } }
         public string theme { get { return _theme; } }
+        public string displayName { get { return _displayName; } }
     }
 
     [System.Serializable]
@@ -82,6 +85,7 @@ public class GameManager : MonoBehaviour
     public int countOfOpponents = 4;
     [HideInInspector]
     public bool inGame;
+    public int levelLengthInSeconds = 30;
 
     //Private fields
     private GameObject player;
@@ -103,18 +107,19 @@ public class GameManager : MonoBehaviour
 
         //Configuring levels.
         //Can look on better way to configure this.
-        levels.Add(new Level("FireLevel", "EDM 1"));
-        levels.Add(new Level("WaterLevel", "EDM 2"));
-        levels.Add(new Level("AirLevel", "EDM 3"));
-        levels.Add(new Level("EarthLevel", "EDM 1"));
-        levels.Add(new Level("GameEnding","Charged Up"));
-        mainMenu = new Level("Main Menu", "Theme");
+        levels.Add(new Level("FireLevel", "EDM 1", "Lava Grounds"));
+        levels.Add(new Level("WaterLevel", "EDM 2", "Lost Island"));
+        levels.Add(new Level("AirLevel", "EDM 3", "Sky Temple"));
+        levels.Add(new Level("EarthLevel", "EDM 1", "Forgotten Lands"));
+        levels.Add(new Level("GameEnding", "Charged Up", ""));
+        mainMenu = new Level("Main Menu", "Theme", "");
     }
 
+    //TODO remove
     void Start()
     {
-        // AudioManager.INSTANCE.Play(levels[1].theme);
-        // inGame = true;
+        AudioManager.INSTANCE.Play(levels[1].theme);
+        inGame = true;
     }
 
     //Custom methods
@@ -142,6 +147,24 @@ public class GameManager : MonoBehaviour
         return aiCars;
     }
 
+    public int AIComponentsLeft()
+    {
+        int count = 0;
+        if (aiCars == null || aiCars.Length == 0)
+        {
+            return 0;
+        }
+
+        foreach (GameObject aiCar in aiCars)
+        {
+            if (aiCar)
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+
     public void PushNotification(string message)
     {
         messageQueue.Enqueue(new Notification(message, Time.time));
@@ -164,6 +187,7 @@ public class GameManager : MonoBehaviour
         inGame = true;
     }
 
+    //It is supposed to be called by inidividual levels when they loaded. Not responsibility of manager to load levels.
     public void InitLevel()
     {
         spawnPoints = GameObject.FindGameObjectsWithTag(Tag.SPAWN_POINT);

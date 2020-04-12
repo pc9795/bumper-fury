@@ -1,28 +1,61 @@
 ﻿using UnityEngine;
 
+//TODO change the name as it isa acting as a Level manager. Also look for merging the `Level` class inside it.
 public class PauseMenu : MonoBehaviour
 {
     //Public fields
     public bool paused;
-    public GameObject pauseMenu;
-    public GameObject gameOverMenu;
+    public GameObject pauseScreen;
+    public GameObject gameOverScreen;
+    public GameObject levelTimerElem;
+    public GameObject roundWonScreen;
+    public GameObject scoreBoardElem;
 
     //Private fields
-    StatsController playerStats;
+    private StatsController playerStats;
+    private LevelTimer levelTimer;
+    private Scoreboard scoreboard;
+
+    //Unity methods
+    void Start()
+    {
+        levelTimer = levelTimerElem.GetComponent<LevelTimer>();
+        scoreboard = scoreBoardElem.GetComponent<Scoreboard>();
+        //Level will start in a paused state.
+        Time.timeScale = 0f;
+        AudioManager.INSTANCE.Play("Engine");
+    }
 
     void Update()
     {
         if (playerStats == null)
         {
-            InitFromGameManager();
-            return;
+            GameObject player = GameManager.INSTANCE.GetPlayer();
+            playerStats = player.GetComponent<StatsController>();
         }
 
-        if (!playerStats.IsAlive())
+        //Round finished.
+        if (levelTimer.GetTimeLeftInSecs() == 0)
         {
             Time.timeScale = 0f;
-            gameOverMenu.SetActive(true);
+            AudioManager.INSTANCE.Stop("Engine");
+            if (scoreboard.DoPlayerWon())
+            {
+                roundWonScreen.SetActive(true);
+            }
+            else
+            {
+                gameOverScreen.SetActive(true);
+            }
         }
+        //Player died
+        else if (!playerStats.IsAlive())
+        {
+            AudioManager.INSTANCE.Stop("Engine");
+            Time.timeScale = 0f;
+            gameOverScreen.SetActive(true);
+        }
+        //Check pause is requested.
         else if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (paused)
@@ -45,15 +78,17 @@ public class PauseMenu : MonoBehaviour
 
     public void Pause()
     {
+        AudioManager.INSTANCE.Stop("Engine");
         paused = true;
-        pauseMenu.SetActive(true);
+        pauseScreen.SetActive(true);
         Time.timeScale = 0f;
     }
 
     public void Resume()
     {
+        AudioManager.INSTANCE.Play("Engine");
         paused = false;
-        pauseMenu.SetActive(false);
+        pauseScreen.SetActive(false);
         Time.timeScale = 1f;
     }
 
@@ -67,13 +102,10 @@ public class PauseMenu : MonoBehaviour
         AudioManager.INSTANCE.Play("Button Click");
     }
 
-    private void InitFromGameManager()
+    public void NextLevel()
     {
-        GameObject player = GameManager.INSTANCE.GetPlayer();
-        if (player == null)
-        {
-            return;
-        }
-        playerStats = player.GetComponent<StatsController>();
+        Time.timeScale = 1f;
+        GameManager.INSTANCE.NextLevel();
     }
+
 }

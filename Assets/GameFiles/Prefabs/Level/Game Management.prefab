@@ -125,6 +125,7 @@ MonoBehaviour:
   selectedElementalIndex: 0
   countOfOpponents: 4
   inGame: 0
+  levelLengthInSeconds: 30
 --- !u!114 &7517723816011022179
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -171,6 +172,12 @@ MonoBehaviour:
   - name: Charged Up
     clip: {fileID: 8300000, guid: 5d54738926f7e6d46a84aa9c14dd9919, type: 3}
     volume: 0.3
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: Engine
+    clip: {fileID: 8300000, guid: 22cd46996da3b624bb08935264560d8c, type: 3}
+    volume: 1
     pitch: 1
     loop: 1
     source: {fileID: 0}

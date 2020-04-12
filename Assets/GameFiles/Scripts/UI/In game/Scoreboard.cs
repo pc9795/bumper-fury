@@ -4,55 +4,6 @@ using UnityEngine.UI;
 
 public class Scoreboard : MonoBehaviour
 {
-    //Public fields
-    public GameObject listItem; //It should have a text component.
-    public GameObject parentPanel;
-
-    //Private fields
-    StatsController playerStats;
-    Dictionary<string, StatsController> aICarStatsDict;
-    List<GameObject> scoreBoardItems = new List<GameObject>();
-
-    //Unity methods
-    void LateUpdate()
-    {
-        if (playerStats == null || aICarStatsDict == null)
-        {
-            InitFromGameManager();
-            return;
-        }
-        //Add player score
-        List<ScoreBoardEntry> scores = new List<ScoreBoardEntry>();
-        if (playerStats != null)
-        {
-            scores.Add(new ScoreBoardEntry("Player", playerStats.score));
-        }
-        else
-        {
-            //-1 is a special value which will result in printing K.O.
-            scores.Add(new ScoreBoardEntry("Player", -1));
-        }
-        foreach (KeyValuePair<string, StatsController> keyValuePair in aICarStatsDict)
-        {
-            if (keyValuePair.Value != null)
-            {
-                scores.Add(new ScoreBoardEntry(keyValuePair.Key, keyValuePair.Value.score));
-            }
-            else
-            {
-                //-1 is a special value which will result in printing K.O.
-                scores.Add(new ScoreBoardEntry(keyValuePair.Key, -1));
-            }
-
-        }
-        //Descending order
-        scores.Sort(delegate (ScoreBoardEntry entry1, ScoreBoardEntry entry2) { return entry2.score - entry1.score; });
-        CleanScoreboard();
-        DisplayScoreboard(scores);
-    }
-
-
-    //Custom methods
     private class ScoreBoardEntry
     {
         //Not using getters and setters as class is private.
@@ -65,20 +16,64 @@ public class Scoreboard : MonoBehaviour
             this.score = score;
         }
     }
+    //Public fields
+    public GameObject listItem; //It should have a text component.
+    public GameObject parentPanel;
 
-    private void InitFromGameManager()
+    //Private fields
+    StatsController playerStats;
+    string playerDisplayName = "You";
+    Dictionary<string, StatsController> aICarStatsDict;
+    List<GameObject> scoreBoardItems = new List<GameObject>();
+
+    //Unity methods
+    void LateUpdate()
+    {
+        if (playerStats == null || aICarStatsDict == null)
+        {
+            LoadFromGameManager();
+        }
+        List<ScoreBoardEntry> scores = GetScores();
+        //Sort in descending order
+        scores.Sort(delegate (ScoreBoardEntry entry1, ScoreBoardEntry entry2) { return entry2.score - entry1.score; });
+        CleanScoreboard();
+        DisplayScoreboard(scores);
+    }
+
+    //Custom methods
+    private List<ScoreBoardEntry> GetScores()
+    {
+        //Add player score
+        List<ScoreBoardEntry> scores = new List<ScoreBoardEntry>();
+        if (playerStats != null)
+        {
+            scores.Add(new ScoreBoardEntry(playerDisplayName, playerStats.score));
+        }
+        else
+        {
+            //-1 is a special value which will result in printing K.O.
+            scores.Add(new ScoreBoardEntry(playerDisplayName, -1));
+        }
+        foreach (KeyValuePair<string, StatsController> keyValuePair in aICarStatsDict)
+        {
+            if (keyValuePair.Value != null)
+            {
+                scores.Add(new ScoreBoardEntry(keyValuePair.Key, keyValuePair.Value.score));
+            }
+            else
+            {
+                //-1 is a special value which will result in printing K.O.
+                scores.Add(new ScoreBoardEntry(keyValuePair.Key, -1));
+            }
+        }
+        return scores;
+    }
+
+    private void LoadFromGameManager()
     {
         GameObject player = GameManager.INSTANCE.GetPlayer();
-        if (player == null)
-        {
-            return;
-        }
         playerStats = player.GetComponent<StatsController>();
         GameObject[] aICarGameObjects = GameManager.INSTANCE.GetAICars();
-        if (aICarGameObjects == null || aICarGameObjects.Length == 0)
-        {
-            return;
-        }
         aICarStatsDict = new Dictionary<string, StatsController>();
         foreach (GameObject aiCarGameObject in aICarGameObjects)
         {
@@ -112,5 +107,22 @@ public class Scoreboard : MonoBehaviour
             listItemInstance.transform.SetParent(parentPanel.transform);
             scoreBoardItems.Add(listItemInstance);
         }
+    }
+
+    public bool DoPlayerWon()
+    {
+        List<ScoreBoardEntry> scores = GetScores();
+        string winner = "";
+        int maxScore = -1;
+        foreach (ScoreBoardEntry entry in scores)
+        {
+            if (entry.score > maxScore)
+            {
+                maxScore = entry.score;
+                winner = entry.name;
+            }
+        }
+
+        return winner.Equals(playerDisplayName);
     }
 }

@@ -20,6 +20,8 @@ public class AudioManager : MonoBehaviour
     public static AudioManager INSTANCE;
     public List<Sound> sounds = new List<Sound>();
 
+    private Dictionary<string, Sound> soundsDict = new Dictionary<string, Sound>();
+
     //Unity methods
     void Awake()
     {
@@ -31,6 +33,7 @@ public class AudioManager : MonoBehaviour
             sound.source.volume = sound.volume;
             sound.source.pitch = sound.pitch;
             sound.source.loop = sound.loop;
+            soundsDict[sound.name] = sound;
         }
     }
 
@@ -50,15 +53,7 @@ public class AudioManager : MonoBehaviour
 
     public void Play(string name)
     {
-        Sound sound = null;
-        foreach (Sound _sound in sounds)
-        {
-            if (_sound.name == name)
-            {
-                sound = _sound;
-                break;
-            }
-        }
+        Sound sound = soundsDict[name];
         if (sound == null)
         {
             print("Requested sound:" + name + " not found!");
@@ -70,21 +65,18 @@ public class AudioManager : MonoBehaviour
 
     public void Stop(string name)
     {
-        Sound sound = null;
-        foreach (Sound _sound in sounds)
-        {
-            if (_sound.name == name)
-            {
-                sound = _sound;
-                break;
-            }
-        }
+        Sound sound = soundsDict[name];
         if (sound == null)
         {
             print("Requested sound:" + name + " not found!");
             return;
         }
         sound.source.Stop();
+    }
+
+    public Sound GetSound(string name)
+    {
+        return soundsDict[name];
     }
 
 }

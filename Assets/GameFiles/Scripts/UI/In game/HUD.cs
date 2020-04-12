@@ -15,23 +15,11 @@ public class HUD : MonoBehaviour
     {
         if (playerStats == null)
         {
-            InitFromGameManager();
-            return;
+            GameObject player = GameManager.INSTANCE.GetPlayer();
+            playerStats = player.GetComponent<StatsController>();
         }
         //Need values in 0 - 1 scale.
         energyBar.fillAmount = playerStats.energy / (float)playerStats.maxEnergy;
         healthBar.fillAmount = playerStats.health / (float)playerStats.maxHealth;
-    }
-
-    //Custom Methods
-    private void InitFromGameManager()
-    {
-        GameObject player = GameManager.INSTANCE.GetPlayer();
-        //Player is not initialized yet. Earyly Exit
-        if (player == null)
-        {
-            return;
-        }
-        playerStats = player.GetComponent<StatsController>();
     }
 }

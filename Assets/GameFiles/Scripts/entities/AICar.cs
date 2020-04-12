@@ -4,6 +4,7 @@ public class AICar : MonoBehaviour
 {
     //Public fields
     public GameObject modelPrefab;
+    public Vector3 centreOfMass = new Vector3(0, 0.3f, 0);
 
     // Private fields
     private StatsController stats;
@@ -28,7 +29,7 @@ public class AICar : MonoBehaviour
         {
             return;
         }
-        if (stats.isOutOflevel || stats.health == 0)
+        if (stats.isOutOflevel || stats.health <= 0)
         {
             GameManager.INSTANCE.PushNotification(stats.displayName + " Eliminated!");
             Destroy(this.gameObject, GameManager.INSTANCE.deathTimer);
@@ -43,6 +44,8 @@ public class AICar : MonoBehaviour
     //Custom methods
     public void Init()
     {
+        Rigidbody rigidbody = GetComponent<Rigidbody>();
+        rigidbody.centerOfMass = centreOfMass;
         stats = GetComponent<StatsController>();
         modelInstance = Instantiate(modelPrefab, transform.position, Quaternion.identity, transform);
         carController = modelInstance.GetComponent<SimpleCarController>();

@@ -11,6 +11,9 @@ public class SimpleCarController : MonoBehaviour
     public float motorForce = 50;
     public float breakingForce = 30;
     public float turnSensitivity = 1;
+    public float accMultiplier = 1;
+    public float deaccMultiplier = 1;
+
 
     //Unity methods
     public void Steer(float horizontalInput)
@@ -22,19 +25,29 @@ public class SimpleCarController : MonoBehaviour
         frontRightWheelCollider.steerAngle = Mathf.Lerp(frontRightWheelCollider.steerAngle, steerAngle, 0.5f);
     }
 
+
+    public void NitroBoost(float multiplier, float duration)
+    {
+        accMultiplier = multiplier;
+        Invoke("ResetAccelerationMultipliers", duration);
+    }
+    private void ResetAccelerationMultipliers()
+    {
+        accMultiplier = 1;  
+        deaccMultiplier = 1;
+    }
+
     public void Move(float verticalInput)
     {
         // Calculate the force from the input.
-        // This will be fixing FPS as 50 because at 50 FPS Time.deltaTime will be 0.2 and multiplying it with 
-        // 500 makes it 1.
-        float force = verticalInput * motorForce * Time.deltaTime * 500;
+        float force = verticalInput * motorForce * accMultiplier;
         // Accelerate the wheel. Only front wheels.
         frontLeftWheelCollider.motorTorque = force;
         frontRightWheelCollider.motorTorque = force;
         backLeftWheelCollider.motorTorque = force;
         backRightWheelCollider.motorTorque = force;
         // If motor there is no motor force applied then apply a breaking force to stop the vechicle.
-        force = force == 0 ? breakingForce : 0;
+        force = force == 0 ? breakingForce * deaccMultiplier : 0;
         frontLeftWheelCollider.brakeTorque = force;
         frontRightWheelCollider.brakeTorque = force;
         backLeftWheelCollider.brakeTorque = force;

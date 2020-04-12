@@ -19,8 +19,8 @@ public class HUD : MonoBehaviour
             return;
         }
         //Need values in 0 - 1 scale.
-        energyBar.fillAmount = playerStats.energy / playerStats.maxEnergy;
-        healthBar.fillAmount = playerStats.health / playerStats.maxHealth;
+        energyBar.fillAmount = playerStats.energy / (float)playerStats.maxEnergy;
+        healthBar.fillAmount = playerStats.health / (float)playerStats.maxHealth;
     }
 
     //Custom Methods

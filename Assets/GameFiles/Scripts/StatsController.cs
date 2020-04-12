@@ -38,20 +38,20 @@ public class StatsController : MonoBehaviour
     // Custom methods
     public void CollectEnergy(int energy)
     {
-        if (this.energy == this.maxEnergy)
-        {
-            return;
-        }
         this.energy += energy;
+        if (this.energy > this.maxEnergy)
+        {
+            this.energy = this.maxEnergy;
+        }
     }
 
     public void CollectHealth(int health)
     {
-        if (this.health == this.maxHealth)
-        {
-            return;
-        }
         this.health += health;
+        if (this.health > this.maxHealth)
+        {
+            this.health = this.maxHealth;
+        }
     }
 
     public void AddScore(int score)
@@ -64,6 +64,11 @@ public class StatsController : MonoBehaviour
         return this.energy == this.maxEnergy;
     }
 
+    public bool IsHealthFull()
+    {
+        return this.health == this.maxHealth;
+    }
+
     public void ConsumeEnergy()
     {
         this.energy = 0;
@@ -71,11 +76,11 @@ public class StatsController : MonoBehaviour
 
     public void DamageHealth(int damage)
     {
-        if (this.health == 0)
-        {
-            return;
-        }
         this.health -= damage;
+        if (this.health < 0)
+        {
+            this.health = 0;
+        }
     }
 
     private Bounds GetMaxBounds()

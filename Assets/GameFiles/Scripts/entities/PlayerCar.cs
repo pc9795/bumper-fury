@@ -4,6 +4,7 @@ public class PlayerCar : MonoBehaviour
 {
     //Public fields
     public GameObject modelPrefab;
+    public Vector3 centreOfMass = new Vector3(0, 0.3f, 0);
 
     //Private fields
     private float horizontalInput;
@@ -33,6 +34,41 @@ public class PlayerCar : MonoBehaviour
         carController.UpdateWheelPoses();
         int damageDoneWithProjectile = projectileShotter.CollectDamageDone();
         playerStats.AddScore(GameManager.INSTANCE.GetScoreFromDamage(damageDoneWithProjectile));
+    }
+
+    void OnTriggerEnter(Collider collider)
+    {
+        Item item = collider.GetComponent<Item>();
+        if (item != null)
+        {
+            switch (item.type)
+            {
+                case Item.ItemType.ENERGY_BOOST:
+                    if (playerStats.IsEnergyFull())
+                    {
+                        return;
+                    }
+                    GameManager.INSTANCE.PushNotification("Picked up a ENERGY BOOST");
+                    playerStats.CollectEnergy((int)item.value);
+                    Destroy(item.gameObject);
+                    break;
+                case Item.ItemType.HEALTH_BOOST:
+                    if (playerStats.IsHealthFull())
+                    {
+                        return;
+                    }
+                    GameManager.INSTANCE.PushNotification("Picked up a HEALTH BOOST");
+                    playerStats.CollectHealth((int)item.value);
+                    Destroy(item.gameObject);
+                    break;
+                case Item.ItemType.SPEED_BOOST:
+                    GameManager.INSTANCE.PushNotification("Picked up a NITRO BOOST");
+                    carController.NitroBoost(item.value, item.duration);
+                    Destroy(item.gameObject);
+                    break;
+
+            }
+        }
     }
 
     void OnCollisionEnter(Collision collision)
@@ -86,6 +122,8 @@ public class PlayerCar : MonoBehaviour
     //Lazy init as model prefab is set dynamically.
     public void Init()
     {
+        Rigidbody rigidbody = GetComponent<Rigidbody>();
+        rigidbody.centerOfMass = centreOfMass;
         projectileShotter = GetComponent<ProjectileShooter>();
         playerStats = GetComponent<StatsController>();
         modelInstance = Instantiate(modelPrefab, transform.position, Quaternion.identity, transform);

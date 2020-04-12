@@ -110,7 +110,7 @@ public class GameManager : MonoBehaviour
         mainMenu = new Level("Main Menu", "Theme");
 
         //TODO: remove
-        AudioManager.INSTANCE.Play(levels[0].theme);
+        //AudioManager.INSTANCE.Play(levels[0].theme);
         InitLevel();
         inGame = true;
     }

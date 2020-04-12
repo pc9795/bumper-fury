@@ -3,25 +3,10 @@ using UnityEngine;
 
 public class ItemManager : MonoBehaviour
 {
-    [System.Serializable]
-    public enum ItemType
-    {
-        HEALTH_BOOST, ENERGY_BOOST, SPEED_BOOST
-    }
-
-    [System.Serializable]
-    public class Item
-    {
-        public string name;
-        public ItemType type;
-        public GameObject prefab;
-    }
-
     //Public fields
     public static ItemManager INSTANCE;
-    public List<Item> items = new List<Item>();
-    public int disappearTimeInSecs = 10;
-    public int generationWindowInSecs = 20;
+    public List<GameObject> items = new List<GameObject>(); //It should have Item component
+    public int generationWindowInSecs = 30;
 
     //Private fields
     private Dictionary<GameObject, GameObject> itemPosToItemDict = new Dictionary<GameObject, GameObject>();
@@ -57,22 +42,25 @@ public class ItemManager : MonoBehaviour
         {
             return;
         }
-        foreach (KeyValuePair<GameObject, GameObject> keyValuePair in itemPosToItemDict)
+        //Can't use iteration as items are collected and destroyed by players.
+        List<GameObject> itemPoints = new List<GameObject>(itemPosToItemDict.Keys);
+        foreach (GameObject itemPoint in itemPoints)
         {
-            if (!keyValuePair.Value)
+            if (itemPosToItemDict[itemPoint])
             {
                 continue;
             }
-            itemPosToItemDict[keyValuePair.Key] = GenerateItemForItemPoint(keyValuePair.Key);
+            itemPosToItemDict[itemPoint] = GenerateItemForItemPoint(itemPoint);
         }
     }
 
     private GameObject GenerateItemForItemPoint(GameObject itemPoint)
     {
         int randIndex = Random.Range(0, items.Count);
-        GameObject itemInstance = Instantiate(items[randIndex].prefab,
-            itemPoint.transform.position, Quaternion.identity, itemPoint.transform);
-        Destroy(itemInstance, disappearTimeInSecs);
+        GameObject itemInstance = Instantiate(items[randIndex], itemPoint.transform.position, Quaternion.identity);
+        Item item = itemInstance.GetComponent<Item>();
+        Vector3 position = new Vector3(itemPoint.transform.position.x, item.groundLevel, itemPoint.transform.position.z);
+        itemInstance.transform.position = position;
         return itemInstance;
 
     }

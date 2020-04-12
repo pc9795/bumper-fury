@@ -10,7 +10,7 @@ public class PlayerCar : MonoBehaviour
     private float horizontalInput;
     private float verticalInput;
     private ProjectileShooter projectileShotter;
-    private StatsController playerStats;
+    private StatsController stats;
     private SimpleCarController carController;
     private bool initialized;
     private GameObject modelInstance;
@@ -28,12 +28,21 @@ public class PlayerCar : MonoBehaviour
         {
             return;
         }
+        //No updates if dead.
+        if (!stats.IsAlive())
+        {
+            return;
+        }
+        if (stats.isOutOflevel || stats.health <= 0)
+        {
+            stats.Die();
+        }
         ProcessInput();
         carController.Steer(horizontalInput);
         carController.Move(verticalInput);
         carController.UpdateWheelPoses();
         int damageDoneWithProjectile = projectileShotter.CollectDamageDone();
-        playerStats.AddScore(GameManager.INSTANCE.GetScoreFromDamage(damageDoneWithProjectile));
+        stats.AddScore(GameManager.INSTANCE.GetScoreFromDamage(damageDoneWithProjectile));
     }
 
     void OnTriggerEnter(Collider collider)
@@ -44,23 +53,23 @@ public class PlayerCar : MonoBehaviour
             switch (item.type)
             {
                 case Item.ItemType.ENERGY_BOOST:
-                    if (playerStats.IsEnergyFull())
+                    if (stats.IsEnergyFull())
                     {
                         return;
                     }
                     AudioManager.INSTANCE.Play(AudioManager.AudioTrack.ITEM_COLLECT);
                     GameManager.INSTANCE.PushNotification("Picked up a ENERGY BOOST");
-                    playerStats.CollectEnergy((int)item.value);
+                    stats.CollectEnergy((int)item.value);
                     Destroy(item.gameObject);
                     break;
                 case Item.ItemType.HEALTH_BOOST:
-                    if (playerStats.IsHealthFull())
+                    if (stats.IsHealthFull())
                     {
                         return;
                     }
                     AudioManager.INSTANCE.Play(AudioManager.AudioTrack.ITEM_COLLECT);
                     GameManager.INSTANCE.PushNotification("Picked up a HEALTH BOOST");
-                    playerStats.CollectHealth((int)item.value);
+                    stats.CollectHealth((int)item.value);
                     Destroy(item.gameObject);
                     break;
                 case Item.ItemType.SPEED_BOOST:
@@ -88,10 +97,15 @@ public class PlayerCar : MonoBehaviour
                 //TODO do this calculations according to the impact.
                 int damage = 20;
 
-                playerStats.CollectEnergy(GameManager.INSTANCE.GetEnergyFromDamage(damage));
-                playerStats.AddScore(GameManager.INSTANCE.GetScoreFromDamage(damage));
+                stats.CollectEnergy(GameManager.INSTANCE.GetEnergyFromDamage(damage));
+                stats.AddScore(GameManager.INSTANCE.GetScoreFromDamage(damage));
                 aICarStats.DamageHealth(damage);
             }
+        }
+        Barel barel = collider.GetComponent<Barel>();
+        if (barel != null)
+        {
+            barel.Explode();
         }
     }
 
@@ -108,9 +122,9 @@ public class PlayerCar : MonoBehaviour
         //Shooting
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (projectileShotter.CanShoot() && playerStats.IsEnergyFull())
+            if (projectileShotter.CanShoot() && stats.IsEnergyFull())
             {
-                playerStats.ConsumeEnergy();
+                stats.ConsumeEnergy();
                 projectileShotter.Shoot();
             }
         }
@@ -128,7 +142,7 @@ public class PlayerCar : MonoBehaviour
         Rigidbody rigidbody = GetComponent<Rigidbody>();
         rigidbody.centerOfMass = centreOfMass;
         projectileShotter = GetComponent<ProjectileShooter>();
-        playerStats = GetComponent<StatsController>();
+        stats = GetComponent<StatsController>();
         modelInstance = Instantiate(modelPrefab, transform.position, Quaternion.identity, transform);
         carController = modelInstance.GetComponent<SimpleCarController>();
         initialized = true;

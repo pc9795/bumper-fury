@@ -16,6 +16,20 @@ public class AudioManager : MonoBehaviour
         [HideInInspector]
         public AudioSource source;
     }
+
+    public class AudioTrack
+    {
+        public static string THEME = "Theme";
+        public static string BUTTON_CLICK = "Button Click";
+        public static string EDM1 = "EDM 1";
+        public static string EDM2 = "EDM 2";
+        public static string EDM3 = "EDM 3";
+        public static string CHARGED_UP = "Charged Up";
+        public static string ENGINE = "Engine";
+        public static string ITEM_COLLECT = "Item collect";
+        public static string POWER_USE = "Power use";
+    }
+
     //Public fields
     public static AudioManager INSTANCE;
     public List<Sound> sounds = new List<Sound>();

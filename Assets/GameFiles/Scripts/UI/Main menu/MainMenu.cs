@@ -30,7 +30,7 @@ public class MainMenu : MonoBehaviour
 
     public void ButtonSound()
     {
-        AudioManager.INSTANCE.Play("Button Click");
+        AudioManager.INSTANCE.Play(AudioManager.AudioTrack.BUTTON_CLICK);
     }
 
     public void StartGame()

@@ -107,12 +107,12 @@ public class GameManager : MonoBehaviour
 
         //Configuring levels.
         //Can look on better way to configure this.
-        levels.Add(new Level("FireLevel", "EDM 1", "Lava Grounds"));
-        levels.Add(new Level("WaterLevel", "EDM 2", "Lost Island"));
-        levels.Add(new Level("AirLevel", "EDM 3", "Sky Temple"));
-        levels.Add(new Level("EarthLevel", "EDM 1", "Forgotten Lands"));
-        levels.Add(new Level("GameEnding", "Charged Up", ""));
-        mainMenu = new Level("Main Menu", "Theme", "");
+        levels.Add(new Level("FireLevel", AudioManager.AudioTrack.EDM1, "Lava Grounds"));
+        levels.Add(new Level("WaterLevel", AudioManager.AudioTrack.EDM2, "Lost Island"));
+        levels.Add(new Level("AirLevel", AudioManager.AudioTrack.EDM3, "Sky Temple"));
+        levels.Add(new Level("EarthLevel", AudioManager.AudioTrack.EDM1, "Forgotten Lands"));
+        levels.Add(new Level("GameEnding", AudioManager.AudioTrack.CHARGED_UP, ""));
+        mainMenu = new Level("Main Menu", AudioManager.AudioTrack.THEME, "");
     }
 
     //TODO remove

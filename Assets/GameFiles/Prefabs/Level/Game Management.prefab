@@ -125,7 +125,7 @@ MonoBehaviour:
   selectedElementalIndex: 0
   countOfOpponents: 4
   inGame: 0
-  levelLengthInSeconds: 30
+  levelLengthInSeconds: 300
 --- !u!114 &7517723816011022179
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180,6 +180,18 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 1
+    source: {fileID: 0}
+  - name: Item collect
+    clip: {fileID: 8300000, guid: bc02d50dd8fba4e47a5e77187e55c1ed, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Power use
+    clip: {fileID: 8300000, guid: 26bc473e95f6949beb2342b3fb647e11, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
     source: {fileID: 0}
 --- !u!114 &7517723816011022190
 MonoBehaviour:

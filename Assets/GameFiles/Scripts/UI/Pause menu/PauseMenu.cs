@@ -35,10 +35,10 @@ public class PauseMenu : MonoBehaviour
         }
 
         //Round finished.
-        if (levelTimer.GetTimeLeftInSecs() == 0)
+        if (levelTimer.GetTimeLeftInSecs() == 0 || GameManager.INSTANCE.AIComponentsLeft() == 0)
         {
             Time.timeScale = 0f;
-            AudioManager.INSTANCE.Stop("Engine");
+            AudioManager.INSTANCE.Stop(AudioManager.AudioTrack.ENGINE);
             if (scoreboard.DoPlayerWon())
             {
                 roundWonScreen.SetActive(true);
@@ -51,7 +51,7 @@ public class PauseMenu : MonoBehaviour
         //Player died
         else if (!playerStats.IsAlive())
         {
-            AudioManager.INSTANCE.Stop("Engine");
+            AudioManager.INSTANCE.Stop(AudioManager.AudioTrack.ENGINE);
             Time.timeScale = 0f;
             gameOverScreen.SetActive(true);
         }
@@ -78,7 +78,7 @@ public class PauseMenu : MonoBehaviour
 
     public void Pause()
     {
-        AudioManager.INSTANCE.Stop("Engine");
+        AudioManager.INSTANCE.Stop(AudioManager.AudioTrack.ENGINE);
         paused = true;
         pauseScreen.SetActive(true);
         Time.timeScale = 0f;
@@ -86,7 +86,7 @@ public class PauseMenu : MonoBehaviour
 
     public void Resume()
     {
-        AudioManager.INSTANCE.Play("Engine");
+        AudioManager.INSTANCE.Play(AudioManager.AudioTrack.ENGINE);
         paused = false;
         pauseScreen.SetActive(false);
         Time.timeScale = 1f;
@@ -99,7 +99,7 @@ public class PauseMenu : MonoBehaviour
 
     public void ButtonSound()
     {
-        AudioManager.INSTANCE.Play("Button Click");
+        AudioManager.INSTANCE.Play(AudioManager.AudioTrack.BUTTON_CLICK);
     }
 
     public void NextLevel()

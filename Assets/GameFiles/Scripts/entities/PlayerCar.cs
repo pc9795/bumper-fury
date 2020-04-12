@@ -48,6 +48,7 @@ public class PlayerCar : MonoBehaviour
                     {
                         return;
                     }
+                    AudioManager.INSTANCE.Play(AudioManager.AudioTrack.ITEM_COLLECT);
                     GameManager.INSTANCE.PushNotification("Picked up a ENERGY BOOST");
                     playerStats.CollectEnergy((int)item.value);
                     Destroy(item.gameObject);
@@ -57,11 +58,13 @@ public class PlayerCar : MonoBehaviour
                     {
                         return;
                     }
+                    AudioManager.INSTANCE.Play(AudioManager.AudioTrack.ITEM_COLLECT);
                     GameManager.INSTANCE.PushNotification("Picked up a HEALTH BOOST");
                     playerStats.CollectHealth((int)item.value);
                     Destroy(item.gameObject);
                     break;
                 case Item.ItemType.SPEED_BOOST:
+                    AudioManager.INSTANCE.Play(AudioManager.AudioTrack.ITEM_COLLECT);
                     GameManager.INSTANCE.PushNotification("Picked up a NITRO BOOST");
                     carController.NitroBoost(item.value, item.duration);
                     Destroy(item.gameObject);

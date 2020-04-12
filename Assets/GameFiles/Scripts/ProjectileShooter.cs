@@ -62,6 +62,7 @@ public class ProjectileShooter : MonoBehaviour
             return;
         }
         //Instantiate a new projectile instance
+        AudioManager.INSTANCE.Play(AudioManager.AudioTrack.POWER_USE);
         projectileInstance = Instantiate(projectileType, rigidBody.transform.position, Quaternion.identity);
         Projectile projectile = projectileInstance.GetComponent<Projectile>();
         Vector3 currPos = projectileInstance.transform.position;

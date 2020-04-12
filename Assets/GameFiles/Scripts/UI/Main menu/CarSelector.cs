@@ -49,7 +49,8 @@ public class CarSelector : MonoBehaviour
     {
         GameManager.INSTANCE.selectedCarIndex--;
         GameManager.INSTANCE.selectedCarIndex =
-            GameManager.INSTANCE.selectedCarIndex < 0 ? 0 : GameManager.INSTANCE.selectedCarIndex;
+            GameManager.INSTANCE.selectedCarIndex < 0 ? 
+            GameManager.INSTANCE.cars.Count - 1 : GameManager.INSTANCE.selectedCarIndex;
         carChanged = true;
 
     }

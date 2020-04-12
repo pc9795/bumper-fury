@@ -107,12 +107,14 @@ public class GameManager : MonoBehaviour
         levels.Add(new Level("WaterLevel", "EDM 2"));
         levels.Add(new Level("AirLevel", "EDM 3"));
         levels.Add(new Level("EarthLevel", "EDM 1"));
+        levels.Add(new Level("GameEnding","Charged Up"));
         mainMenu = new Level("Main Menu", "Theme");
+    }
 
-        //TODO: remove
-        //AudioManager.INSTANCE.Play(levels[0].theme);
-        InitLevel();
-        inGame = true;
+    void Start()
+    {
+        // AudioManager.INSTANCE.Play(levels[1].theme);
+        // inGame = true;
     }
 
     //Custom methods
@@ -159,11 +161,10 @@ public class GameManager : MonoBehaviour
         AudioManager.INSTANCE.Stop(mainMenu.theme);
         SceneManager.LoadScene(levels[0].sceneName);
         AudioManager.INSTANCE.Play(levels[0].theme);
-        InitLevel();
         inGame = true;
     }
 
-    private void InitLevel()
+    public void InitLevel()
     {
         spawnPoints = GameObject.FindGameObjectsWithTag(Tag.SPAWN_POINT);
         trapPoints = GameObject.FindGameObjectsWithTag(Tag.TRAP_POINT);
@@ -181,7 +182,6 @@ public class GameManager : MonoBehaviour
         currLevel %= levels.Count;
         SceneManager.LoadScene(levels[currLevel].sceneName);
         AudioManager.INSTANCE.Play(levels[currLevel].theme);
-        InitLevel();
     }
 
     public void MainMenu()

@@ -66,7 +66,7 @@ public class Scoreboard : MonoBehaviour
         }
     }
 
-    void InitFromGameManager()
+    private void InitFromGameManager()
     {
         GameObject player = GameManager.INSTANCE.GetPlayer();
         if (player == null)

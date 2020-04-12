@@ -24,7 +24,7 @@ public class HUD : MonoBehaviour
     }
 
     //Custom Methods
-    void InitFromGameManager()
+    private void InitFromGameManager()
     {
         GameObject player = GameManager.INSTANCE.GetPlayer();
         //Player is not initialized yet. Earyly Exit

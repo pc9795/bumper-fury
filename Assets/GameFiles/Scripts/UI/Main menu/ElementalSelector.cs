@@ -41,7 +41,8 @@ public class ElementalSelector : MonoBehaviour
     {
         GameManager.INSTANCE.selectedElementalIndex--;
         GameManager.INSTANCE.selectedElementalIndex =
-            GameManager.INSTANCE.selectedElementalIndex < 0 ? 0 : GameManager.INSTANCE.selectedElementalIndex;
+            GameManager.INSTANCE.selectedElementalIndex < 0 ?
+            GameManager.INSTANCE.elementals.Count - 1 : GameManager.INSTANCE.selectedElementalIndex;
         elementalChanged = true;
 
     }

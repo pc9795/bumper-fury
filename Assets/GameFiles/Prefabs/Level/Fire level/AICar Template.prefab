@@ -1,0 +1,134 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &997243567065810766
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 997243567065810775}
+  - component: {fileID: 997243567065810772}
+  - component: {fileID: 997243567065810773}
+  - component: {fileID: 997243567065810770}
+  - component: {fileID: 997243567065810771}
+  - component: {fileID: 997243567065810768}
+  - component: {fileID: 997243567065810769}
+  m_Layer: 0
+  m_Name: AICar Template
+  m_TagString: AI
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &997243567065810775
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 997243567065810766}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &997243567065810772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 997243567065810766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37428ef1e2061bd4d9337616e18c28a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  modelPrefab: {fileID: 0}
+  centreOfMass: {x: 0, y: 0.3, z: 0}
+--- !u!114 &997243567065810773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 997243567065810766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d20dc1b41c14734faf3f0d3df17206c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  halfDamageIndicator: {fileID: 6476947184579106723, guid: 0633f2f949f20c24890a19d958419b6a,
+    type: 3}
+  fullDamageIndicator: {fileID: 6338004245128731735, guid: ddd0958b2b9c0de468ccd7bd60048c27,
+    type: 3}
+  explosion: {fileID: 7409209947098858319, guid: 27c55b606bbd42142b4f4c7aad209c7c,
+    type: 3}
+  explostionDuration: 6
+--- !u!114 &997243567065810770
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 997243567065810766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55118cedecfdfc54a98cc4b846740b6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  element: {fileID: 7564370448982209011, guid: 69759d51317cade439eacb00e3ad9050, type: 3}
+  groundLevel: 0
+--- !u!114 &997243567065810771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 997243567065810766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78fb9bd2149194748890ae5f608b515b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectileType: {fileID: 1060718018706899589, guid: 3949a310cfdef3446b8b1cb7d49a1db6,
+    type: 3}
+--- !u!114 &997243567065810768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 997243567065810766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2dc48ac4585ef34cac7dae8f04c4bc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  displayName: AICar 1
+  maxHealth: 100
+  health: 100
+  energy: 0
+  maxEnergy: 100
+  score: 0
+  isOutOflevel: 0
+--- !u!54 &997243567065810769
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 997243567065810766}
+  serializedVersion: 2
+  m_Mass: 1000
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0

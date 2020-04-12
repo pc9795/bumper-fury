@@ -15,12 +15,12 @@ EditorBuildSettings:
     path: Assets/GameFiles/Scenes/FireLevel.unity
     guid: 1db3511cd092b2f4893eb938d6535657
   - enabled: 1
-    path: Assets/GameFiles/Scenes/FinalLevel.unity
-    guid: f938cd612200c6b47a32b93892a55e2c
-  - enabled: 1
     path: Assets/GameFiles/Scenes/EarthLevel.unity
     guid: 23f4db57175b4c94691cfc03699b1688
   - enabled: 1
     path: Assets/GameFiles/Scenes/AirLevel.unity
     guid: 0a701f269b8bdcb41b0013227fd57358
+  - enabled: 1
+    path: Assets/GameFiles/Scenes/GameEnding.unity
+    guid: 1ee348c2a88ba82478718470ea7ea4b5
   m_configObjects: {}

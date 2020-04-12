@@ -12,17 +12,17 @@ public class MainMenu : MonoBehaviour
         Application.Quit();
     }
 
-    public void StartEasyGame()
+    public void SetEasyDifficulty()
     {
         GameManager.INSTANCE.difficulty = GameManager.Difficulty.EASY;
     }
 
-    public void StartNormalGame()
+    public void SetNormalDifficulty()
     {
         GameManager.INSTANCE.difficulty = GameManager.Difficulty.MEDIUM;
     }
 
-    public void StartHardGame()
+    public void SetHardDifficulty()
     {
         GameManager.INSTANCE.difficulty = GameManager.Difficulty.HARD;
     }
@@ -30,5 +30,10 @@ public class MainMenu : MonoBehaviour
     public void ButtonSound()
     {
         AudioManager.INSTANCE.Play("Button Click");
+    }
+
+    public void StartGame()
+    {
+        GameManager.INSTANCE.StartGame();
     }
 }

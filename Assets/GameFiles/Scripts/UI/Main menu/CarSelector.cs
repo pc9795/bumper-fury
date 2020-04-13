@@ -16,7 +16,7 @@ public class CarSelector : MonoBehaviour
         }
         if (selectedCarInstance)
         {
-            selectedCarInstance.transform.Rotate(new Vector3(0, 0.3f, 0), Space.Self);
+            selectedCarInstance.transform.Rotate(new Vector3(0, 0.1f, 0), Space.Self);
         }
         if (!carChanged)
         {

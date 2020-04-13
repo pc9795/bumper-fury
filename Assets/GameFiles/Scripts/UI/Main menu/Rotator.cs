@@ -5,6 +5,6 @@ public class Rotator : MonoBehaviour
 
     void Update()
     {
-        transform.Rotate(new Vector3(0, -0.5f, 0), Space.Self);
+        transform.Rotate(new Vector3(0, -0.1f, 0), Space.Self);
     }
 }

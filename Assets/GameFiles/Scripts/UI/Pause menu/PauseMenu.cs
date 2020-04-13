@@ -60,7 +60,11 @@ public class PauseMenu : MonoBehaviour
         {
             if (paused)
             {
-                Resume();
+                //Handle the case whent the game is paused but we are navigating other screens from the pause menu.
+                if (pauseScreen.activeSelf)
+                {
+                    Resume();
+                }
             }
             else
             {

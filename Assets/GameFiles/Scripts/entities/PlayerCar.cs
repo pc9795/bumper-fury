@@ -82,6 +82,15 @@ public class PlayerCar : MonoBehaviour
             }
         }
     }
+    
+    void OnTriggerStay(Collider collider)
+    {
+        Lava lava = collider.GetComponent<Lava>();
+        if (lava != null)
+        {
+            stats.DamageHealth(lava.baseDamage);
+        }
+    }
 
     void OnCollisionEnter(Collision collision)
     {
@@ -105,6 +114,7 @@ public class PlayerCar : MonoBehaviour
         Barel barel = collider.GetComponent<Barel>();
         if (barel != null)
         {
+            AudioManager.INSTANCE.Play(AudioManager.AudioTrack.BAREL_EXPLODE);
             barel.Explode();
         }
     }

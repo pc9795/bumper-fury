@@ -315,7 +315,7 @@ public class GameManager : MonoBehaviour
         player.transform.forward = spawnPoints[spawnIndex].transform.forward;
         spawnIndex++;
         spawnIndex %= spawnPoints.Length;
-
+        
         foreach (GameObject aiCar in aiCars)
         {
             aiCar.transform.position = spawnPoints[spawnIndex].transform.position;
@@ -324,6 +324,5 @@ public class GameManager : MonoBehaviour
             spawnIndex++;
             spawnIndex %= spawnPoints.Length;
         }
-
     }
 }

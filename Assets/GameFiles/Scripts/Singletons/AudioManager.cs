@@ -28,6 +28,7 @@ public class AudioManager : MonoBehaviour
         public static string ENGINE = "Engine";
         public static string ITEM_COLLECT = "Item collect";
         public static string POWER_USE = "Power use";
+        public static string BAREL_EXPLODE = "Barel explode";
     }
 
     //Public fields

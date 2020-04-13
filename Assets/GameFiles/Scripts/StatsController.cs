@@ -5,13 +5,13 @@ public class StatsController : MonoBehaviour
     //Public fields
     public string displayName;
     [HideInInspector]
-    public int maxHealth = 100;
+    public float maxHealth = 100;
     [HideInInspector]
-    public int health = 100;
+    public float health = 100;
     [HideInInspector]
-    public int energy;
+    public float energy;
     [HideInInspector]
-    public int maxEnergy = 100;
+    public float maxEnergy = 100;
     [HideInInspector]
     public int score;
     [HideInInspector]
@@ -36,7 +36,7 @@ public class StatsController : MonoBehaviour
     }
 
     // Custom methods
-    public void CollectEnergy(int energy)
+    public void CollectEnergy(float energy)
     {
         this.energy += energy;
         if (this.energy > this.maxEnergy)
@@ -45,7 +45,7 @@ public class StatsController : MonoBehaviour
         }
     }
 
-    public void CollectHealth(int health)
+    public void CollectHealth(float health)
     {
         this.health += health;
         if (this.health > this.maxHealth)
@@ -74,7 +74,7 @@ public class StatsController : MonoBehaviour
         this.energy = 0;
     }
 
-    public void DamageHealth(int damage)
+    public void DamageHealth(float damage)
     {
         this.health -= damage;
         if (this.health < 0)

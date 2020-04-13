@@ -45,6 +45,7 @@ public class ProjectileShooter : MonoBehaviour
             aiCarStats.DamageHealth(projectile.baseDamage);
             damageDone += projectile.baseDamage;
         }
+        //TODO I am not making everything FPS consistent so have to remove this deltaTime here to ensure consistency.
         //Move with the local space
         projectileInstance.transform.position += direction * projectile.speed * Time.deltaTime;
     }

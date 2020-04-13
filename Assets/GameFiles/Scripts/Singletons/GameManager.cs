@@ -86,6 +86,8 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public bool inGame;
     public int levelLengthInSeconds = 30;
+    [HideInInspector]
+    public GameObject[] trapPoints;
 
     //Private fields
     private GameObject player;
@@ -94,7 +96,6 @@ public class GameManager : MonoBehaviour
     private List<Level> levels = new List<Level>();
     private int currLevel = 0;
     private GameObject[] spawnPoints;
-    private GameObject[] trapPoints;
     private GameObject[] itemPoints;
     private string[] aiNames = { "Cormac", "Wilhelm", "Tyrel", "Ivan", "Seth", "Viktor", "Austin", "Roy",
         "Warrick","Carter","August","Benedict","Cyan","Valen","Zared","Daron","Finlay","Kynon","Jordan","Xerxes" };

@@ -59,7 +59,8 @@ public class ItemManager : MonoBehaviour
         int randIndex = Random.Range(0, items.Count);
         GameObject itemInstance = Instantiate(items[randIndex], itemPoint.transform.position, Quaternion.identity);
         Item item = itemInstance.GetComponent<Item>();
-        Vector3 position = new Vector3(itemPoint.transform.position.x, item.groundLevel, itemPoint.transform.position.z);
+        Vector3 position = new Vector3(itemPoint.transform.position.x,
+            itemPoint.transform.position.y + item.groundLevel, itemPoint.transform.position.z);
         itemInstance.transform.position = position;
         return itemInstance;
 

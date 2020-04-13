@@ -66,7 +66,7 @@ public class ProjectileShooter : MonoBehaviour
         projectileInstance = Instantiate(projectileType, rigidBody.transform.position, Quaternion.identity);
         Projectile projectile = projectileInstance.GetComponent<Projectile>();
         Vector3 currPos = projectileInstance.transform.position;
-        projectileInstance.transform.position = new Vector3(currPos.x, projectile.groundLevel, currPos.z);
+        projectileInstance.transform.position = new Vector3(currPos.x, currPos.y + projectile.groundLevel, currPos.z);
         Destroy(projectileInstance, projectile.duration);
         direction = rigidBody.transform.forward;
     }

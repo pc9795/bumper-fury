@@ -82,13 +82,21 @@ public class PlayerCar : MonoBehaviour
             }
         }
     }
-    
+
     void OnTriggerStay(Collider collider)
     {
         Lava lava = collider.GetComponent<Lava>();
         if (lava != null)
         {
             stats.DamageHealth(lava.baseDamage);
+            return;
+        }
+
+        Water water = collider.GetComponent<Water>();
+        if (lava != null)
+        {
+            stats.DamageHealth(water.baseDamage);
+            return;
         }
     }
 

@@ -47,7 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelBounds:
     m_Center: {x: 0, y: 100, z: 0}
-    m_Extent: {x: 110, y: 110, z: 110}
+    m_Extent: {x: 125, y: 125, z: 110}
   deathTimer: 3
   cars:
   - modelPrefab: {fileID: 1048014018787270843, guid: d9dcf39e0f78eca449ebe0b610f9c82e,

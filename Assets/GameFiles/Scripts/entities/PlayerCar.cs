@@ -80,6 +80,7 @@ public class PlayerCar : MonoBehaviour
                     break;
 
             }
+            return;
         }
     }
 
@@ -93,7 +94,7 @@ public class PlayerCar : MonoBehaviour
         }
 
         Water water = collider.GetComponent<Water>();
-        if (lava != null)
+        if (water != null)
         {
             stats.DamageHealth(water.baseDamage);
             return;

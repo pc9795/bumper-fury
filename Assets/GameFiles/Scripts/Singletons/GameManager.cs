@@ -119,7 +119,6 @@ public class GameManager : MonoBehaviour
     //TODO remove
     void Start()
     {
-        AudioManager.INSTANCE.Play(levels[4].theme);
         inGame = true;
     }
 

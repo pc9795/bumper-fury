@@ -50,6 +50,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   modelPrefab: {fileID: 0}
   centreOfMass: {x: 0, y: 0.3, z: 0}
+  speedLimit: 20
 --- !u!114 &563626918210779635
 MonoBehaviour:
   m_ObjectHideFlags: 0

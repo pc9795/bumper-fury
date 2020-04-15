@@ -5,7 +5,7 @@ public class AICar : MonoBehaviour
     //Public fields
     public GameObject modelPrefab;
     public Vector3 centreOfMass = new Vector3(0, 0.3f, 0);
-    public int speedLimit = 5;
+    public int speedLimit = 10;
 
     // Private fields
     private StatsController stats;
@@ -23,6 +23,7 @@ public class AICar : MonoBehaviour
     private float speedCheckTimeIntervalInSecs = 5;
     private float stuckThreshold = 0.5f;
     private float wayPointDistanceThreshold = 5;
+    private bool flipped;
 
     // Unity methods
     void Start()
@@ -120,6 +121,13 @@ public class AICar : MonoBehaviour
         //Let the script now that updates can be applied on this object as it is initialized.
         initialized = true;
     }
+
+    private void Reset()
+    {
+        Vector3 rotation = transform.rotation.eulerAngles;
+        transform.rotation = Quaternion.Euler(new Vector3(0, rotation.y, 0));
+    }
+
 
     private bool CheckItemTrigger(Collider collider)
     {
@@ -263,7 +271,11 @@ public class AICar : MonoBehaviour
             MovementChecks();
             lastSpeedCheckTime = now;
         }
-        if (reversing)
+        if (flipped)
+        {
+            Reset();
+        }
+        else if (reversing)
         {
             Reverse();
         }
@@ -280,13 +292,16 @@ public class AICar : MonoBehaviour
         {
             return;
         }
-        Debug.Log("Reversing");
-        Debug.DrawLine(transform.position, currWaypoint.position, Color.blue, 10);
-
-        //TODO reversing logic
+        float flipIndicator = Vector3.Dot(transform.up, Vector3.down);
+        if (flipIndicator >= PhysicsManager.INSTANCE.flipThreshold)
+        {
+            print("Flipping");
+            flipped = true;
+            return;
+        }
         transform.forward = -transform.forward;
-        // reverseDirection = -transform.forward;
-        // reversing = true;
+        reverseDirection = -transform.forward;
+        reversing = true;
     }
 
     private void MoveToWayPoint()

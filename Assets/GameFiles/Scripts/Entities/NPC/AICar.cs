@@ -15,7 +15,7 @@ public class AICar : MonoBehaviour
     private GameObject modelInstance;
     private float horizontalInput;
     private float verticalInput;
-    private Transform currWaypoint;
+    private Vector3 currWaypoint;
     new private Rigidbody rigidbody;
     private bool reversing;
     private Vector3 reverseDirection;
@@ -24,6 +24,7 @@ public class AICar : MonoBehaviour
     private float stuckThreshold = 0.5f;
     private float wayPointDistanceThreshold = 5;
     private bool flipped;
+    private bool wasOutsideSmartBoundary;
 
     // Unity methods
     void Start()
@@ -53,6 +54,7 @@ public class AICar : MonoBehaviour
             Destroy(this.gameObject, GameManager.INSTANCE.deathTimer);
             stats.Die();
         }
+        carController.ReleaseHandBrake();
         //AI Behaviors
         AI();
         //Move the car
@@ -126,6 +128,8 @@ public class AICar : MonoBehaviour
     {
         Vector3 rotation = transform.rotation.eulerAngles;
         transform.rotation = Quaternion.Euler(new Vector3(0, rotation.y, 0));
+        horizontalInput = 0;
+        verticalInput = 0;
         flipped = false;
     }
 
@@ -266,40 +270,73 @@ public class AICar : MonoBehaviour
 
     private void AI()
     {
-        float now = Time.time;
-        if (now - lastSpeedCheckTime > speedCheckTimeIntervalInSecs)
-        {
-            //At regular intervals check that the car is stucked or not.
-            MovementChecks();
-            lastSpeedCheckTime = now;
-        }
+        MovementChecks();
         if (flipped)
         {
             Reset();
+            return;
         }
-        else if (reversing)
+        if (reversing)
         {
             Reverse();
+            return;
         }
-        else
+        MoveToWayPoint();
+        //We are not checking smart boundary for cases when car is reversing. It will fall.
+        SmartBoundaryDetection();
+    }
+
+    private void SmartBoundaryDetection()
+    {
+        bool outsideSmartBoundary = IsOutsideSmartBoundary();
+        if (outsideSmartBoundary)
         {
-            MoveToWayPoint();
+            if (!wasOutsideSmartBoundary)
+            {
+                MoveTowardsSafteyPoint();
+            }
+            if (rigidbody.velocity.magnitude > 5)
+            {
+                carController.ApplyHandBrake();
+            }
         }
+        wasOutsideSmartBoundary = outsideSmartBoundary;
+    }
+    
+    private bool IsOutsideSmartBoundary()
+    {
+        Bounds smartBounds = AIManager.INSTANCE.smartLevelBounds;
+        Bounds bounds = stats.GetMaxBounds();
+        if (!(smartBounds.Contains(bounds.min) && smartBounds.Contains(bounds.max)))
+        {
+            return true;
+        }
+        return false;
     }
 
     private void MovementChecks()
     {
+        float now = Time.time;
+        //Do checks at regular intervals not every frame.
+        if (now - lastSpeedCheckTime <= speedCheckTimeIntervalInSecs)
+        {
+            return;
+        }
+        lastSpeedCheckTime = now;
         float currSpeed = rigidbody.velocity.magnitude;
+        //Check vehicle is stucked or not.
         if (currSpeed >= stuckThreshold)
         {
             return;
         }
+        //Check vehicle is flipped or not.
         float flipIndicator = Vector3.Dot(transform.up, Vector3.down);
         if (flipIndicator >= PhysicsManager.INSTANCE.flipThreshold)
         {
             flipped = true;
             return;
         }
+        //If vechile is stucked and not flipped then reverse.
         reverseDirection = -transform.forward;
         reversing = true;
     }
@@ -307,31 +344,44 @@ public class AICar : MonoBehaviour
     private void SelectNewWayPoint()
     {
         currWaypoint = AIManager.INSTANCE.GetRandWayPoint();
-        Debug.DrawLine(transform.position, currWaypoint.position, Color.blue, 10);
+        Debug.DrawLine(transform.position, currWaypoint, Color.blue, 10);
+    }
+
+    private void MoveTowardsSafteyPoint()
+    {
+        //Right now origin is a safety point.
+        currWaypoint = new Vector3(0, 0, 0);
+        Debug.DrawLine(transform.position, currWaypoint, Color.green, 10);
     }
 
     private void MoveToWayPoint()
     {
-        if (currWaypoint == null || Vector3.Distance(transform.position, currWaypoint.position) < wayPointDistanceThreshold)
+        //Reached at the waypoint
+        if (currWaypoint == null || Vector3.Distance(transform.position, currWaypoint) < wayPointDistanceThreshold)
         {
             SelectNewWayPoint();
         }
-        Vector3 relative = transform.InverseTransformPoint(currWaypoint.position);
+
+        Vector3 relative = transform.InverseTransformPoint(currWaypoint);
         horizontalInput = relative.x / relative.magnitude;
         verticalInput = rigidbody.velocity.magnitude > speedLimit ? 0 : 1;
     }
 
     private void Reverse()
     {
+        //We don't want the height component.
         Vector2 reversedDirection2D = new Vector2(reverseDirection.x, reverseDirection.z);
         Vector2 forward2D = new Vector2(transform.forward.x, transform.forward.z);
+
         if (Vector2.Dot(reversedDirection2D, forward2D) > PhysicsManager.INSTANCE.reversingThreshold)
         {
             SelectNewWayPoint();
             reversing = false;
             return;
         }
+        //Turn with maximum steer angle.
         horizontalInput = 1;
+        //Move back with maximum moter force.
         verticalInput = rigidbody.velocity.magnitude > speedLimit ? 0 : -1;
     }
 }

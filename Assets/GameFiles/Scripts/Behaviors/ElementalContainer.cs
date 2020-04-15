@@ -4,7 +4,6 @@ public class ElementalContainer : MonoBehaviour
 {
     //Public fields
     public GameObject element;
-    //TODO if the parent has a offset then need of this
     public float groundLevel = 0.6f;
 
     //Private fields
@@ -27,7 +26,7 @@ public class ElementalContainer : MonoBehaviour
     {
         rigidBody = GetComponent<Rigidbody>();
         Vector3 position = rigidBody.transform.position;
-        position.y = groundLevel;
+        position.y += groundLevel;
         elementInstance = Instantiate(element, position, Quaternion.identity, transform);
     }
 }

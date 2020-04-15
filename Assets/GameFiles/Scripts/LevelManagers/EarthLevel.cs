@@ -62,6 +62,7 @@ public class EarthLevel : MonoBehaviour
             start += Time.deltaTime;
             yield return null;
         }
+        
         foreach (GameObject rock in rocks)
         {
             Destroy(rock, rockStayDurationInSecs);

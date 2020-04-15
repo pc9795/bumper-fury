@@ -29,17 +29,18 @@ public class ProjectileShooter : MonoBehaviour
         Collider[] colliders = Physics.OverlapSphere(projectileInstance.transform.position, projectile.radius);
         foreach (Collider collider in colliders)
         {
+            //TODO it should work on both player and ai with consideration that who fired it.
             //Collision will occur with models so have to look for behaviors in parent.
             AICar aICar = collider.GetComponentInParent<AICar>();
             if (aICar == null)
             {
                 continue;
             }
-
+            //Make explosion
             Rigidbody aICarRigidBody = aICar.GetComponent<Rigidbody>();
             aICarRigidBody.AddExplosionForce(projectile.power, projectileInstance.transform.position,
                 projectile.radius, projectile.upwardRift);
-
+            //Do the damage.
             StatsController aiCarStats = aICar.GetComponent<StatsController>();
             //TODO Modify base damage on the basis of impact
             aiCarStats.DamageHealth(projectile.baseDamage);

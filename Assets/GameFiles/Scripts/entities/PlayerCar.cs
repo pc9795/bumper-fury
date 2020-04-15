@@ -42,9 +42,10 @@ public class PlayerCar : MonoBehaviour
         {
             stats.Die();
         }
-
+        carController.ReleaseHandBrake();
         ProcessInput();
         //Move the car
+        //We are not clearing `horizontalInput` and `veticalInput` as it is expected to be handeled inside `ProcessInput`.
         carController.Steer(horizontalInput);
         carController.Move(verticalInput);
         carController.UpdateWheelPoses();
@@ -194,6 +195,10 @@ public class PlayerCar : MonoBehaviour
         {
             stats.ConsumeEnergy();
             projectileShooter.Shoot();
+        }
+        if (Input.GetKey(KeyCode.Q))
+        {
+            carController.ApplyHandBrake();
         }
     }
 

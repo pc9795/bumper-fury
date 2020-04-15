@@ -7,12 +7,14 @@ public class SimpleCarController : MonoBehaviour
     public WheelCollider frontRightWheelCollider, frontLeftWheelCollider;
     public Transform backRightWheel, backLeftWheel;
     public Transform frontRightWheel, frontLeftWheel;
-    public float maxSteerAngle = 45;
-    public float motorForce = 50;
-    public float breakingForce = 30;
-    public float turnSensitivity = 1;   
+    public float maxSteerAngle = 30;
+    public float motorForce = 500;
+    public float breakingForce = 400;
+    public float turnSensitivity = 1;
     public float accMultiplier = 1;
     public float deaccMultiplier = 1;
+    public float handbrakeForce = 800;
+    public bool handbreak;
 
 
     //Custom methods
@@ -31,9 +33,10 @@ public class SimpleCarController : MonoBehaviour
         accMultiplier = multiplier;
         Invoke("ResetAccelerationMultipliers", duration);
     }
+
     private void ResetAccelerationMultipliers()
     {
-        accMultiplier = 1;  
+        accMultiplier = 1;
         deaccMultiplier = 1;
     }
 
@@ -48,6 +51,8 @@ public class SimpleCarController : MonoBehaviour
         backRightWheelCollider.motorTorque = force;
         // If motor there is no motor force applied then apply a breaking force to stop the vechicle.
         force = force == 0 ? breakingForce * deaccMultiplier : 0;
+        //Handbreak override default breaking force.
+        force = handbreak ? handbrakeForce : force;
         frontLeftWheelCollider.brakeTorque = force;
         frontRightWheelCollider.brakeTorque = force;
         backLeftWheelCollider.brakeTorque = force;
@@ -71,5 +76,15 @@ public class SimpleCarController : MonoBehaviour
 
         transform.position = pos;
         transform.rotation = quaternion;
+    }
+
+    public void ApplyHandBrake()
+    {
+        handbreak = true;
+    }
+
+    public void ReleaseHandBrake()
+    {
+        handbreak = false;
     }
 }

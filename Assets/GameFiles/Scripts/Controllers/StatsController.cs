@@ -4,13 +4,9 @@ public class StatsController : MonoBehaviour
 {
     //Public fields
     public string displayName;
-    [HideInInspector]
     public float maxHealth = 100;
-    [HideInInspector]
     public float health = 100;
-    [HideInInspector]
     public float energy;
-    [HideInInspector]
     public float maxEnergy = 100;
     [HideInInspector]
     public int score;
@@ -23,16 +19,16 @@ public class StatsController : MonoBehaviour
     // Unity methods
     void LateUpdate()
     {
-        if (!isOutOflevel)
+        if (isOutOflevel)
         {
-            Bounds levelBounds = GameManager.INSTANCE.levelBounds;
-            Bounds bounds = GetMaxBounds();
-            if (!(levelBounds.Contains(bounds.min) && levelBounds.Contains(bounds.max)))
-            {
-                isOutOflevel = true;
-            }
+            return;
         }
-
+        Bounds levelBounds = GameManager.INSTANCE.levelBounds;
+        Bounds bounds = GetMaxBounds();
+        if (!(levelBounds.Contains(bounds.min) && levelBounds.Contains(bounds.max)))
+        {
+            isOutOflevel = true;
+        }
     }
 
     // Custom methods
@@ -83,7 +79,7 @@ public class StatsController : MonoBehaviour
         }
     }
 
-    private Bounds GetMaxBounds()
+    public Bounds GetMaxBounds()
     {
         var b = new Bounds(transform.position, Vector3.zero);
         foreach (MeshRenderer r in GetComponentsInChildren<MeshRenderer>())

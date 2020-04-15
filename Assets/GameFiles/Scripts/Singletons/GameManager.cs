@@ -70,7 +70,7 @@ public class GameManager : MonoBehaviour
     //Public fields
     //TODO check a way to make it configurable
     //The bounds is shifted upwards so that things can be in air and still be considered inside level.
-    public Bounds levelBounds = new Bounds(new Vector3(0, 50, 0), new Vector3(100, 100, 100));
+    public Bounds levelBounds = new Bounds(new Vector3(0, 100, 0), new Vector3(125, 125, 125));
     public int deathTimer = 3;
     public static GameManager INSTANCE;
     [HideInInspector]

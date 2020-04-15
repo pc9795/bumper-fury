@@ -3,9 +3,11 @@
 public class DamageBehavior : MonoBehaviour
 {
     //Public fields
+    
     //These are expected to be looping animations.
     public GameObject halfDamageIndicator;
     public GameObject fullDamageIndicator;
+
     public GameObject explosion;
     public int explostionDuration;
 
@@ -28,7 +30,6 @@ public class DamageBehavior : MonoBehaviour
         {
             if (!explosionInstance)
             {
-                //Explosion is one time thing.
                 explosionInstance = Instantiate(explosion, transform.position, Quaternion.identity, transform);
                 Destroy(explosionInstance, explostionDuration);
             }

@@ -546,6 +546,8 @@ MonoBehaviour:
   turnSensitivity: 1
   accMultiplier: 1
   deaccMultiplier: 1
+  handbrakeForce: 3200
+  handbreak: 0
 --- !u!1 &8527892053455034787
 GameObject:
   m_ObjectHideFlags: 0

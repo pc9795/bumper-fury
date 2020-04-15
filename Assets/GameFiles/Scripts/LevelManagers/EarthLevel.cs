@@ -24,6 +24,7 @@ public class EarthLevel : MonoBehaviour
         InvokeRepeating("RockShower", 0, rockShowerIntervalInSecs);
     }
 
+    //Custom methods
     private void RockShower()
     {
         if (rockShower)
@@ -36,7 +37,6 @@ public class EarthLevel : MonoBehaviour
         StartCoroutine(RockShowerUtil());
     }
 
-    //Custom methods
     private IEnumerator RockShowerUtil()
     {
         rockShower = true;

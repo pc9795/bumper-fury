@@ -2,6 +2,7 @@
 
 public class Barel : MonoBehaviour
 {
+    //Public variables
     public GameObject explostionAnim;
     public int duration;
     public int radius = 20;
@@ -9,6 +10,7 @@ public class Barel : MonoBehaviour
     public float power = 20000;
     public int baseDamage = 20;
 
+    //Unity methods
     public void Explode()
     {
         GameObject explostionInstance = Instantiate(explostionAnim, transform.position, Quaternion.identity);

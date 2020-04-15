@@ -1955,7 +1955,7 @@ GameObject:
   - component: {fileID: 663267888}
   - component: {fileID: 663267887}
   m_Layer: 0
-  m_Name: Oil Spil 1 (7)
+  m_Name: Oil Spil 8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4330,7 +4330,7 @@ GameObject:
   - component: {fileID: 1374357364}
   - component: {fileID: 1374357363}
   m_Layer: 0
-  m_Name: Oil Spil 1 (3)
+  m_Name: Oil Spil 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4762,7 +4762,7 @@ GameObject:
   - component: {fileID: 1401650102}
   - component: {fileID: 1401650101}
   m_Layer: 0
-  m_Name: Oil Spil 1 (1)
+  m_Name: Oil Spil 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5436,7 +5436,7 @@ GameObject:
   - component: {fileID: 1601883261}
   - component: {fileID: 1601883260}
   m_Layer: 0
-  m_Name: Oil Spil 1 (2)
+  m_Name: Oil Spil 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5757,7 +5757,7 @@ GameObject:
   - component: {fileID: 1714503251}
   - component: {fileID: 1714503250}
   m_Layer: 0
-  m_Name: Oil Spil 1 (5)
+  m_Name: Oil Spil 6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5869,7 +5869,7 @@ GameObject:
   - component: {fileID: 1798407901}
   - component: {fileID: 1798407900}
   m_Layer: 0
-  m_Name: Oil Spil 1 (4)
+  m_Name: Oil Spil 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7030,7 +7030,7 @@ GameObject:
   - component: {fileID: 2066389549}
   - component: {fileID: 2066389548}
   m_Layer: 0
-  m_Name: Oil Spil 1 (6)
+  m_Name: Oil Spil 7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

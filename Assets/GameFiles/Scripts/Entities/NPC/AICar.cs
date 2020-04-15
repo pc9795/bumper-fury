@@ -1,33 +1,41 @@
 ﻿using UnityEngine;
 
-public class PlayerCar : MonoBehaviour
+public class AICar : MonoBehaviour
 {
     //Public fields
     public GameObject modelPrefab;
     public Vector3 centreOfMass = new Vector3(0, 0.3f, 0);
+    public int speedLimit = 5;
 
-    //Private fields
-    private float horizontalInput;
-    private float verticalInput;
-    private ProjectileShooter projectileShooter;
+    // Private fields
     private StatsController stats;
     private SimpleCarController carController;
+    private ProjectileShooter projectileShooter;
     private bool initialized;
     private GameObject modelInstance;
-    private UIButtonManager uIButtonManager;
+    private float horizontalInput;
+    private float verticalInput;
+    private Transform currWaypoint;
+    new private Rigidbody rigidbody;
+    private bool reversing;
+    private Vector3 reverseDirection;
+    private float lastSpeedCheckTime;
+    private float speedCheckTimeIntervalInSecs = 5;
+    private float stuckThreshold = 0.5f;
+    private float wayPointDistanceThreshold = 5;
 
-    //Unity methods
+    // Unity methods
     void Start()
     {
-        //Give a specific tag to this object
-        gameObject.tag = GameManager.Tag.PLAYER;
-        //This component will be used on handheld devices
-        uIButtonManager = FindObjectOfType<UIButtonManager>();
+        //Get this object AI tag.
+        gameObject.tag = GameManager.Tag.AI;
+
+        rigidbody = GetComponent<Rigidbody>();
     }
 
     void LateUpdate()
     {
-        //No Updates if not initialized
+        //No updates if not initialized.
         if (!initialized)
         {
             return;
@@ -40,10 +48,12 @@ public class PlayerCar : MonoBehaviour
         //If out of level or health drops below zero make it dead.
         if (stats.isOutOflevel || stats.health <= 0)
         {
+            GameManager.INSTANCE.PushNotification(stats.displayName + " Eliminated!");
+            Destroy(this.gameObject, GameManager.INSTANCE.deathTimer);
             stats.Die();
         }
-
-        ProcessInput();
+        //AI Behaviors
+        AI();
         //Move the car
         carController.Steer(horizontalInput);
         carController.Move(verticalInput);
@@ -67,7 +77,6 @@ public class PlayerCar : MonoBehaviour
         {
             return;
         }
-
         if (CheckWaterTrigger(collider))
         {
             return;
@@ -76,6 +85,10 @@ public class PlayerCar : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+        if (CheckPlayerCollision(collision))
+        {
+            return;
+        }
         if (CheckAICollision(collision))
         {
             return;
@@ -88,130 +101,23 @@ public class PlayerCar : MonoBehaviour
 
     //Custom methods
 
-    //Process the inputs
-    public void ProcessInput()
-    {
-        if (SystemInfo.deviceType == DeviceType.Handheld)
-        {
-            ProcessHandheldInput();
-        }
-        else if (SystemInfo.deviceType == DeviceType.Desktop)
-        {
-            ProcessDesktopInput();
-        }
-    }
-
-    //Process inputs from handheld devices
-    private void ProcessHandheldInput()
-    {
-        if (GameManager.INSTANCE.useDpad)
-        {
-            //Use virtual joystick
-            UseDpad();
-        }
-        else
-        {
-            //Use device accelrometer
-            UseAccelrometer();
-        }
-        //Shoot the projectiile.
-        if ((IsPlayerTouched() || uIButtonManager.IsCirclePressed()) && projectileShooter.CanShoot() && stats.IsEnergyFull())
-        {
-            stats.ConsumeEnergy();
-            projectileShooter.Shoot();
-        }
-        //Reset the car position
-        if (uIButtonManager.IsDeltaPressed())
-        {
-            Reset();
-        }
-    }
-
-    private void UseDpad()
-    {
-        verticalInput = uIButtonManager.Vertical();
-        horizontalInput = uIButtonManager.Horizontal();
-    }
-
-    private void UseAccelrometer()
-    {
-        float yMin = GameManager.INSTANCE.handHeldAxisMin.y;
-        float yMax = GameManager.INSTANCE.handheldAxisMax.y;
-        float xMin = GameManager.INSTANCE.handHeldAxisMin.x;
-        float xMax = GameManager.INSTANCE.handheldAxisMax.x;
-        float y = Mathf.Clamp(Input.acceleration.y, yMin, yMax);
-        float x = Mathf.Clamp(Input.acceleration.x, xMin, xMax);
-
-        verticalInput = RemapRange(y, yMin, yMax, -1f, 1f);
-        horizontalInput = RemapRange(x, xMin, xMax, -1f, 1f);
-    }
-
-    private bool IsPlayerTouched()
-    {
-        //No touches
-        if (Input.touchCount <= 0)
-        {
-            return false;
-        }
-        //Get the first touch;
-        Touch touch = Input.GetTouch(0);
-        //Touch is not ended.
-        if (touch.phase != TouchPhase.Ended)
-        {
-            return false;
-        }
-
-        Ray ray = Camera.main.ScreenPointToRay(touch.position);
-        RaycastHit hit;
-        if (!Physics.Raycast(ray, out hit) || hit.collider == null)
-        {
-            return false;
-        }
-
-        GameObject touchedObject = hit.transform.gameObject;
-        bool isPlayer = touchedObject.GetComponent<PlayerCar>() != null;
-        return isPlayer;
-    }
-
-    //Map a value from one range to other.
-    private float RemapRange(float value, float oldMin, float oldMax, float newMin, float newMax)
-    {
-        return (((value - oldMin) / (oldMax - oldMin)) * (newMax - newMin)) + newMin;
-    }
-
-    //Process input from desktop.
-    private void ProcessDesktopInput()
-    {
-        horizontalInput = Input.GetAxis("Horizontal");
-        verticalInput = Input.GetAxis("Vertical");
-        //Reset
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            Reset();
-        }
-        //Shooting
-        if (Input.GetKeyDown(KeyCode.Space) && projectileShooter.CanShoot() && stats.IsEnergyFull())
-        {
-            stats.ConsumeEnergy();
-            projectileShooter.Shoot();
-        }
-    }
-
-    private void Reset()
-    {
-        Vector3 rotation = transform.rotation.eulerAngles;
-        transform.rotation = Quaternion.Euler(new Vector3(0, rotation.y, 0));
-    }
-
-    //Method used by game manager to initialize this object.
+    //Called by game manager to initialize.
     public void Init()
     {
+        //Configure centre of mass.
         Rigidbody rigidbody = GetComponent<Rigidbody>();
         rigidbody.centerOfMass = centreOfMass;
+        //Initialize the projectile shooter.
         projectileShooter = GetComponent<ProjectileShooter>();
+        //Initialize the stats controller.
         stats = GetComponent<StatsController>();
+        //Create the car model.
         modelInstance = Instantiate(modelPrefab, transform.position, Quaternion.identity, transform);
+        //Initialize the car controller.
         carController = modelInstance.GetComponent<SimpleCarController>();
+
+        lastSpeedCheckTime = Time.time;
+        //Let the script now that updates can be applied on this object as it is initialized.
         initialized = true;
     }
 
@@ -276,6 +182,19 @@ public class PlayerCar : MonoBehaviour
         return true;
     }
 
+    private bool CheckPlayerCollision(Collision collision)
+    {
+        //Models will be collided so we have to look for behaviors in parent.
+        PlayerCar playerCar = collision.collider.GetComponentInParent<PlayerCar>();
+        if (playerCar == null)
+        {
+            return false;
+        }
+        StatsController otherStats = playerCar.GetComponent<StatsController>();
+        DamageCalcWithOtherCars(otherStats, collision);
+        return true;
+    }
+
     private bool CheckAICollision(Collision collision)
     {
         //Models will be collided so we have to look for behaviors in parent.
@@ -323,7 +242,6 @@ public class PlayerCar : MonoBehaviour
         otherStats.DamageHealth(damage);
     }
 
-
     private bool CheckBarelCollision(Collision collision)
     {
         Barel barel = collision.collider.GetComponent<Barel>();
@@ -336,4 +254,62 @@ public class PlayerCar : MonoBehaviour
         return true;
     }
 
+    private void AI()
+    {
+        float now = Time.time;
+        if (now - lastSpeedCheckTime > speedCheckTimeIntervalInSecs)
+        {
+            //At regular intervals check that the car is stucked or not.
+            MovementChecks();
+            lastSpeedCheckTime = now;
+        }
+        if (reversing)
+        {
+            Reverse();
+        }
+        else
+        {
+            MoveToWayPoint();
+        }
+    }
+
+    private void MovementChecks()
+    {
+        float currSpeed = rigidbody.velocity.magnitude;
+        if (currSpeed >= stuckThreshold)
+        {
+            return;
+        }
+        Debug.Log("Reversing");
+        Debug.DrawLine(transform.position, currWaypoint.position, Color.blue, 10);
+
+        //TODO reversing logic
+        transform.forward = -transform.forward;
+        // reverseDirection = -transform.forward;
+        // reversing = true;
+    }
+
+    private void MoveToWayPoint()
+    {
+        if (currWaypoint == null || Vector3.Distance(transform.position, currWaypoint.position) < wayPointDistanceThreshold)
+        {
+            currWaypoint = AIManager.INSTANCE.GetRandWayPoint();
+            Debug.Log("New waypoint selected!");
+            Debug.DrawLine(transform.position, currWaypoint.position, Color.blue, 10);
+        }
+        Vector3 relative = transform.InverseTransformPoint(currWaypoint.position);
+        horizontalInput = relative.x / relative.magnitude;
+        verticalInput = rigidbody.velocity.magnitude > speedLimit ? 0 : 1;
+    }
+
+    private void Reverse()
+    {
+        if (transform.forward == reverseDirection)
+        {
+            reversing = false;
+            return;
+        }
+        horizontalInput = 1;
+        verticalInput = rigidbody.velocity.magnitude > speedLimit ? 0 : -1;
+    }
 }

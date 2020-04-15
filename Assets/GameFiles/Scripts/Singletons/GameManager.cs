@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour
         public static string SPAWN_POINT = "Spawn Point";
         public static string ITEM_POINT = "Item Point";
         public static string TRAP_POINT = "Trap Point";
+        public static string WAY_POINT = "Way Point";
     }
 
     public class Level
@@ -92,6 +93,7 @@ public class GameManager : MonoBehaviour
     public Vector3 handHeldAxisMin = new Vector3(-0.5f, -0.9f, 0);
     [HideInInspector]
     public bool useDpad;
+    public GameObject[] wayPoints;
 
     //Private fields
     private GameObject player;
@@ -197,10 +199,12 @@ public class GameManager : MonoBehaviour
         spawnPoints = GameObject.FindGameObjectsWithTag(Tag.SPAWN_POINT);
         trapPoints = GameObject.FindGameObjectsWithTag(Tag.TRAP_POINT);
         itemPoints = GameObject.FindGameObjectsWithTag(Tag.ITEM_POINT);
+        wayPoints = GameObject.FindGameObjectsWithTag(Tag.WAY_POINT);
         LoadPlayer();
         LoadAIOpponents();
         PlaceObjectsOnSpawnPoints();
         ItemManager.INSTANCE.LoadItems(itemPoints);
+        AIManager.INSTANCE.LoadWaypoints(wayPoints);
     }
 
     public void NextLevel()

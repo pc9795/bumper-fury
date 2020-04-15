@@ -3,10 +3,12 @@
 //TODO: change name
 public class MainMenu : MonoBehaviour
 {
+    //Unity methods
     void Start()
     {
         AudioManager.INSTANCE.Play(GameManager.INSTANCE.mainMenu.theme);
     }
+    
     //Custom methods
     public void Quit()
     {

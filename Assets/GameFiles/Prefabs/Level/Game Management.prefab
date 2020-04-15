@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 7517723816011022176}
   - component: {fileID: 7517723816011022179}
   - component: {fileID: 7517723816011022190}
+  - component: {fileID: 2778011706348969292}
+  - component: {fileID: 6863654035160358740}
   m_Layer: 0
   m_Name: Game Management
   m_TagString: Untagged
@@ -123,9 +125,14 @@ MonoBehaviour:
     name: Water
   selectedCarIndex: 0
   selectedElementalIndex: 0
-  countOfOpponents: 4
+  countOfOpponents: 5
   inGame: 0
   levelLengthInSeconds: 300
+  trapPoints: []
+  handheldAxisMax: {x: 0.5, y: 0.2, z: 0}
+  handHeldAxisMin: {x: -0.5, y: -0.9, z: 0}
+  useDpad: 0
+  wayPoints: []
 --- !u!114 &7517723816011022179
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -216,3 +223,29 @@ MonoBehaviour:
   - {fileID: 2505564337193970121, guid: 00ef40185def5e04499fb3e0742a9804, type: 3}
   - {fileID: 3055540130693689941, guid: 0ee2255a68a77de4e8ee560e70188121, type: 3}
   generationWindowInSecs: 20
+--- !u!114 &2778011706348969292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7517723816011022178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8381ea6760330704393d5777dd80fb4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6863654035160358740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7517723816011022178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd31fc7215ce40b44a2d0fc920d5f9ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  collisionRelativeVelocityThreshold: 10
+  collisionRelativeVectorZThreshold: 1.5

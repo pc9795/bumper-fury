@@ -7,15 +7,15 @@ public class SimpleCarController : MonoBehaviour
     public WheelCollider frontRightWheelCollider, frontLeftWheelCollider;
     public Transform backRightWheel, backLeftWheel;
     public Transform frontRightWheel, frontLeftWheel;
-    public float maxSteerAngle = 30;
+    public float maxSteerAngle = 45;
     public float motorForce = 50;
     public float breakingForce = 30;
-    public float turnSensitivity = 1;
+    public float turnSensitivity = 1;   
     public float accMultiplier = 1;
     public float deaccMultiplier = 1;
 
 
-    //Unity methods
+    //Custom methods
     public void Steer(float horizontalInput)
     {
         // Calculate steering angle from the input.

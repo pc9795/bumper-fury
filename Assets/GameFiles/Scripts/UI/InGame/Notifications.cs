@@ -31,6 +31,7 @@ public class Notifications : MonoBehaviour
         GenerateNotificationBoard();
     }
 
+    //Custom methods
     private void ClearNotificationBoard()
     {
         foreach (GameObject item in listItems)
@@ -40,7 +41,6 @@ public class Notifications : MonoBehaviour
         listItems = new List<GameObject>();
     }
 
-    //Custom methods
     private void GenerateNotificationBoard()
     {
         float currTime = Time.time;

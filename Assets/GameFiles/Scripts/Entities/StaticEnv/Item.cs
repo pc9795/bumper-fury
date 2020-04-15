@@ -8,6 +8,7 @@ public class Item : MonoBehaviour
         HEALTH_BOOST, ENERGY_BOOST, SPEED_BOOST
     }
 
+    //Public variables
     public ItemType type;
     public float groundLevel = 0.5f;
     public float value = 10;

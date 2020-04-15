@@ -26,8 +26,11 @@ public class PauseMenu : MonoBehaviour
     {
         levelTimer = levelTimerElem.GetComponent<LevelTimer>();
         scoreboard = scoreBoardElem.GetComponent<Scoreboard>();
+        
+        //TODO uncomment
         //Level will start in a paused state.
-        Time.timeScale = 0f;
+        //Time.timeScale = 0f;
+        
         AudioManager.INSTANCE.Play("Engine");
 
         if (SystemInfo.deviceType == DeviceType.Handheld)

@@ -22,7 +22,7 @@ public class Scoreboard : MonoBehaviour
 
     //Private fields
     StatsController playerStats;
-    string playerDisplayName = "You";
+    string playerDisplayName;
     Dictionary<string, StatsController> aICarStatsDict;
     List<GameObject> scoreBoardItems = new List<GameObject>();
 
@@ -73,6 +73,9 @@ public class Scoreboard : MonoBehaviour
     {
         GameObject player = GameManager.INSTANCE.GetPlayer();
         playerStats = player.GetComponent<StatsController>();
+        //We are storing the player display name because in future if we decide that game object of the player will be destroyed 
+        //on loosing/death then the `playerStats` will return null and we can't access the display name to show.
+        playerDisplayName = playerStats.displayName;
         GameObject[] aICarGameObjects = GameManager.INSTANCE.GetAICars();
         aICarStatsDict = new Dictionary<string, StatsController>();
         foreach (GameObject aiCarGameObject in aICarGameObjects)
@@ -109,7 +112,12 @@ public class Scoreboard : MonoBehaviour
         }
     }
 
-    public bool DoPlayerWon()
+    public bool IsPlayerWinning()
+    {
+        return IsCharacterWinning(playerDisplayName);
+    }
+
+    public bool IsCharacterWinning(string displayName)
     {
         List<ScoreBoardEntry> scores = GetScores();
         string winner = "";
@@ -123,6 +131,6 @@ public class Scoreboard : MonoBehaviour
             }
         }
 
-        return winner.Equals(playerDisplayName);
+        return winner.Equals(displayName);
     }
 }

@@ -53,7 +53,7 @@ public class PauseMenu : MonoBehaviour
         {
             Time.timeScale = 0f;
             AudioManager.INSTANCE.Stop(AudioManager.AudioTrack.ENGINE);
-            if (scoreboard.DoPlayerWon())
+            if (scoreboard.IsPlayerWinning())
             {
                 roundWonScreen.SetActive(true);
             }

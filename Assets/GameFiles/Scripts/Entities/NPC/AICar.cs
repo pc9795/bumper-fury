@@ -15,16 +15,17 @@ public class AICar : MonoBehaviour
     private GameObject modelInstance;
     private float horizontalInput;
     private float verticalInput;
-    private Vector3 currWaypoint;
+    private AIManager.WayPoint currWaypoint;
     new private Rigidbody rigidbody;
     private bool reversing;
     private Vector3 reverseDirection;
     private float lastSpeedCheckTime;
     private float speedCheckTimeIntervalInSecs = 5;
     private float stuckThreshold = 0.5f;
-    private float wayPointDistanceThreshold = 5;
+    private float wayPointDistanceThreshold = 1;
     private bool flipped;
     private bool wasOutsideSmartBoundary;
+    private Scoreboard scoreboard;
 
     // Unity methods
     void Start()
@@ -118,6 +119,8 @@ public class AICar : MonoBehaviour
         modelInstance = Instantiate(modelPrefab, transform.position, Quaternion.identity, transform);
         //Initialize the car controller.
         carController = modelInstance.GetComponent<SimpleCarController>();
+        //Initialize the scoreboard.
+        scoreboard = FindObjectOfType<Scoreboard>();
 
         lastSpeedCheckTime = Time.time;
         //Let the script now that updates can be applied on this object as it is initialized.
@@ -270,24 +273,61 @@ public class AICar : MonoBehaviour
 
     private void AI()
     {
-        MovementChecks();
+        StuckingCheck();
         if (flipped)
         {
             Reset();
-            return;
         }
-        if (reversing)
+        else if (reversing)
         {
             Reverse();
-            return;
         }
-        MoveToWayPoint();
-        //We are not checking smart boundary for cases when car is reversing. It will fall.
-        SmartBoundaryDetection();
+        else
+        {
+            if (IsReachedWayPoint())
+            {
+                DecideWayPoint();
+            }
+            MoveToWayPoint();
+            //We are not checking smart boundary for cases when car is reversing. It will fall.
+            SmartBoundaryDetection();
+        }
+    }
+
+    private void DebugWaypointSelection()
+    {
+        Color color = Color.blue;
+        switch (currWaypoint.wayPointType)
+        {
+            case AIManager.WayPointType.SAFTEY:
+            case AIManager.WayPointType.HEALTH:
+            case AIManager.WayPointType.ENERGY:
+            case AIManager.WayPointType.NITRO:
+                color = Color.green;
+                break;
+            case AIManager.WayPointType.AI_CAR:
+                color = Color.black;
+                break;
+            case AIManager.WayPointType.PLAYER:
+                color = Color.magenta;
+                break;
+        }
+        if (currWaypoint.containsTransform)
+        {
+            Debug.DrawLine(transform.position, currWaypoint.transform.position, color, 10);
+        }
+        else
+        {
+            Debug.DrawLine(transform.position, currWaypoint.vector, color, 10);
+        }
     }
 
     private void SmartBoundaryDetection()
     {
+        if (GameManager.INSTANCE.CurrLevel().boundaries)
+        {
+            return;
+        }
         bool outsideSmartBoundary = IsOutsideSmartBoundary();
         if (outsideSmartBoundary)
         {
@@ -302,7 +342,7 @@ public class AICar : MonoBehaviour
         }
         wasOutsideSmartBoundary = outsideSmartBoundary;
     }
-    
+
     private bool IsOutsideSmartBoundary()
     {
         Bounds smartBounds = AIManager.INSTANCE.smartLevelBounds;
@@ -314,7 +354,7 @@ public class AICar : MonoBehaviour
         return false;
     }
 
-    private void MovementChecks()
+    private void StuckingCheck()
     {
         float now = Time.time;
         //Do checks at regular intervals not every frame.
@@ -341,28 +381,146 @@ public class AICar : MonoBehaviour
         reversing = true;
     }
 
-    private void SelectNewWayPoint()
+    private bool IsReachedWayPoint()
     {
-        currWaypoint = AIManager.INSTANCE.GetRandWayPoint();
-        Debug.DrawLine(transform.position, currWaypoint, Color.blue, 10);
+        //Reached at the waypoint
+        if (currWaypoint == null)
+        {
+            return true;
+        }
+        if (currWaypoint.containsTransform && currWaypoint.transform == null)
+        {
+            return true;
+        }
+        return Vector3.Distance(
+                transform.position, currWaypoint.containsTransform ? currWaypoint.transform.position : currWaypoint.vector
+                ) <= wayPointDistanceThreshold;
+    }
+
+    private void DecideWayPoint()
+    {
+        //Fill health
+        if (stats.IsHealthCritical() && TrySelectingHealthWaypoint())
+        {
+            return;
+        }
+        //Try to attack the player.
+        if (TrySelectingPlayerWaypoint())
+        {
+            return;
+        }
+        //Try to attack other AIs.
+        if (TrySelectingOtherAIWaypoint())
+        {
+            return;
+        }
+        currWaypoint = AIManager.INSTANCE.GetRandWayPoint(stats.displayName);
+        DebugWaypointSelection();
     }
 
     private void MoveTowardsSafteyPoint()
     {
-        //Right now origin is a safety point.
-        currWaypoint = new Vector3(0, 0, 0);
-        Debug.DrawLine(transform.position, currWaypoint, Color.green, 10);
+        //Try to collect health;
+        if (!stats.IsHealthFull() && TrySelectingHealthWaypoint())
+        {
+            return;
+        }
+        //Try to collect energy
+        if (!stats.IsEnergyFull() && TrySelectingEnergyWaypoint())
+        {
+            return;
+        }
+        //Try selecting Nitro.
+        if (TrySelectingNitroWaypoint())
+        {
+            return;
+        }
+        //Move to a safe place decided by AI manager
+        currWaypoint = AIManager.INSTANCE.GetSafteyPoint(stats.displayName);
+        DebugWaypointSelection();
+    }
+
+    private bool TrySelectingHealthWaypoint()
+    {
+        AIManager.WayPoint wayPoint = AIManager.INSTANCE.GetHealthLocation(stats.displayName);
+        if (wayPoint == null)
+        {
+            return false;
+        }
+        currWaypoint = wayPoint;
+        DebugWaypointSelection();
+        return true;
+    }
+
+    private bool TrySelectingEnergyWaypoint()
+    {
+        AIManager.WayPoint wayPoint = AIManager.INSTANCE.GetEnergyLocation(stats.displayName);
+        if (wayPoint == null)
+        {
+            return false;
+        }
+        currWaypoint = wayPoint;
+        DebugWaypointSelection();
+        return true;
+    }
+
+    private bool TrySelectingNitroWaypoint()
+    {
+        AIManager.WayPoint wayPoint = AIManager.INSTANCE.GetNitroLocation(stats.displayName);
+        if (wayPoint == null)
+        {
+            return false;
+        }
+        currWaypoint = wayPoint;
+        DebugWaypointSelection();
+        return true;
+    }
+
+    private bool TrySelectingPlayerWaypoint()
+    {
+        int chances = (int)(1 / AIManager.INSTANCE.playerAttackingProb);
+        if (Random.Range(0, chances) != 0)
+        {
+            return false;
+        }
+        AIManager.WayPoint playerLoc = AIManager.INSTANCE.GetPlayerLocation(stats.displayName);
+        if (playerLoc == null)
+        {
+            return false;
+        }
+        currWaypoint = playerLoc;
+        DebugWaypointSelection();
+        return true;
+    }
+
+    private bool TrySelectingOtherAIWaypoint()
+    {
+        int chances = (int)(1 / AIManager.INSTANCE.otherAIAttackcingProb);
+        if (Random.Range(0, chances) == 0)
+        {
+            return false;
+        }
+        AIManager.WayPoint otherAILoc = AIManager.INSTANCE.GetRandomAICarLocation(stats.displayName);
+        if (otherAILoc == null)
+        {
+            return false;
+        }
+        currWaypoint = otherAILoc;
+        DebugWaypointSelection();
+        return true;
     }
 
     private void MoveToWayPoint()
     {
-        //Reached at the waypoint
-        if (currWaypoint == null || Vector3.Distance(transform.position, currWaypoint) < wayPointDistanceThreshold)
+        //The object is destroyed.
+        //TODO it is checked in `DecideWayPoint`. Decide on removing this.
+        if (currWaypoint.containsTransform && currWaypoint.transform == null)
         {
-            SelectNewWayPoint();
+            return;
         }
-
-        Vector3 relative = transform.InverseTransformPoint(currWaypoint);
+        Vector3 relative = transform.InverseTransformPoint(
+            currWaypoint.containsTransform ? currWaypoint.transform.position : currWaypoint.vector
+            );
         horizontalInput = relative.x / relative.magnitude;
         verticalInput = rigidbody.velocity.magnitude > speedLimit ? 0 : 1;
     }
@@ -375,7 +533,7 @@ public class AICar : MonoBehaviour
 
         if (Vector2.Dot(reversedDirection2D, forward2D) > PhysicsManager.INSTANCE.reversingThreshold)
         {
-            SelectNewWayPoint();
+            DecideWayPoint();
             reversing = false;
             return;
         }

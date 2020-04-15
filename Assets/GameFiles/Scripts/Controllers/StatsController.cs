@@ -65,6 +65,12 @@ public class StatsController : MonoBehaviour
         return this.health == this.maxHealth;
     }
 
+    //TODO change according to difficulty.
+    public bool IsHealthCritical()
+    {
+        return this.health <= this.maxHealth / 2;
+    }
+
     public void ConsumeEnergy()
     {
         this.energy = 0;

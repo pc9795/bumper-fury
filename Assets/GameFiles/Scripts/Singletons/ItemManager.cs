@@ -36,6 +36,26 @@ public class ItemManager : MonoBehaviour
         }
     }
 
+    public Transform GetItemLocation(Item.ItemType type)
+    {
+        //Can't use iteration as items are collected and destroyed by players.
+        List<GameObject> itemPoints = new List<GameObject>(itemPosToItemDict.Keys);
+        foreach (GameObject itemPoint in itemPoints)
+        {
+            if (!itemPosToItemDict[itemPoint])
+            {
+                continue;
+            }
+            Item item = itemPosToItemDict[itemPoint].GetComponent<Item>();
+            if (item.type == type)
+            {
+                return itemPoint.transform;
+            }
+        }
+        return null;
+    }
+
+
     void GenerateItems()
     {
         if (!GameManager.INSTANCE.inGame)
@@ -66,8 +86,11 @@ public class ItemManager : MonoBehaviour
 
     }
 
+    //This method is intended to called at the start of the level by game manager.
     public void LoadItems(GameObject[] itemPoints)
     {
+        //Destroying previous items.
+        //TODO We are using iteration here but the dictionary is concurrently modified so have to check it.
         foreach (KeyValuePair<GameObject, GameObject> keyValuePair in itemPosToItemDict)
         {
             if (!keyValuePair.Value)

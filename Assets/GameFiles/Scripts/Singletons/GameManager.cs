@@ -39,16 +39,26 @@ public class GameManager : MonoBehaviour
         private string _sceneName;
         private string _theme;
         private string _displayName;
+        private bool _boundaries;
 
-        public Level(string sceneName, string theme, string displayName)
+        public Level(string sceneName, string theme, string displayName, bool boundaries)
         {
             _sceneName = sceneName;
             _theme = theme;
             _displayName = displayName;
+            _boundaries = boundaries;
         }
+
+        public Level(string sceneName, string theme)
+        {
+            _sceneName = sceneName;
+            _theme = theme;
+        }
+
         public string sceneName { get { return _sceneName; } }
         public string theme { get { return _theme; } }
         public string displayName { get { return _displayName; } }
+        public bool boundaries { get { return _boundaries; } }
     }
 
     [System.Serializable]
@@ -114,18 +124,19 @@ public class GameManager : MonoBehaviour
 
         //Configuring levels.
         //Can look on better way to configure this.
-        levels.Add(new Level("FireLevel", AudioManager.AudioTrack.EDM1, "Lava Grounds"));
-        levels.Add(new Level("WaterLevel", AudioManager.AudioTrack.EDM2, "Lost Island"));
-        levels.Add(new Level("AirLevel", AudioManager.AudioTrack.EDM3, "Sky Temple"));
-        levels.Add(new Level("EarthLevel", AudioManager.AudioTrack.EDM1, "Forgotten Lands"));
-        levels.Add(new Level("GameEnding", AudioManager.AudioTrack.CHARGED_UP, ""));
-        mainMenu = new Level("Main Menu", AudioManager.AudioTrack.THEME, "");
+        levels.Add(new Level("FireLevel", AudioManager.AudioTrack.EDM1, "Lava Grounds", true));
+        levels.Add(new Level("WaterLevel", AudioManager.AudioTrack.EDM2, "Lost Island", false));
+        levels.Add(new Level("AirLevel", AudioManager.AudioTrack.EDM3, "Sky Temple", false));
+        levels.Add(new Level("EarthLevel", AudioManager.AudioTrack.EDM1, "Forgotten Lands", true));
+        levels.Add(new Level("GameEnding", AudioManager.AudioTrack.CHARGED_UP));
+        mainMenu = new Level("Main Menu", AudioManager.AudioTrack.THEME);
     }
 
     //TODO remove
     void Start()
     {
         inGame = true;
+        currLevel = 2;
     }
 
     //Custom methods
@@ -151,6 +162,20 @@ public class GameManager : MonoBehaviour
     public GameObject[] GetAICars()
     {
         return aiCars;
+    }
+
+    public List<GameObject> GetAliveAICars()
+    {
+        List<GameObject> aliveAICars = new List<GameObject>();
+        for (int i = 0; i < aiCars.Length; i++)
+        {
+            if (!aiCars[i])
+            {
+                continue;
+            }
+            aliveAICars.Add(aiCars[i]);
+        }
+        return aliveAICars;
     }
 
     public int AIComponentsLeft()
@@ -331,5 +356,10 @@ public class GameManager : MonoBehaviour
             spawnIndex++;
             spawnIndex %= spawnPoints.Length;
         }
+    }
+
+    public Level CurrLevel()
+    {
+        return levels[currLevel];
     }
 }

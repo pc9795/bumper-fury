@@ -238,6 +238,9 @@ MonoBehaviour:
   smartLevelBounds:
     m_Center: {x: 0, y: 100, z: 0}
     m_Extent: {x: 85, y: 125, z: 85}
+  maxAttackingPlayers: 2
+  playerAttackingProb: 0.33
+  otherAIAttackcingProb: 0.33
 --- !u!114 &6863654035160358740
 MonoBehaviour:
   m_ObjectHideFlags: 0

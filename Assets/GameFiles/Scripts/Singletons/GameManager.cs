@@ -88,6 +88,10 @@ public class GameManager : MonoBehaviour
     public int levelLengthInSeconds = 30;
     [HideInInspector]
     public GameObject[] trapPoints;
+    public Vector3 handheldAxisMax = new Vector3(0.5f, 0.2f, 0);
+    public Vector3 handHeldAxisMin = new Vector3(-0.5f, -0.9f, 0);
+    [HideInInspector]
+    public bool useDpad;
 
     //Private fields
     private GameObject player;

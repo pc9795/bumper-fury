@@ -56,7 +56,7 @@ namespace UnityStandardAssets.Water
         {
             if (reflection)
             {
-                reflection.WaterTileBeingRendered(transform, Camera.current);
+                //reflection.WaterTileBeingRendered(transform, Camera.current);
             }
             if (waterBase)
             {

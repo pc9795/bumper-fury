@@ -10,6 +10,11 @@ public class PauseMenu : MonoBehaviour
     public GameObject levelTimerElem;
     public GameObject roundWonScreen;
     public GameObject scoreBoardElem;
+    public GameObject dPadConfigElem;
+    public GameObject dPadElem;
+    public GameObject touchButtonHolderElem;
+    public GameObject controlsDescDesktopElem;
+    public GameObject controlsDescHandhelElem;
 
     //Private fields
     private StatsController playerStats;
@@ -24,6 +29,12 @@ public class PauseMenu : MonoBehaviour
         //Level will start in a paused state.
         Time.timeScale = 0f;
         AudioManager.INSTANCE.Play("Engine");
+
+        if (SystemInfo.deviceType == DeviceType.Handheld)
+        {
+            dPadConfigElem.SetActive(true);
+            touchButtonHolderElem.SetActive(true);
+        }
     }
 
     void Update()
@@ -112,4 +123,21 @@ public class PauseMenu : MonoBehaviour
         GameManager.INSTANCE.NextLevel();
     }
 
+    public void ToggleDpad()
+    {
+        GameManager.INSTANCE.useDpad = !GameManager.INSTANCE.useDpad;
+        dPadElem.SetActive(!dPadElem.activeSelf);
+    }
+
+    public void ToggleControlDesc(bool value)
+    {
+        if (SystemInfo.deviceType == DeviceType.Desktop)
+        {
+            controlsDescDesktopElem.SetActive(value);
+        }
+        else if (SystemInfo.deviceType == DeviceType.Handheld)
+        {
+            controlsDescHandhelElem.SetActive(value);
+        }
+    }
 }

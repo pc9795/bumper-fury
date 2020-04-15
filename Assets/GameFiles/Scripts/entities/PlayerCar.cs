@@ -14,12 +14,13 @@ public class PlayerCar : MonoBehaviour
     private SimpleCarController carController;
     private bool initialized;
     private GameObject modelInstance;
+    private UIButtonManager uIButtonManager;
 
     //Unity methods
-
     void Start()
     {
         gameObject.tag = GameManager.Tag.PLAYER;
+        uIButtonManager = FindObjectOfType<UIButtonManager>();
     }
 
     void LateUpdate()
@@ -130,6 +131,96 @@ public class PlayerCar : MonoBehaviour
 
     //Custom methods
     public void ProcessInput()
+    {
+        if (SystemInfo.deviceType == DeviceType.Handheld)
+        {
+            ProcessHandheldInput();
+        }
+        else if (SystemInfo.deviceType == DeviceType.Desktop)
+        {
+            ProcessDesktopInput();
+        }
+    }
+
+    private void ProcessHandheldInput()
+    {
+        if (GameManager.INSTANCE.useDpad)
+        {
+            UseDpad();
+        }
+        else
+        {
+            UseAccelrometer();
+        }
+
+        ShootIfTouched();
+
+        if (uIButtonManager.IsCirclePressed() && projectileShotter.CanShoot() && stats.IsEnergyFull())
+        {
+            stats.ConsumeEnergy();
+            projectileShotter.Shoot();
+        }
+
+        if (uIButtonManager.IsDeltaPressed())
+        {
+            Reset();
+        }
+    }
+
+    private void UseDpad()
+    {
+        verticalInput = uIButtonManager.Vertical();
+        horizontalInput = uIButtonManager.Horizontal();
+    }
+
+    private void UseAccelrometer()
+    {
+        float yMin = GameManager.INSTANCE.handHeldAxisMin.y;
+        float yMax = GameManager.INSTANCE.handheldAxisMax.y;
+        float xMin = GameManager.INSTANCE.handHeldAxisMin.x;
+        float xMax = GameManager.INSTANCE.handheldAxisMax.x;
+        float y = Mathf.Clamp(Input.acceleration.y, yMin, yMax);
+        float x = Mathf.Clamp(Input.acceleration.x, xMin, xMax);
+
+        verticalInput = RemapRange(y, yMin, yMax, -1f, 1f);
+        horizontalInput = RemapRange(x, xMin, xMax, -1f, 1f);
+    }
+
+    private void ShootIfTouched()
+    {
+        if (Input.touchCount <= 0)
+        {
+            return;
+        }
+        //Get the first touch;
+        Touch touch = Input.GetTouch(0);
+        if (touch.phase != TouchPhase.Ended)
+        {
+            return;
+        }
+        Ray ray = Camera.main.ScreenPointToRay(touch.position);
+        RaycastHit hit;
+        //Depending on short ciructing.
+        if (!Physics.Raycast(ray, out hit) || hit.collider == null)
+        {
+            return;
+        }
+        GameObject touchedObject = hit.transform.gameObject;
+        //Logic to check that the touched object is player.
+        bool isPlayer = touchedObject.GetComponent<PlayerCar>() != null;
+        if (isPlayer && projectileShotter.CanShoot() && stats.IsEnergyFull())
+        {
+            stats.ConsumeEnergy();
+            projectileShotter.Shoot();
+        }
+    }
+
+    private float RemapRange(float value, float oldMin, float oldMax, float newMin, float newMax)
+    {
+        return (((value - oldMin) / (oldMax - oldMin)) * (newMax - newMin)) + newMin;
+    }
+
+    private void ProcessDesktopInput()
     {
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");

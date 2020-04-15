@@ -310,17 +310,17 @@ public class PlayerCar : MonoBehaviour
                 break;
             }
         }
-        if (!performedBySelf)
-        {
-            return;
-        }
-        print("Damage done by " + stats.displayName);
         //TODO do this calculations according to the impact.
         int damage = 0;
-
-        stats.CollectEnergy(GameManager.INSTANCE.GetEnergyFromDamage(damage));
-        stats.AddScore(GameManager.INSTANCE.GetScoreFromDamage(damage));
-        otherStats.DamageHealth(damage);
+        if (performedBySelf)
+        {
+            stats.AddScore(GameManager.INSTANCE.GetScoreFromDamage(damage));
+            otherStats.DamageHealth(damage);
+        }
+        else
+        {
+            stats.CollectEnergy(GameManager.INSTANCE.GetEnergyFromDamage(damage));
+        }
     }
 
 

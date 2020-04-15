@@ -5656,7 +5656,7 @@ PrefabInstance:
     - target: {fileID: 7517723816011022176, guid: 8e284c67d3848874880f08f80c3cfc5a,
         type: 3}
       propertyPath: countOfOpponents
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7517723816011022177, guid: 8e284c67d3848874880f08f80c3cfc5a,
         type: 3}
@@ -5870,7 +5870,7 @@ PrefabInstance:
     - target: {fileID: 7720095446412239995, guid: 1c02bc6c4fbbf4d4184105f814e54910,
         type: 3}
       propertyPath: m_TagString
-      value: Untagged
+      value: Spawn Point
       objectReference: {fileID: 0}
     - target: {fileID: 7720095446412239998, guid: 1c02bc6c4fbbf4d4184105f814e54910,
         type: 3}

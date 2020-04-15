@@ -126,6 +126,7 @@ public class AICar : MonoBehaviour
     {
         Vector3 rotation = transform.rotation.eulerAngles;
         transform.rotation = Quaternion.Euler(new Vector3(0, rotation.y, 0));
+        flipped = false;
     }
 
 
@@ -237,17 +238,18 @@ public class AICar : MonoBehaviour
                 break;
             }
         }
-        if (!performedBySelf)
-        {
-            return;
-        }
-        print("Damage done by " + stats.displayName);
+
         //TODO do this calculations according to the impact.
         int damage = 0;
-
-        stats.CollectEnergy(GameManager.INSTANCE.GetEnergyFromDamage(damage));
-        stats.AddScore(GameManager.INSTANCE.GetScoreFromDamage(damage));
-        otherStats.DamageHealth(damage);
+        if (performedBySelf)
+        {
+            stats.AddScore(GameManager.INSTANCE.GetScoreFromDamage(damage));
+            otherStats.DamageHealth(damage);
+        }
+        else
+        {
+            stats.CollectEnergy(GameManager.INSTANCE.GetEnergyFromDamage(damage));
+        }
     }
 
     private bool CheckBarelCollision(Collision collision)
@@ -295,22 +297,24 @@ public class AICar : MonoBehaviour
         float flipIndicator = Vector3.Dot(transform.up, Vector3.down);
         if (flipIndicator >= PhysicsManager.INSTANCE.flipThreshold)
         {
-            print("Flipping");
             flipped = true;
             return;
         }
-        transform.forward = -transform.forward;
         reverseDirection = -transform.forward;
         reversing = true;
+    }
+
+    private void SelectNewWayPoint()
+    {
+        currWaypoint = AIManager.INSTANCE.GetRandWayPoint();
+        Debug.DrawLine(transform.position, currWaypoint.position, Color.blue, 10);
     }
 
     private void MoveToWayPoint()
     {
         if (currWaypoint == null || Vector3.Distance(transform.position, currWaypoint.position) < wayPointDistanceThreshold)
         {
-            currWaypoint = AIManager.INSTANCE.GetRandWayPoint();
-            Debug.Log("New waypoint selected!");
-            Debug.DrawLine(transform.position, currWaypoint.position, Color.blue, 10);
+            SelectNewWayPoint();
         }
         Vector3 relative = transform.InverseTransformPoint(currWaypoint.position);
         horizontalInput = relative.x / relative.magnitude;
@@ -319,8 +323,11 @@ public class AICar : MonoBehaviour
 
     private void Reverse()
     {
-        if (transform.forward == reverseDirection)
+        Vector2 reversedDirection2D = new Vector2(reverseDirection.x, reverseDirection.z);
+        Vector2 forward2D = new Vector2(transform.forward.x, transform.forward.z);
+        if (Vector2.Dot(reversedDirection2D, forward2D) > PhysicsManager.INSTANCE.reversingThreshold)
         {
+            SelectNewWayPoint();
             reversing = false;
             return;
         }

@@ -249,4 +249,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collisionRelativeVelocityThreshold: 10
   collisionRelativeVectorZThreshold: 1.5
-  flipThreshold: 0.95
+  flipThreshold: 0.7
+  reversingThreshold: 0.9

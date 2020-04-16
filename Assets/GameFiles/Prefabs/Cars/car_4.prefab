@@ -439,7 +439,7 @@ MonoBehaviour:
   accMultiplier: 1
   deaccMultiplier: 1
   handbrakeForce: 3200
-  handbreak: 0
+  carDimensions: {x: 1.5, y: 1.2, z: 3.5}
 --- !u!1 &1912149318251623692
 GameObject:
   m_ObjectHideFlags: 0

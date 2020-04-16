@@ -10,7 +10,7 @@ public class WaterLevel : MonoBehaviour
     void Start()
     {
         GameManager.INSTANCE.InitLevel();
-        InvokeRepeating("GenerateTornado", tornadoIntervals, tornadoIntervals);
+        InvokeRepeating("GenerateTornado", 0, tornadoIntervals);
     }
 
     //Custom methods

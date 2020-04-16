@@ -9,6 +9,7 @@ TagManager:
   - Item Point
   - Trap Point
   - Way Point
+  - Obstacle
   layers:
   - Default
   - TransparentFX

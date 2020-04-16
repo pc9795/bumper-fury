@@ -37,7 +37,6 @@ public class WaypointGizmo : MonoBehaviour
                 prev = transforms[transforms.Count - 1].position;
             }
             Gizmos.DrawLine(prev, curr);
-            Gizmos.DrawWireSphere(curr, 0.3f);
         }
     }
 }

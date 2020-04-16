@@ -43,6 +43,8 @@ public class AIManager : MonoBehaviour
     public int maxAttackingPlayers;
     public float playerAttackingProb = 0.33f;
     public float otherAIAttackcingProb = 0.33f;
+    public float sensorLength = 3f;
+    public float sensorAngle = 30;
 
     //Private variables
     private GameObject[] wayPoints;
@@ -161,5 +163,39 @@ public class AIManager : MonoBehaviour
     public void LoadWaypoints(GameObject[] wayPoints)
     {
         this.wayPoints = wayPoints;
+    }
+
+    public bool IsObstacle(Collider collider)
+    {
+        if (collider.CompareTag(GameManager.Tag.OBSTACLE))
+        {
+            return true;
+        }
+        if (collider.GetComponent<Lava>() != null)
+        {
+            return true;
+        }
+        if (collider.GetComponent<Barel>() != null)
+        {
+            return true;
+        }
+        if (collider.GetComponent<Oil>() != null)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public bool IsShootable(Collider collider)
+    {
+        if (collider.GetComponentInParent<PlayerCar>() != null)
+        {
+            return true;
+        }
+        if (collider.GetComponentInParent<AICar>() != null)
+        {
+            return true;
+        }
+        return false;
     }
 }

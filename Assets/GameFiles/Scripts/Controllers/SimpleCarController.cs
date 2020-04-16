@@ -14,7 +14,12 @@ public class SimpleCarController : MonoBehaviour
     public float accMultiplier = 1;
     public float deaccMultiplier = 1;
     public float handbrakeForce = 800;
-    public bool handbreak;
+    //Calculated using a cube on the modal prefab.
+    public Vector3 carDimensions = new Vector3(1.5f, 1.2f, 3.5f);
+
+    //Private fields
+    private bool handbreak;
+
 
 
     //Custom methods

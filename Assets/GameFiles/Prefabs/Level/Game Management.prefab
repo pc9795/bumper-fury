@@ -241,6 +241,8 @@ MonoBehaviour:
   maxAttackingPlayers: 2
   playerAttackingProb: 0.33
   otherAIAttackcingProb: 0.33
+  sensorLength: 8
+  sensorAngle: 30
 --- !u!114 &6863654035160358740
 MonoBehaviour:
   m_ObjectHideFlags: 0

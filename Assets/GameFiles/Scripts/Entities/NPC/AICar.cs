@@ -26,6 +26,8 @@ public class AICar : MonoBehaviour
     private bool flipped;
     private bool wasOutsideSmartBoundary;
     private Scoreboard scoreboard;
+    private bool obstacleFound;
+    private float obstacleAvoidanceInput;
 
     // Unity methods
     void Start()
@@ -291,6 +293,105 @@ public class AICar : MonoBehaviour
             MoveToWayPoint();
             //We are not checking smart boundary for cases when car is reversing. It will fall.
             SmartBoundaryDetection();
+            SenseEnv();
+            if (obstacleFound)
+            {
+                horizontalInput = obstacleAvoidanceInput;
+            }
+        }
+    }
+
+    private void SenseEnv()
+    {
+        float sensorLength = AIManager.INSTANCE.sensorLength;
+        float sensorAngle = AIManager.INSTANCE.sensorAngle;
+        Vector3 sensorPos = transform.position;
+        sensorPos += transform.forward * carController.carDimensions.z / 2;
+        sensorPos += transform.up * carController.carDimensions.y / 2;
+        //Clear if there is some input from the previous sense iteration.
+        obstacleFound = false;
+        obstacleAvoidanceInput = 0f;
+        RaycastHit hit;
+
+        //Shotting is enabled only for Right, Left and Centre sensors not for Angluar ones.
+
+        //Check right obstacles.
+        //Front right sensor
+        sensorPos += transform.right * carController.carDimensions.x / 2;
+        if (Physics.Raycast(sensorPos, transform.forward, out hit, sensorLength))
+        {
+            if (AIManager.INSTANCE.IsObstacle(hit.collider))
+            {
+                obstacleFound = true;
+                obstacleAvoidanceInput -= 1f;
+                Debug.DrawLine(sensorPos, hit.point, Color.yellow);
+            }
+            else if (AIManager.INSTANCE.IsShootable(hit.collider) && projectileShooter.CanShoot() && stats.IsEnergyFull())
+            {
+                projectileShooter.Shoot();
+            }
+        }
+        //Front right angle sensor
+        else if (Physics.Raycast(sensorPos, Quaternion.AngleAxis(sensorAngle, transform.up) * transform.forward, out hit, sensorLength))
+        {
+            if (AIManager.INSTANCE.IsObstacle(hit.collider))
+            {
+                obstacleFound = true;
+                obstacleAvoidanceInput -= 0.5f;
+                Debug.DrawLine(sensorPos, hit.point, Color.yellow);
+            }
+        }
+
+        //Checking Left Obstacles
+        //Front left sensor
+        //Multiplying by 2 because to place at right we already added an extra half from centre position.
+        sensorPos -= 2 * transform.right * (carController.carDimensions.x / 2);
+        if (Physics.Raycast(sensorPos, transform.forward, out hit, sensorLength))
+        {
+            if (AIManager.INSTANCE.IsObstacle(hit.collider))
+            {
+                obstacleFound = true;
+                obstacleAvoidanceInput += 1f;
+                Debug.DrawLine(sensorPos, hit.point, Color.yellow);
+            }
+            else if (AIManager.INSTANCE.IsShootable(hit.collider) && projectileShooter.CanShoot() && stats.IsEnergyFull())
+            {
+                projectileShooter.Shoot();
+            }
+        }
+        //Front left angle sensor
+        if (Physics.Raycast(sensorPos, Quaternion.AngleAxis(-sensorAngle, transform.up) * transform.forward, out hit, sensorLength))
+        {
+            if (AIManager.INSTANCE.IsObstacle(hit.collider))
+            {
+                obstacleFound = true;
+                obstacleAvoidanceInput += 0.5f;
+                Debug.DrawLine(sensorPos, hit.point, Color.yellow);
+            }
+        }
+
+        //If we have a narrow obstacle(missed by left and right sensor) or obstacle on both sides(components from left and right
+        //sensors got cancelled.). Use front sensor in this situation.
+        //Front sensor
+        if (obstacleAvoidanceInput == 0 && Physics.Raycast(sensorPos, transform.forward, out hit, sensorLength))
+        {
+            if (AIManager.INSTANCE.IsObstacle(hit.collider))
+            {
+                obstacleFound = true;
+                Debug.DrawLine(sensorPos, hit.point, Color.yellow);
+                if (hit.normal.x < 0)
+                {
+                    obstacleAvoidanceInput = -1f;
+                }
+                else
+                {
+                    obstacleAvoidanceInput = 1f;
+                }
+            }
+            else if (AIManager.INSTANCE.IsShootable(hit.collider) && projectileShooter.CanShoot() && stats.IsEnergyFull())
+            {
+                projectileShooter.Shoot();
+            }
         }
     }
 
@@ -324,10 +425,6 @@ public class AICar : MonoBehaviour
 
     private void SmartBoundaryDetection()
     {
-        if (GameManager.INSTANCE.CurrLevel().boundaries)
-        {
-            return;
-        }
         bool outsideSmartBoundary = IsOutsideSmartBoundary();
         if (outsideSmartBoundary)
         {

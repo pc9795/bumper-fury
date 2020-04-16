@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
         public static string ITEM_POINT = "Item Point";
         public static string TRAP_POINT = "Trap Point";
         public static string WAY_POINT = "Way Point";
+        public static string OBSTACLE = "Obstacle";
     }
 
     public class Level
@@ -136,7 +137,6 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         inGame = true;
-        currLevel = 2;
     }
 
     //Custom methods

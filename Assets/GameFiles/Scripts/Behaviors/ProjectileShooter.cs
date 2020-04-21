@@ -9,7 +9,7 @@ public class ProjectileShooter : MonoBehaviour
     private GameObject projectileInstance;
     private Rigidbody rigidBody;
     private Vector3 direction;
-    private int damageDone = 0;
+    private float damageDone = 0;
     private StatsController stats;
 
     //Unity methods
@@ -37,9 +37,9 @@ public class ProjectileShooter : MonoBehaviour
             PlayerCar playerCar = collider.GetComponentInParent<PlayerCar>();
             //Assuming that AICar and PlayerCar will never be on the same object
             //And if the component has rigidbody then it will also have StatsController.
-            rigidBody = aICar != null ? aICar.GetComponent<Rigidbody>() : rigidBody;
+            colliderRigidBody = aICar != null ? aICar.GetComponent<Rigidbody>() : colliderRigidBody;
             colliderStats = aICar != null ? aICar.GetComponent<StatsController>() : colliderStats;
-            rigidBody = playerCar != null ? playerCar.GetComponent<Rigidbody>() : rigidBody;
+            colliderRigidBody = playerCar != null ? playerCar.GetComponent<Rigidbody>() : colliderRigidBody;
             colliderStats = playerCar != null ? playerCar.GetComponent<StatsController>() : colliderStats;
             //If no rigidbody or it is detecting the shooter itself.
             if (colliderRigidBody == null || colliderStats.displayName.Equals(stats.displayName))
@@ -55,7 +55,7 @@ public class ProjectileShooter : MonoBehaviour
         }
         //TODO I am not making everything FPS consistent so have to remove this deltaTime here to ensure consistency.
         //Move with the local space
-        projectileInstance.transform.position += direction * projectile.speed * Time.deltaTime;
+        projectileInstance.transform.position += direction * projectile.speed;
     }
 
     // Custom methods
@@ -80,9 +80,9 @@ public class ProjectileShooter : MonoBehaviour
         direction = rigidBody.transform.forward;
     }
 
-    public int CollectDamageDone()
+    public float CollectDamageDone()
     {
-        int returnValue = damageDone;
+        float returnValue = damageDone;
         damageDone = 0;
         return returnValue;
     }

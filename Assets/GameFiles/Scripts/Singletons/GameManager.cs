@@ -257,9 +257,9 @@ public class GameManager : MonoBehaviour
     }
 
     //TODO: ponder
-    public int GetScoreFromDamage(int damage)
+    public int GetScoreFromDamage(float damage)
     {
-        return damage / 2;
+        return (int)damage / 2;
     }
 
     //TODO: ponder

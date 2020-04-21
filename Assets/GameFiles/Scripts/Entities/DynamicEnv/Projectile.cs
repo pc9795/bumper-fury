@@ -9,5 +9,5 @@ public class Projectile : MonoBehaviour
     public float duration = 8;
     public float upwardRift = 3.0f;
     public float groundLevel = 0.6f;
-    public int baseDamage = 1;
+    public float baseDamage = 0.1f;
 }

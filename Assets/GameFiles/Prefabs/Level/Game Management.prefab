@@ -125,9 +125,9 @@ MonoBehaviour:
     name: Water
   selectedCarIndex: 0
   selectedElementalIndex: 0
-  countOfOpponents: 1
+  countOfOpponents: 5
   inGame: 0
-  levelLengthInSeconds: 300
+  levelLengthInSeconds: 120
   trapPoints: []
   handheldAxisMax: {x: 0.5, y: 0.2, z: 0}
   handHeldAxisMin: {x: -0.5, y: -0.9, z: 0}

@@ -52,7 +52,7 @@ public class PlayerCar : MonoBehaviour
         carController.Drift(drifting, horizontalInput);
         carController.UpdateWheelPoses();
         //Collect any score done by the current projectile if exists.
-        int damageDoneWithProjectile = projectileShooter.CollectDamageDone();
+        float damageDoneWithProjectile = projectileShooter.CollectDamageDone();
         stats.AddScore(GameManager.INSTANCE.GetScoreFromDamage(damageDoneWithProjectile));
     }
 

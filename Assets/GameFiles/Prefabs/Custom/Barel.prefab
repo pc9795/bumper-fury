@@ -810,7 +810,7 @@ MonoBehaviour:
   explostionAnim: {fileID: 7409209947098858319, guid: 27c55b606bbd42142b4f4c7aad209c7c,
     type: 3}
   duration: 6
-  radius: 50
-  upwardRift: 3
-  power: 100000
+  radius: 5
+  upwardRift: 20
+  power: 200000
   baseDamage: 20

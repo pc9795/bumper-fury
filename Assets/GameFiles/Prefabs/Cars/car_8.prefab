@@ -575,9 +575,9 @@ MonoBehaviour:
   backLeftWheel: {fileID: 7482563663330823821}
   frontRightWheel: {fileID: 7482443969880023511}
   frontLeftWheel: {fileID: 7478385344938621831}
-  maxSteerAngle: 30
+  maxSteerAngle: 20
   motorForce: 500
-  breakingForce: 400
+  breakingForce: 800
   turnSensitivity: 1
   accMultiplier: 1
   deaccMultiplier: 1

@@ -39,6 +39,7 @@ public class EarthLevel : MonoBehaviour
 
     private IEnumerator RockShowerUtil()
     {
+        AudioManager.INSTANCE.Play(AudioManager.AudioTrack.ROCK_SHOWER);
         rockShower = true;
         float start = 0.0f;
         List<GameObject> rocks = new List<GameObject>();
@@ -56,17 +57,20 @@ public class EarthLevel : MonoBehaviour
                     GameObject rockInstance = Instantiate(rockPrefab, rockShowerLocation.transform.position,
                         Quaternion.identity);
                     rockInstance.transform.localScale *= scale;
+                    Rigidbody rockRigidBody = rockInstance.GetComponent<Rigidbody>();
+                    rockRigidBody.mass *= scale;
                     rocks.Add(rockInstance);
                 }
             }
             start += Time.deltaTime;
             yield return null;
         }
-        
+
         foreach (GameObject rock in rocks)
         {
             Destroy(rock, rockStayDurationInSecs);
         }
         rockShower = false;
+        AudioManager.INSTANCE.Stop(AudioManager.AudioTrack.ROCK_SHOWER);
     }
 }

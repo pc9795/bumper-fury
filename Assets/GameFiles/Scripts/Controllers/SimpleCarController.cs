@@ -19,7 +19,12 @@ public class SimpleCarController : MonoBehaviour
 
     //Private fields
     private bool handbreak;
+    new private Rigidbody rigidbody;
 
+    void Start()
+    {
+        rigidbody = GetComponentInParent<Rigidbody>();
+    }
 
 
     //Custom methods
@@ -91,5 +96,16 @@ public class SimpleCarController : MonoBehaviour
     public void ReleaseHandBrake()
     {
         handbreak = false;
+    }
+
+    public void Drift(bool drifting, float horizontalInput)
+    {
+        
+    }
+
+    //Map a value from one range to other.
+    private float RemapRange(float value, float oldMin, float oldMax, float newMin, float newMax)
+    {
+        return (((value - oldMin) / (oldMax - oldMin)) * (newMax - newMin)) + newMin;
     }
 }

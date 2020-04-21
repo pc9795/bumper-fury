@@ -33,6 +33,8 @@ public class GameManager : MonoBehaviour
         public static string TRAP_POINT = "Trap Point";
         public static string WAY_POINT = "Way Point";
         public static string OBSTACLE = "Obstacle";
+        public static string INVISIBLE_BOUNDARY = "Invisible Boundary";
+        public static string ROCK = "Rock";
     }
 
     public class Level
@@ -104,7 +106,10 @@ public class GameManager : MonoBehaviour
     public Vector3 handHeldAxisMin = new Vector3(-0.5f, -0.9f, 0);
     [HideInInspector]
     public bool useDpad;
+    [HideInInspector]
     public GameObject[] wayPoints;
+    [HideInInspector]
+    public GameObject[] itemPoints;
 
     //Private fields
     private GameObject player;
@@ -113,7 +118,6 @@ public class GameManager : MonoBehaviour
     private List<Level> levels = new List<Level>();
     private int currLevel = 0;
     private GameObject[] spawnPoints;
-    private GameObject[] itemPoints;
     private string[] aiNames = { "Cormac", "Wilhelm", "Tyrel", "Ivan", "Seth", "Viktor", "Austin", "Roy",
         "Warrick","Carter","August","Benedict","Cyan","Valen","Zared","Daron","Finlay","Kynon","Jordan","Xerxes" };
     private int aiNameIndex;
@@ -137,6 +141,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         inGame = true;
+        AudioManager.INSTANCE.Play(levels[currLevel].theme);
     }
 
     //Custom methods
@@ -228,8 +233,8 @@ public class GameManager : MonoBehaviour
         LoadPlayer();
         LoadAIOpponents();
         PlaceObjectsOnSpawnPoints();
-        ItemManager.INSTANCE.LoadItems(itemPoints);
-        AIManager.INSTANCE.LoadWaypoints(wayPoints);
+        ItemManager.INSTANCE.Refresh();
+        AIManager.INSTANCE.Refresh();
     }
 
     public void NextLevel()

@@ -8,6 +8,11 @@ public class Storm : MonoBehaviour
     //Private variables
     private int deathTimer = 5;
 
+    void Start()
+    {
+        AudioManager.INSTANCE.Play(AudioManager.AudioTrack.WIND);
+    }
+
     //Unity methods.
     void Update()
     {
@@ -19,4 +24,10 @@ public class Storm : MonoBehaviour
         //TODO I am not making everything FPS consistent so have to remove this deltaTime here to ensure consistency.
         transform.position += transform.forward * speed * Time.deltaTime;
     }
+
+    void OnDestroy()
+    {
+        AudioManager.INSTANCE.Stop(AudioManager.AudioTrack.WIND);
+    }
+
 }

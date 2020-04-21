@@ -8,7 +8,7 @@ public class NitroBehavior : MonoBehaviour
 
     //Private fields
     private Rigidbody rigidBody;
-    private int incrmentSize = 10;
+    private int incrmentSize = 15;
     private GameObject nitroFlameInstance;
     private bool initialized;
 

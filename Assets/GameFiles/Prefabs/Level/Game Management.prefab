@@ -125,7 +125,7 @@ MonoBehaviour:
     name: Water
   selectedCarIndex: 0
   selectedElementalIndex: 0
-  countOfOpponents: 5
+  countOfOpponents: 1
   inGame: 0
   levelLengthInSeconds: 300
   trapPoints: []
@@ -133,6 +133,7 @@ MonoBehaviour:
   handHeldAxisMin: {x: -0.5, y: -0.9, z: 0}
   useDpad: 0
   wayPoints: []
+  itemPoints: []
 --- !u!114 &7517723816011022179
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -160,31 +161,31 @@ MonoBehaviour:
     source: {fileID: 0}
   - name: EDM 1
     clip: {fileID: 8300000, guid: e6e7ae404edcbfd42bde150a84aaf06b, type: 3}
-    volume: 0.3
+    volume: 0.1
     pitch: 1
     loop: 1
     source: {fileID: 0}
   - name: EDM 2
     clip: {fileID: 8300000, guid: 83a545809c62fd248b6e125789daa119, type: 3}
-    volume: 0.3
+    volume: 0.1
     pitch: 1
     loop: 1
     source: {fileID: 0}
   - name: EDM 3
     clip: {fileID: 8300000, guid: 61eeab56ffd2b584fa4f7c8fc864ebb0, type: 3}
-    volume: 0.3
+    volume: 0.1
     pitch: 1
     loop: 1
     source: {fileID: 0}
   - name: Charged Up
     clip: {fileID: 8300000, guid: 5d54738926f7e6d46a84aa9c14dd9919, type: 3}
-    volume: 0.3
+    volume: 0.2
     pitch: 1
     loop: 1
     source: {fileID: 0}
   - name: Engine
     clip: {fileID: 8300000, guid: 22cd46996da3b624bb08935264560d8c, type: 3}
-    volume: 1
+    volume: 0.5
     pitch: 1
     loop: 1
     source: {fileID: 0}
@@ -205,6 +206,36 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 0
+    source: {fileID: 0}
+  - name: Skid
+    clip: {fileID: 8300000, guid: 23aff7528eddc584eb55709ad763c81b, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Rock shower
+    clip: {fileID: 8300000, guid: a439dd3160a5c034e8006cc978772425, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Handbrake
+    clip: {fileID: 8300000, guid: de4856c139d22c0468f32c072696f920, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Wind
+    clip: {fileID: 8300000, guid: 27e7172f59eb67e43b9823b219af1bd7, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Hurricane
+    clip: {fileID: 8300000, guid: eafb7fac2652b2b4992282d7c79ac015, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 1
     source: {fileID: 0}
 --- !u!114 &7517723816011022190
 MonoBehaviour:
@@ -238,11 +269,13 @@ MonoBehaviour:
   smartLevelBounds:
     m_Center: {x: 0, y: 100, z: 0}
     m_Extent: {x: 85, y: 125, z: 85}
-  maxAttackingPlayers: 2
+  maxAttacking: 1
   playerAttackingProb: 0.33
   otherAIAttackcingProb: 0.33
-  sensorLength: 8
-  sensorAngle: 30
+  sensorLength: 12
+  sensorAngle: 45
+  smartBoundarySpeed: 5
+  stormSpeed: 5
 --- !u!114 &6863654035160358740
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -15,6 +15,8 @@ public class PlayerCar : MonoBehaviour
     private bool initialized;
     private GameObject modelInstance;
     private UIButtonManager uIButtonManager;
+    private bool drifting;
+    new private Rigidbody rigidbody;
 
     //Unity methods
     void Start()
@@ -42,12 +44,12 @@ public class PlayerCar : MonoBehaviour
         {
             stats.Die();
         }
-        carController.ReleaseHandBrake();
         ProcessInput();
         //Move the car
         //We are not clearing `horizontalInput` and `veticalInput` as it is expected to be handeled inside `ProcessInput`.
         carController.Steer(horizontalInput);
         carController.Move(verticalInput);
+        carController.Drift(drifting, horizontalInput);
         carController.UpdateWheelPoses();
         //Collect any score done by the current projectile if exists.
         int damageDoneWithProjectile = projectileShooter.CollectDamageDone();
@@ -64,6 +66,21 @@ public class PlayerCar : MonoBehaviour
 
     void OnTriggerStay(Collider collider)
     {
+        Tornado tornado = collider.GetComponent<Tornado>();
+        if (tornado != null)
+        {
+            stats.DamageHealth(tornado.baseDamage);
+            return;
+        }
+
+        Storm storm = collider.GetComponent<Storm>();
+        if (storm != null)
+        {
+            float force = 10000;
+            rigidbody.AddForce(storm.transform.forward * force);
+            return;
+        }
+
         if (CheckLavaTrigger(collider))
         {
             return;
@@ -77,6 +94,33 @@ public class PlayerCar : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+        if (collision.collider.CompareTag(GameManager.Tag.ROCK))
+        {
+            foreach (ContactPoint contact in collision.contacts)
+            {
+                if (Mathf.Abs(Vector3.Dot(transform.up, contact.normal)) > 0.90)
+                {
+                    //Rock will have a rigid body
+                    float mass = collision.collider.GetComponent<Rigidbody>().mass;
+                    float relativeVelocity = collision.relativeVelocity.magnitude;
+
+                    //Found using experimentaion.
+                    float powerFactor = 50;
+                    float maxForce = 200000;
+                    float radius = 40;
+                    float upwardRift = 2;
+
+                    //When weight of the rock is 1000 and then this value is coming in the range of approx 1000-15000
+                    //If the value of rock weight change then update this accordingly.
+                    float damage = (mass * relativeVelocity) / 1000;
+                    float force = Mathf.Clamp(mass * relativeVelocity * powerFactor, 0, maxForce);
+                    stats.DamageHealth(damage);
+                    rigidbody.AddExplosionForce(force, transform.position, radius, upwardRift);
+                    break;
+                }
+            }
+            return;
+        }
         if (CheckAICollision(collision))
         {
             return;
@@ -191,14 +235,31 @@ public class PlayerCar : MonoBehaviour
             Reset();
         }
         //Shooting
-        if (Input.GetKeyDown(KeyCode.Space) && projectileShooter.CanShoot() && stats.IsEnergyFull())
+        if (Input.GetKeyDown(KeyCode.Tab) && projectileShooter.CanShoot() && stats.IsEnergyFull())
         {
             stats.ConsumeEnergy();
             projectileShooter.Shoot();
         }
+        //TODO think of removing it as handbreaking is specifically implemented for AI cars.
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            AudioManager.INSTANCE.Play(AudioManager.AudioTrack.HANDBRAKE);
+        }
         if (Input.GetKey(KeyCode.Q))
         {
             carController.ApplyHandBrake();
+        }
+        else
+        {
+            carController.ReleaseHandBrake();
+        }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            drifting = true;
+        }
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            drifting = false;
         }
     }
 
@@ -211,7 +272,7 @@ public class PlayerCar : MonoBehaviour
     //Method used by game manager to initialize this object.
     public void Init()
     {
-        Rigidbody rigidbody = GetComponent<Rigidbody>();
+        rigidbody = GetComponent<Rigidbody>();
         rigidbody.centerOfMass = centreOfMass;
         projectileShooter = GetComponent<ProjectileShooter>();
         stats = GetComponent<StatsController>();

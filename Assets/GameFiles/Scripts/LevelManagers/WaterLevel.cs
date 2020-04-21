@@ -3,14 +3,29 @@
 public class WaterLevel : MonoBehaviour
 {
     //Public variables
-    public int tornadoIntervals = 10;
     public GameObject tornadoPrefab;
+    public int tornadoGap = 5;
+
+    //Private variables
+    private GameObject tornadoInstance;
+    private bool invoked;
 
     //Unity methods
     void Start()
     {
         GameManager.INSTANCE.InitLevel();
-        InvokeRepeating("GenerateTornado", 0, tornadoIntervals);
+        invoked = true;
+        GenerateTornado();
+    }
+
+    void Update()
+    {
+        if (tornadoInstance || invoked)
+        {
+            return;
+        }
+        invoked = true;
+        Invoke("GenerateTornado", tornadoGap);
     }
 
     //Custom methods
@@ -20,8 +35,8 @@ public class WaterLevel : MonoBehaviour
         int randIndex = Random.Range(0, trapPoints.Length);
         GameObject trapPoint = trapPoints[randIndex];
         //Tornado will destroy itself.
-        GameObject tornadoInstance = Instantiate(tornadoPrefab, trapPoint.transform.position, Quaternion.identity);
-        tornadoInstance.transform.forward = trapPoint.transform.forward;
+        tornadoInstance = Instantiate(tornadoPrefab, trapPoint.transform.position, Quaternion.identity);
+        invoked = false;
     }
 
 }

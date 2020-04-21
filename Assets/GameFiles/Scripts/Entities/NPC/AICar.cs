@@ -5,9 +5,10 @@ public class AICar : MonoBehaviour
     //Public fields
     public GameObject modelPrefab;
     public Vector3 centreOfMass = new Vector3(0, 0.3f, 0);
-    public int speedLimit = 10;
+    public int speedLimit = 20;
 
     // Private fields
+    //TODO move general configuration to AI manager.
     private StatsController stats;
     private SimpleCarController carController;
     private ProjectileShooter projectileShooter;
@@ -20,7 +21,7 @@ public class AICar : MonoBehaviour
     private bool reversing;
     private Vector3 reverseDirection;
     private float lastSpeedCheckTime;
-    private float speedCheckTimeIntervalInSecs = 5;
+    private float speedCheckTimeIntervalInSecs = 2;
     private float stuckThreshold = 0.5f;
     private float wayPointDistanceThreshold = 1;
     private bool flipped;
@@ -34,8 +35,6 @@ public class AICar : MonoBehaviour
     {
         //Get this object AI tag.
         gameObject.tag = GameManager.Tag.AI;
-
-        rigidbody = GetComponent<Rigidbody>();
     }
 
     void LateUpdate()
@@ -56,6 +55,11 @@ public class AICar : MonoBehaviour
             GameManager.INSTANCE.PushNotification(stats.displayName + " Eliminated!");
             Destroy(this.gameObject, GameManager.INSTANCE.deathTimer);
             stats.Die();
+        }
+        //TODO remove
+        if (true)
+        {
+            return;
         }
         carController.ReleaseHandBrake();
         //AI Behaviors
@@ -79,6 +83,19 @@ public class AICar : MonoBehaviour
 
     void OnTriggerStay(Collider collider)
     {
+        Storm storm = collider.GetComponent<Storm>();
+        if (storm != null)
+        {
+            float force = 2500;
+            rigidbody.AddForce(storm.transform.forward * force);
+
+            if (rigidbody.velocity.magnitude > AIManager.INSTANCE.stormSpeed)
+            {
+                carController.ApplyHandBrake();
+            }
+            return;
+        }
+
         if (CheckLavaTrigger(collider))
         {
             return;
@@ -111,7 +128,7 @@ public class AICar : MonoBehaviour
     public void Init()
     {
         //Configure centre of mass.
-        Rigidbody rigidbody = GetComponent<Rigidbody>();
+        rigidbody = GetComponent<Rigidbody>();
         rigidbody.centerOfMass = centreOfMass;
         //Initialize the projectile shooter.
         projectileShooter = GetComponent<ProjectileShooter>();
@@ -121,6 +138,9 @@ public class AICar : MonoBehaviour
         modelInstance = Instantiate(modelPrefab, transform.position, Quaternion.identity, transform);
         //Initialize the car controller.
         carController = modelInstance.GetComponent<SimpleCarController>();
+        //TODO make this constants.
+        carController.maxSteerAngle = 20;
+        carController.motorForce = 500;
         //Initialize the scoreboard.
         scoreboard = FindObjectOfType<Scoreboard>();
 
@@ -153,8 +173,6 @@ public class AICar : MonoBehaviour
                 {
                     return false;
                 }
-                AudioManager.INSTANCE.Play(AudioManager.AudioTrack.ITEM_COLLECT);
-                GameManager.INSTANCE.PushNotification("Picked up a ENERGY BOOST");
                 stats.CollectEnergy(item.value);
                 Destroy(item.gameObject);
                 break;
@@ -163,14 +181,10 @@ public class AICar : MonoBehaviour
                 {
                     return false;
                 }
-                AudioManager.INSTANCE.Play(AudioManager.AudioTrack.ITEM_COLLECT);
-                GameManager.INSTANCE.PushNotification("Picked up a HEALTH BOOST");
                 stats.CollectHealth(item.value);
                 Destroy(item.gameObject);
                 break;
             case Item.ItemType.SPEED_BOOST:
-                AudioManager.INSTANCE.Play(AudioManager.AudioTrack.ITEM_COLLECT);
-                GameManager.INSTANCE.PushNotification("Picked up a NITRO BOOST");
                 carController.NitroBoost(item.value, item.duration);
                 Destroy(item.gameObject);
                 break;
@@ -430,9 +444,10 @@ public class AICar : MonoBehaviour
         {
             if (!wasOutsideSmartBoundary)
             {
-                MoveTowardsSafteyPoint();
+                reversing = true;
+                reverseDirection = -transform.forward;
             }
-            if (rigidbody.velocity.magnitude > 5)
+            if (rigidbody.velocity.magnitude > AIManager.INSTANCE.smartBoundarySpeed)
             {
                 carController.ApplyHandBrake();
             }
@@ -473,6 +488,11 @@ public class AICar : MonoBehaviour
             flipped = true;
             return;
         }
+        //If already reversing and stuck
+        if (reversing)
+        {
+            reversing = false;
+        }
         //If vechile is stucked and not flipped then reverse.
         reverseDirection = -transform.forward;
         reversing = true;
@@ -494,6 +514,7 @@ public class AICar : MonoBehaviour
                 ) <= wayPointDistanceThreshold;
     }
 
+    //TODO add energy and nitro checking.
     private void DecideWayPoint()
     {
         //Fill health
@@ -515,6 +536,7 @@ public class AICar : MonoBehaviour
         DebugWaypointSelection();
     }
 
+    //TODO decide on removing this.
     private void MoveTowardsSafteyPoint()
     {
         //Try to collect health;
@@ -537,6 +559,7 @@ public class AICar : MonoBehaviour
         DebugWaypointSelection();
     }
 
+    //TODO randomize
     private bool TrySelectingHealthWaypoint()
     {
         AIManager.WayPoint wayPoint = AIManager.INSTANCE.GetHealthLocation(stats.displayName);
@@ -549,6 +572,7 @@ public class AICar : MonoBehaviour
         return true;
     }
 
+    //TODO randomize
     private bool TrySelectingEnergyWaypoint()
     {
         AIManager.WayPoint wayPoint = AIManager.INSTANCE.GetEnergyLocation(stats.displayName);
@@ -561,6 +585,7 @@ public class AICar : MonoBehaviour
         return true;
     }
 
+    //TODO randomize
     private bool TrySelectingNitroWaypoint()
     {
         AIManager.WayPoint wayPoint = AIManager.INSTANCE.GetNitroLocation(stats.displayName);
@@ -609,12 +634,6 @@ public class AICar : MonoBehaviour
 
     private void MoveToWayPoint()
     {
-        //The object is destroyed.
-        //TODO it is checked in `DecideWayPoint`. Decide on removing this.
-        if (currWaypoint.containsTransform && currWaypoint.transform == null)
-        {
-            return;
-        }
         Vector3 relative = transform.InverseTransformPoint(
             currWaypoint.containsTransform ? currWaypoint.transform.position : currWaypoint.vector
             );

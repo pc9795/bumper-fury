@@ -10,12 +10,13 @@ public class ProjectileShooter : MonoBehaviour
     private Rigidbody rigidBody;
     private Vector3 direction;
     private int damageDone = 0;
-
+    private StatsController stats;
 
     //Unity methods
     void Start()
     {
         rigidBody = GetComponent<Rigidbody>();
+        stats = GetComponent<StatsController>();
 
     }
 
@@ -29,21 +30,27 @@ public class ProjectileShooter : MonoBehaviour
         Collider[] colliders = Physics.OverlapSphere(projectileInstance.transform.position, projectile.radius);
         foreach (Collider collider in colliders)
         {
-            //TODO it should work on both player and ai with consideration that who fired it.
             //Collision will occur with models so have to look for behaviors in parent.
+            Rigidbody colliderRigidBody = null;
+            StatsController colliderStats = null;
             AICar aICar = collider.GetComponentInParent<AICar>();
-            if (aICar == null)
+            PlayerCar playerCar = collider.GetComponentInParent<PlayerCar>();
+            //Assuming that AICar and PlayerCar will never be on the same object
+            //And if the component has rigidbody then it will also have StatsController.
+            rigidBody = aICar != null ? aICar.GetComponent<Rigidbody>() : rigidBody;
+            colliderStats = aICar != null ? aICar.GetComponent<StatsController>() : colliderStats;
+            rigidBody = playerCar != null ? playerCar.GetComponent<Rigidbody>() : rigidBody;
+            colliderStats = playerCar != null ? playerCar.GetComponent<StatsController>() : colliderStats;
+            //If no rigidbody or it is detecting the shooter itself.
+            if (colliderRigidBody == null || colliderStats.displayName.Equals(stats.displayName))
             {
                 continue;
             }
-            //Make explosion
-            Rigidbody aICarRigidBody = aICar.GetComponent<Rigidbody>();
-            aICarRigidBody.AddExplosionForce(projectile.power, projectileInstance.transform.position,
+            colliderRigidBody.AddExplosionForce(projectile.power, projectileInstance.transform.position,
                 projectile.radius, projectile.upwardRift);
             //Do the damage.
-            StatsController aiCarStats = aICar.GetComponent<StatsController>();
             //TODO Modify base damage on the basis of impact
-            aiCarStats.DamageHealth(projectile.baseDamage);
+            colliderStats.DamageHealth(projectile.baseDamage);
             damageDone += projectile.baseDamage;
         }
         //TODO I am not making everything FPS consistent so have to remove this deltaTime here to ensure consistency.

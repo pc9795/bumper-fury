@@ -40,16 +40,24 @@ public class AIManager : MonoBehaviour
     //Public variables
     public static AIManager INSTANCE;
     public Bounds smartLevelBounds = new Bounds(new Vector3(0, 100, 0), new Vector3(85, 125, 85));
-    public int maxAttackingPlayers;
+    public int maxAttacking = 1;
     public float playerAttackingProb = 0.33f;
     public float otherAIAttackcingProb = 0.33f;
-    public float sensorLength = 3f;
-    public float sensorAngle = 30;
+    public float sensorLength = 12;
+    public float sensorAngle = 45;
+    public float smartBoundarySpeed = 5;
+    public float stormSpeed = 5;
 
     //Private variables
     private GameObject[] wayPoints;
+    //TODO check for deprecation. Not used
+    //What is the current way point type for the AI. Identifying using StatsController's displayname.
     private Dictionary<string, WayPointType> wayPointTracker = new Dictionary<string, WayPointType>();
-    private int attackingPlayers;
+    //Who is getting attacked by how many. Identifying using StatsController's displayname.
+    private Dictionary<string, int> attackedInfo = new Dictionary<string, int>();
+    //Who is attacking who. Identifying using StatsController's displayname.
+    private Dictionary<string, string> attackingInfo = new Dictionary<string, string>();
+    private string playerDisplayName;
 
     //Unity methods
     void Awake()
@@ -71,131 +79,120 @@ public class AIManager : MonoBehaviour
         }
     }
 
-    private void CheckAndDecrementAttackingPlayersCount(string identifier)
+    public void Refresh()
     {
-        if (!wayPointTracker.ContainsKey(identifier))
+        wayPoints = GameManager.INSTANCE.wayPoints;
+
+        List<string> participants = new List<string>();
+        participants.Add(GameManager.INSTANCE.GetPlayer().GetComponent<StatsController>().displayName);
+        playerDisplayName = participants[0];
+        foreach (GameObject aiCar in GameManager.INSTANCE.GetAICars())
+        {
+            participants.Add(aiCar.GetComponent<StatsController>().displayName);
+        }
+        foreach (string participant in participants)
+        {
+            //Just initial value will be replaced at first selection.
+            wayPointTracker.Add(participant, WayPointType.WAYPOINT);
+            attackedInfo.Add(participant, 0);
+            attackingInfo.Add(participant, null);
+        }
+    }
+
+    private void CheckAndDecrementAttackingCount(string identifier)
+    {
+        string attacked = attackingInfo[identifier];
+        if (attacked == null)
         {
             return;
         }
-        if (wayPointTracker[identifier] != WayPointType.PLAYER)
-        {
-            return;
-        }
-        attackingPlayers--;
+        attackedInfo[attacked] = attackedInfo[attacked] - 1;
+        attackingInfo[identifier] = null;
     }
 
     public WayPoint GetSafteyPoint(string identifier)
     {
-        CheckAndDecrementAttackingPlayersCount(identifier);
+        CheckAndDecrementAttackingCount(identifier);
         wayPointTracker[identifier] = WayPointType.SAFTEY;
         return new WayPoint(Vector3.zero, WayPointType.SAFTEY);
     }
 
     public WayPoint GetRandWayPoint(string identifier)
     {
-        CheckAndDecrementAttackingPlayersCount(identifier);
+        CheckAndDecrementAttackingCount(identifier);
         wayPointTracker[identifier] = WayPointType.WAYPOINT;
         return new WayPoint(wayPoints[Random.Range(0, wayPoints.Length)].transform, WayPointType.WAYPOINT);
     }
 
-    private bool CanAttackPlayer(string identifier)
-    {
-        bool attackingPlayerPreviously = false;
-        if (wayPointTracker.ContainsKey(identifier))
-        {
-            attackingPlayerPreviously = wayPointTracker[identifier] == WayPointType.PLAYER;
-        }
-        return !attackingPlayerPreviously && (attackingPlayers != maxAttackingPlayers);
-    }
-
     public WayPoint GetPlayerLocation(string identifier)
     {
-        //No need to check for decrementing attacking players as an AI car can't target a player twice continuously.
-        if (!CanAttackPlayer(identifier))
+        CheckAndDecrementAttackingCount(identifier);
+        if (attackedInfo[playerDisplayName] >= maxAttacking)
         {
             return null;
         }
-        attackingPlayers++;
+        wayPointTracker[identifier] = WayPointType.PLAYER;
         return new WayPoint(GameManager.INSTANCE.GetPlayer().transform, WayPointType.PLAYER);
     }
 
     public WayPoint GetRandomAICarLocation(string identifier)
     {
-        CheckAndDecrementAttackingPlayersCount(identifier);
+        CheckAndDecrementAttackingCount(identifier);
         List<GameObject> aiCars = GameManager.INSTANCE.GetAliveAICars();
-        return new WayPoint(aiCars[Random.Range(0, aiCars.Count)].transform, WayPointType.AI_CAR);
+        foreach (GameObject aiCar in aiCars)
+        {
+            string displayName = aiCar.GetComponent<StatsController>().displayName;
+            //Won't attack self.
+            if (displayName.Equals(identifier))
+            {
+                continue;
+            }
+            if (attackedInfo[displayName] < maxAttacking)
+            {
+                wayPointTracker[identifier] = WayPointType.AI_CAR;
+                return new WayPoint(aiCar.transform, WayPointType.AI_CAR);
+            }
+        }
+        return null;
+
     }
 
     public WayPoint GetEnergyLocation(string identifier)
     {
-        CheckAndDecrementAttackingPlayersCount(identifier);
-        Transform transform = ItemManager.INSTANCE.GetItemLocation(Item.ItemType.ENERGY_BOOST);
-        if (transform == null)
+        return GetRandomItemLocation(identifier, Item.ItemType.ENERGY_BOOST, WayPointType.ENERGY);
+    }
+
+    private WayPoint GetRandomItemLocation(string identifier, Item.ItemType itemType, WayPointType wayPointType)
+    {
+        CheckAndDecrementAttackingCount(identifier);
+        List<Transform> transforms = ItemManager.INSTANCE.GetItemLocation(Item.ItemType.ENERGY_BOOST);
+        if (transforms == null || transforms.Count < 1)
         {
             return null;
         }
-        return new WayPoint(transform, WayPointType.ENERGY);
+        wayPointTracker[identifier] = wayPointType;
+        return new WayPoint(transforms[Random.Range(0, transforms.Count)], WayPointType.ENERGY);
     }
 
     public WayPoint GetHealthLocation(string identifier)
     {
-        CheckAndDecrementAttackingPlayersCount(identifier);
-        Transform transform = ItemManager.INSTANCE.GetItemLocation(Item.ItemType.HEALTH_BOOST);
-        if (transform == null)
-        {
-            return null;
-        }
-        return new WayPoint(transform, WayPointType.HEALTH);
+        return GetRandomItemLocation(identifier, Item.ItemType.HEALTH_BOOST, WayPointType.HEALTH);
     }
 
     public WayPoint GetNitroLocation(string identifier)
     {
-        CheckAndDecrementAttackingPlayersCount(identifier);
-        Transform transform = ItemManager.INSTANCE.GetItemLocation(Item.ItemType.SPEED_BOOST);
-        if (transform == null)
-        {
-            return null;
-        }
-        return new WayPoint(transform, WayPointType.NITRO);
-    }
-
-    //This method is intended to called at the start of the level by game manager.
-    public void LoadWaypoints(GameObject[] wayPoints)
-    {
-        this.wayPoints = wayPoints;
+        return GetRandomItemLocation(identifier, Item.ItemType.SPEED_BOOST, WayPointType.NITRO);
     }
 
     public bool IsObstacle(Collider collider)
     {
-        if (collider.CompareTag(GameManager.Tag.OBSTACLE))
-        {
-            return true;
-        }
-        if (collider.GetComponent<Lava>() != null)
-        {
-            return true;
-        }
-        if (collider.GetComponent<Barel>() != null)
-        {
-            return true;
-        }
-        if (collider.GetComponent<Oil>() != null)
-        {
-            return true;
-        }
-        return false;
+        return collider.CompareTag(GameManager.Tag.OBSTACLE) || collider.CompareTag(GameManager.Tag.INVISIBLE_BOUNDARY) ||
+        collider.GetComponent<Lava>() != null || collider.GetComponent<Barel>() != null || collider.GetComponent<Oil>() != null ||
+        collider.CompareTag(GameManager.Tag.ROCK);
     }
 
     public bool IsShootable(Collider collider)
     {
-        if (collider.GetComponentInParent<PlayerCar>() != null)
-        {
-            return true;
-        }
-        if (collider.GetComponentInParent<AICar>() != null)
-        {
-            return true;
-        }
-        return false;
+        return collider.GetComponentInParent<PlayerCar>() != null || collider.GetComponentInParent<AICar>() != null;
     }
 }

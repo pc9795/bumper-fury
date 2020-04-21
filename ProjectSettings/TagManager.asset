@@ -10,6 +10,8 @@ TagManager:
   - Trap Point
   - Way Point
   - Obstacle
+  - Invisible Boundary
+  - Rock
   layers:
   - Default
   - TransparentFX

@@ -29,6 +29,11 @@ public class AudioManager : MonoBehaviour
         public static string ITEM_COLLECT = "Item collect";
         public static string POWER_USE = "Power use";
         public static string BAREL_EXPLODE = "Barel explode";
+        public static string SKID = "Skid";
+        public static string ROCK_SHOWER = "Rock shower";
+        public static string HANDBRAKE = "Handbrake";
+        public static string HURRICANE = "Hurricane";
+        public static string WIND = "Wind";
     }
 
     //Public fields

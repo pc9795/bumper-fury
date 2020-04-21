@@ -3,20 +3,24 @@
 public class Tornado : MonoBehaviour
 {
     //Public variables
-    public int speed = 10;
-
-    //Private variables
-    private int deathTimer = 5;
+    public int duration = 5;
+    public float baseDamage = 0.1f;
 
     //Unity methods.
+    void Start()
+    {
+        AudioManager.INSTANCE.Play(AudioManager.AudioTrack.HURRICANE);
+    }
+
     void Update()
     {
-        Bounds levelBounds = GameManager.INSTANCE.levelBounds;
-        if (!levelBounds.Contains(transform.position))
-        {
-            Destroy(gameObject, deathTimer);
-        }
-        //TODO I am not making everything FPS consistent so have to remove this deltaTime here to ensure consistency.
-        transform.position += transform.forward * speed * Time.deltaTime;
+        //TODO readjust the prefab to remove this kind of thing.
+        //Tornado is the grand-child of main particle system.
+        Destroy(transform.parent.transform.parent.gameObject, duration);
+    }
+
+    void OnDestroy()
+    {
+        AudioManager.INSTANCE.Stop(AudioManager.AudioTrack.HURRICANE);
     }
 }

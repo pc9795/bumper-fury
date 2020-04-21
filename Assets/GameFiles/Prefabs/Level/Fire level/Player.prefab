@@ -183,7 +183,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   modelPrefab: {fileID: 1141737773037995874, guid: 62f59bbcbf2b92645975938ad2013e2f,
     type: 3}
-  centreOfMass: {x: 0, y: 0.1, z: 0}
+  centreOfMass: {x: 0, y: 0, z: 0}
 --- !u!114 &1354148583250018529
 MonoBehaviour:
   m_ObjectHideFlags: 0

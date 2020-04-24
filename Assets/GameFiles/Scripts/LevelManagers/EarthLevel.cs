@@ -20,6 +20,8 @@ public class EarthLevel : MonoBehaviour
     //Unity methods
     void Start()
     {
+        //Game starts at paused state because of level start screen.
+        Time.timeScale = 0f;
         GameManager.INSTANCE.InitLevel();
         InvokeRepeating("RockShower", 0, rockShowerIntervalInSecs);
     }

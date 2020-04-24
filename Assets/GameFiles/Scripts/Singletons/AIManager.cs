@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class AIManager : MonoBehaviour
 {
@@ -50,6 +51,22 @@ public class AIManager : MonoBehaviour
     public float maxSteerAngle = 20;
     public float motorForce = 500;
 
+    //Needed this class as we can't view normal dictionaries in Unity inspector.
+    [Serializable]
+    public class DictionaryInfo
+    {
+        public string key;
+        public string value;
+
+        public DictionaryInfo(string key, string value)
+        {
+            this.key = key;
+            this.value = value;
+        }
+    }
+    public List<DictionaryInfo> _attackedInfo;
+    public List<DictionaryInfo> _attackingInfo;
+
     //Private variables
     private GameObject[] wayPoints;
     //Right now this dictionary is not used anywhere but can be used in future or could be removed.
@@ -66,6 +83,21 @@ public class AIManager : MonoBehaviour
     {
         Init();
     }
+
+    void Update()
+    {
+        _attackedInfo = new List<DictionaryInfo>();
+        foreach (KeyValuePair<string, int> keyValue in attackedInfo)
+        {
+            _attackedInfo.Add(new DictionaryInfo(keyValue.Key, "" + keyValue.Value));
+        }
+        _attackingInfo = new List<DictionaryInfo>();
+        foreach (KeyValuePair<string, string> keyValue in attackingInfo)
+        {
+            _attackingInfo.Add(new DictionaryInfo(keyValue.Key, keyValue.Value));
+        }
+    }
+
 
     //Custom methods
     private void Init()
@@ -126,7 +158,7 @@ public class AIManager : MonoBehaviour
     {
         CheckAndDecrementAttackingCount(identifier);
         wayPointTracker[identifier] = WayPointType.WAYPOINT;
-        return new WayPoint(wayPoints[Random.Range(0, wayPoints.Length)].transform, WayPointType.WAYPOINT);
+        return new WayPoint(wayPoints[UnityEngine.Random.Range(0, wayPoints.Length)].transform, WayPointType.WAYPOINT);
     }
 
     public WayPoint GetPlayerLocation(string identifier)
@@ -137,6 +169,8 @@ public class AIManager : MonoBehaviour
             return null;
         }
         wayPointTracker[identifier] = WayPointType.PLAYER;
+        attackingInfo[identifier] = playerDisplayName;
+        attackedInfo[playerDisplayName]++;
         return new WayPoint(GameManager.INSTANCE.GetPlayer().transform, WayPointType.PLAYER);
     }
 
@@ -155,6 +189,8 @@ public class AIManager : MonoBehaviour
             if (attackedInfo[displayName] < maxAttacking)
             {
                 wayPointTracker[identifier] = WayPointType.AI_CAR;
+                attackingInfo[identifier] = displayName;
+                attackedInfo[displayName]++;
                 return new WayPoint(aiCar.transform, WayPointType.AI_CAR);
             }
         }
@@ -176,7 +212,7 @@ public class AIManager : MonoBehaviour
             return null;
         }
         wayPointTracker[identifier] = wayPointType;
-        return new WayPoint(transforms[Random.Range(0, transforms.Count)], WayPointType.ENERGY);
+        return new WayPoint(transforms[UnityEngine.Random.Range(0, transforms.Count)], WayPointType.ENERGY);
     }
 
     public WayPoint GetHealthLocation(string identifier)

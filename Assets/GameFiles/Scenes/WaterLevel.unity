@@ -1384,6 +1384,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3984210822472902841, guid: 0190e62e3fcca6744bd5c4fca1786171,
+        type: 3}
+      propertyPath: m_Text
+      value: Tropical cyclons can lift your car and throw you out of the map.
+      objectReference: {fileID: 0}
     - target: {fileID: 6172822389670896884, guid: 0190e62e3fcca6744bd5c4fca1786171,
         type: 3}
       propertyPath: m_Text

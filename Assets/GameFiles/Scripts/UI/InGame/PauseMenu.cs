@@ -34,7 +34,7 @@ public class PauseMenu : MonoBehaviour
         scoreboard = scoreBoardElem.GetComponent<Scoreboard>();
 
         AudioManager.INSTANCE.Play("Engine");
-
+        
         if (SystemInfo.deviceType == DeviceType.Handheld)
         {
             dPadConfigElem.SetActive(true);

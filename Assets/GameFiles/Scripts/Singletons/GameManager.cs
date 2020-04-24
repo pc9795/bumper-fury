@@ -221,7 +221,6 @@ public class GameManager : MonoBehaviour
     //It is supposed to be called by inidividual levels when they loaded. Not responsibility of manager to load levels.
     public void InitLevel()
     {
-        Time.timeScale = 1;
         spawnPoints = GameObject.FindGameObjectsWithTag(Tag.SPAWN_POINT);
         trapPoints = GameObject.FindGameObjectsWithTag(Tag.TRAP_POINT);
         itemPoints = GameObject.FindGameObjectsWithTag(Tag.ITEM_POINT);

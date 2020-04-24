@@ -24,7 +24,7 @@ public class AICar : MonoBehaviour
     private Vector3 reverseDirection;
     private float lastSpeedCheckTime;
     private float speedCheckTimeIntervalInSecs = 2;
-    private float stuckThreshold = 0.5f;
+    private float stuckThreshold = 2f;
     private float wayPointDistanceThreshold = 1;
     private bool flipped;
     private bool wasOutsideSmartBoundary;
@@ -483,14 +483,18 @@ public class AICar : MonoBehaviour
             flipped = true;
             return;
         }
-        //If already reversing and stuck
+        
         if (reversing)
         {
+            //If already reversing and stuck
             reversing = false;
         }
-        //If vechile is stucked and not flipped then reverse.
-        reverseDirection = -transform.forward;
-        reversing = true;
+        else
+        {
+            //If vechile is stucked and not flipped then reverse.
+            reverseDirection = -transform.forward;
+            reversing = true;
+        }
     }
 
     private bool IsReachedWayPoint()

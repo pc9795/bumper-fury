@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 
+//REF: https://www.youtube.com/watch?v=JivuXdrIHK0
+//I referenced about how to create a Pause menu from the above mentioned video
 //TODO change the name as it isa acting as a Level manager. Also look for merging the `Level` class inside it.
 public class PauseMenu : MonoBehaviour
 {
@@ -26,11 +28,11 @@ public class PauseMenu : MonoBehaviour
     {
         levelTimer = levelTimerElem.GetComponent<LevelTimer>();
         scoreboard = scoreBoardElem.GetComponent<Scoreboard>();
-        
+
         //TODO uncomment
         //Level will start in a paused state.
         //Time.timeScale = 0f;
-        
+
         AudioManager.INSTANCE.Play("Engine");
 
         if (SystemInfo.deviceType == DeviceType.Handheld)

@@ -239,6 +239,7 @@ public class PlayerCar : MonoBehaviour
         {
             stats.ConsumeEnergy();
             projectileShooter.Shoot();
+            rigidbody.velocity = transform.forward * -18;
         }
         //TODO think of removing it as handbreaking is specifically implemented for AI cars.
         if (Input.GetKeyDown(KeyCode.Q))

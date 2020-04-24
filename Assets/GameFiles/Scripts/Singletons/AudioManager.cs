@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+//REF: https://www.youtube.com/watch?v=6OT43pvUyfY
+//I referenced above mentioned video on how to add Audion to my game.
 public class AudioManager : MonoBehaviour
 {
     [System.Serializable]
@@ -29,9 +31,13 @@ public class AudioManager : MonoBehaviour
         public static string ITEM_COLLECT = "Item collect";
         public static string POWER_USE = "Power use";
         public static string BAREL_EXPLODE = "Barel explode";
+        // REF: https://www.freesoundeffects.com/free-sounds/cars-10069/40/tot_sold/20/3/
         public static string SKID = "Skid";
+        // REF: https://www.zapsplat.com/?s=earthquake&post_type=music&sound-effect-category-id=
         public static string ROCK_SHOWER = "Rock shower";
+        // REF: https://www.zapsplat.com/page/2/?s=car+brake&post_type=music&sound-effect-category-id
         public static string HANDBRAKE = "Handbrake";
+        // REF: https://www.freesoundeffects.com/free-sounds/wind-sounds-10041/
         public static string HURRICANE = "Hurricane";
         public static string WIND = "Wind";
     }

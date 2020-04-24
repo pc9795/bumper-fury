@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 
+//REF: https://www.youtube.com/watch?v=o1XOUkYUDZU&list=PLB9LefPJI-5wH5VdLFPkWfnPjeI6OSys1
+//I referenced about AI movements from the above mentioned youtube tutorial on Car AI.
 public class AICar : MonoBehaviour
 {
     //Public fields
@@ -55,11 +57,6 @@ public class AICar : MonoBehaviour
             GameManager.INSTANCE.PushNotification(stats.displayName + " Eliminated!");
             Destroy(this.gameObject, GameManager.INSTANCE.deathTimer);
             stats.Die();
-        }
-        //TODO remove
-        if (true)
-        {
-            return;
         }
         carController.ReleaseHandBrake();
         //AI Behaviors

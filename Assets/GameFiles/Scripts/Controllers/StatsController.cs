@@ -73,11 +73,6 @@ public class StatsController : MonoBehaviour
 
     public void ConsumeEnergy()
     {
-        //TODO remove
-        if (true)
-        {
-            return;
-        }
         this.energy = 0;
     }
 

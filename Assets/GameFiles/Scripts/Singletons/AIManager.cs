@@ -47,10 +47,12 @@ public class AIManager : MonoBehaviour
     public float sensorAngle = 45;
     public float smartBoundarySpeed = 5;
     public float stormSpeed = 5;
+    public float maxSteerAngle = 20;
+    public float motorForce = 500;
 
     //Private variables
     private GameObject[] wayPoints;
-    //TODO check for deprecation. Not used
+    //Right now this dictionary is not used anywhere but can be used in future or could be removed.
     //What is the current way point type for the AI. Identifying using StatsController's displayname.
     private Dictionary<string, WayPointType> wayPointTracker = new Dictionary<string, WayPointType>();
     //Who is getting attacked by how many. Identifying using StatsController's displayname.
@@ -82,6 +84,9 @@ public class AIManager : MonoBehaviour
     public void Refresh()
     {
         wayPoints = GameManager.INSTANCE.wayPoints;
+        wayPointTracker = new Dictionary<string, WayPointType>();
+        attackedInfo = new Dictionary<string, int>();
+        attackingInfo = new Dictionary<string, string>();
 
         List<string> participants = new List<string>();
         participants.Add(GameManager.INSTANCE.GetPlayer().GetComponent<StatsController>().displayName);

@@ -5,6 +5,7 @@ public class PlayerCar : MonoBehaviour
     //Public fields
     public GameObject modelPrefab;
     public Vector3 centreOfMass = new Vector3(0, 0.3f, 0);
+    public float topSpeed = 40;
 
     //Private fields
     private float horizontalInput;
@@ -48,7 +49,10 @@ public class PlayerCar : MonoBehaviour
         //Move the car
         //We are not clearing `horizontalInput` and `veticalInput` as it is expected to be handeled inside `ProcessInput`.
         carController.Steer(horizontalInput);
-        carController.Move(verticalInput);
+        if (rigidbody.velocity.magnitude <= topSpeed)
+        {
+            carController.Move(verticalInput);
+        }
         carController.Drift(drifting, horizontalInput);
         carController.UpdateWheelPoses();
         //Collect any score done by the current projectile if exists.
@@ -241,7 +245,6 @@ public class PlayerCar : MonoBehaviour
             projectileShooter.Shoot();
             rigidbody.velocity = transform.forward * -18;
         }
-        //TODO think of removing it as handbreaking is specifically implemented for AI cars.
         if (Input.GetKeyDown(KeyCode.Q))
         {
             AudioManager.INSTANCE.Play(AudioManager.AudioTrack.HANDBRAKE);
@@ -377,8 +380,7 @@ public class PlayerCar : MonoBehaviour
                 break;
             }
         }
-        //TODO do this calculations according to the impact.
-        int damage = 0;
+        int damage = GameManager.INSTANCE.GetDamageFromCollisonRelativeVelcoity(collision.relativeVelocity.magnitude);
         if (performedBySelf)
         {
             stats.AddScore(GameManager.INSTANCE.GetScoreFromDamage(damage));

@@ -81,13 +81,12 @@ public class GameManager : MonoBehaviour
     }
 
     //Public fields
-    //TODO check a way to make it configurable
     //The bounds is shifted upwards so that things can be in air and still be considered inside level.
     public Bounds levelBounds = new Bounds(new Vector3(0, 100, 0), new Vector3(125, 125, 125));
     public int deathTimer = 3;
     public static GameManager INSTANCE;
     [HideInInspector]
-    public Difficulty difficulty { get; set; }
+    public Difficulty difficulty = Difficulty.MEDIUM;
     public List<Car> cars = new List<Car>();
     public List<Elemental> elementals = new List<Elemental>();
     [HideInInspector]
@@ -121,6 +120,7 @@ public class GameManager : MonoBehaviour
     private string[] aiNames = { "Cormac", "Wilhelm", "Tyrel", "Ivan", "Seth", "Viktor", "Austin", "Roy",
         "Warrick","Carter","August","Benedict","Cyan","Valen","Zared","Daron","Finlay","Kynon","Jordan","Xerxes" };
     private int aiNameIndex;
+    private int currRetries;
 
     //Unity methods
     void Awake()
@@ -135,13 +135,8 @@ public class GameManager : MonoBehaviour
         levels.Add(new Level("EarthLevel", AudioManager.AudioTrack.EDM1, "Forgotten Lands", true));
         levels.Add(new Level("GameEnding", AudioManager.AudioTrack.CHARGED_UP));
         mainMenu = new Level("Main Menu", AudioManager.AudioTrack.THEME);
-    }
 
-    //TODO remove
-    void Start()
-    {
-        inGame = true;
-        AudioManager.INSTANCE.Play(levels[currLevel].theme);
+        currRetries = GetMaxRetries();
     }
 
     //Custom methods
@@ -226,6 +221,7 @@ public class GameManager : MonoBehaviour
     //It is supposed to be called by inidividual levels when they loaded. Not responsibility of manager to load levels.
     public void InitLevel()
     {
+        Time.timeScale = 1;
         spawnPoints = GameObject.FindGameObjectsWithTag(Tag.SPAWN_POINT);
         trapPoints = GameObject.FindGameObjectsWithTag(Tag.TRAP_POINT);
         itemPoints = GameObject.FindGameObjectsWithTag(Tag.ITEM_POINT);
@@ -256,16 +252,19 @@ public class GameManager : MonoBehaviour
         inGame = false;
     }
 
-    //TODO: ponder
+    public int GetDamageFromCollisonRelativeVelcoity(float relativeVelocity)
+    {
+        return (int)relativeVelocity / 2;
+    }
+
     public int GetScoreFromDamage(float damage)
     {
         return (int)damage / 2;
     }
 
-    //TODO: ponder
     public int GetEnergyFromDamage(int damage)
     {
-        return damage * 5;
+        return damage * 2;
     }
 
     private void LoadPlayer()
@@ -366,5 +365,33 @@ public class GameManager : MonoBehaviour
     public Level CurrLevel()
     {
         return levels[currLevel];
+    }
+
+    private int GetMaxRetries()
+    {
+        switch (difficulty)
+        {
+            case Difficulty.EASY: return 5;
+            case Difficulty.MEDIUM: return 3;
+            case Difficulty.HARD: return 1;
+        }
+
+        return 0;
+    }
+
+    public void Retry()
+    {
+        SceneManager.LoadScene(levels[currLevel].sceneName);
+        currRetries--;
+    }
+
+    public bool CanRetry()
+    {
+        return currRetries > 0;
+    }
+
+    public int GetRetiresLeft()
+    {
+        return currRetries;
     }
 }

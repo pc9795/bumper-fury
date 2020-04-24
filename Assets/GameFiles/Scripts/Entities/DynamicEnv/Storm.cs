@@ -3,7 +3,7 @@
 public class Storm : MonoBehaviour
 {
     //Public variables
-    public int speed = 10;
+    public float speed = 0.2f;
 
     //Private variables
     private int deathTimer = 5;
@@ -21,8 +21,7 @@ public class Storm : MonoBehaviour
         {
             Destroy(gameObject, deathTimer);
         }
-        //TODO I am not making everything FPS consistent so have to remove this deltaTime here to ensure consistency.
-        transform.position += transform.forward * speed * Time.deltaTime;
+        transform.position += transform.forward * speed;
     }
 
     void OnDestroy()

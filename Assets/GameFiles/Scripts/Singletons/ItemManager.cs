@@ -91,7 +91,7 @@ public class ItemManager : MonoBehaviour
     {
         GameObject[] itemPoints = GameManager.INSTANCE.itemPoints;
         //Destroying previous items.
-        //TODO We are using iteration here but the dictionary is concurrently modified so have to check it.
+        //Right now it is working fine but because this dictionary is modifed(players collect itmes) to have to check it in future.
         foreach (KeyValuePair<GameObject, GameObject> keyValuePair in itemPosToItemDict)
         {
             if (!keyValuePair.Value)

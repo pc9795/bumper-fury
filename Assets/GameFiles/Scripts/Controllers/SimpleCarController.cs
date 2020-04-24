@@ -102,7 +102,7 @@ public class SimpleCarController : MonoBehaviour
 
     public void Drift(bool drifting, float horizontalInput)
     {
-        
+
     }
 
     //Map a value from one range to other.

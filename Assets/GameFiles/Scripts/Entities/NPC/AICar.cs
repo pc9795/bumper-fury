@@ -7,10 +7,10 @@ public class AICar : MonoBehaviour
     //Public fields
     public GameObject modelPrefab;
     public Vector3 centreOfMass = new Vector3(0, 0.3f, 0);
-    public int speedLimit = 20;
+    public int topSpeed = 20;
 
     // Private fields
-    //TODO move general configuration to AI manager.
+    //Many of the configurations can be moved to AI manager.
     private StatsController stats;
     private SimpleCarController carController;
     private ProjectileShooter projectileShooter;
@@ -135,9 +135,8 @@ public class AICar : MonoBehaviour
         modelInstance = Instantiate(modelPrefab, transform.position, Quaternion.identity, transform);
         //Initialize the car controller.
         carController = modelInstance.GetComponent<SimpleCarController>();
-        //TODO make this constants.
-        carController.maxSteerAngle = 20;
-        carController.motorForce = 500;
+        carController.maxSteerAngle = AIManager.INSTANCE.maxSteerAngle;
+        carController.motorForce = AIManager.INSTANCE.motorForce;
         //Initialize the scoreboard.
         scoreboard = FindObjectOfType<Scoreboard>();
 
@@ -259,8 +258,7 @@ public class AICar : MonoBehaviour
             }
         }
 
-        //TODO do this calculations according to the impact.
-        int damage = 0;
+        int damage = GameManager.INSTANCE.GetDamageFromCollisonRelativeVelcoity(collision.relativeVelocity.magnitude);
         if (performedBySelf)
         {
             stats.AddScore(GameManager.INSTANCE.GetScoreFromDamage(damage));
@@ -511,7 +509,7 @@ public class AICar : MonoBehaviour
                 ) <= wayPointDistanceThreshold;
     }
 
-    //TODO add energy and nitro checking.
+    //Right now I am not adding them to look for energy and nitro as it can cause weired race between AIs. Can add this in future.
     private void DecideWayPoint()
     {
         //Fill health
@@ -533,7 +531,7 @@ public class AICar : MonoBehaviour
         DebugWaypointSelection();
     }
 
-    //TODO decide on removing this.
+    //Right now this mehtod is not used so can look to remove it in future.
     private void MoveTowardsSafteyPoint()
     {
         //Try to collect health;
@@ -556,7 +554,6 @@ public class AICar : MonoBehaviour
         DebugWaypointSelection();
     }
 
-    //TODO randomize
     private bool TrySelectingHealthWaypoint()
     {
         AIManager.WayPoint wayPoint = AIManager.INSTANCE.GetHealthLocation(stats.displayName);
@@ -569,7 +566,6 @@ public class AICar : MonoBehaviour
         return true;
     }
 
-    //TODO randomize
     private bool TrySelectingEnergyWaypoint()
     {
         AIManager.WayPoint wayPoint = AIManager.INSTANCE.GetEnergyLocation(stats.displayName);
@@ -582,7 +578,6 @@ public class AICar : MonoBehaviour
         return true;
     }
 
-    //TODO randomize
     private bool TrySelectingNitroWaypoint()
     {
         AIManager.WayPoint wayPoint = AIManager.INSTANCE.GetNitroLocation(stats.displayName);
@@ -635,7 +630,7 @@ public class AICar : MonoBehaviour
             currWaypoint.containsTransform ? currWaypoint.transform.position : currWaypoint.vector
             );
         horizontalInput = relative.x / relative.magnitude;
-        verticalInput = rigidbody.velocity.magnitude > speedLimit ? 0 : 1;
+        verticalInput = rigidbody.velocity.magnitude > topSpeed ? 0 : 1;
     }
 
     private void Reverse()
@@ -653,6 +648,6 @@ public class AICar : MonoBehaviour
         //Turn with maximum steer angle.
         horizontalInput = 1;
         //Move back with maximum moter force.
-        verticalInput = rigidbody.velocity.magnitude > speedLimit ? 0 : -1;
+        verticalInput = rigidbody.velocity.magnitude > topSpeed ? 0 : -1;
     }
 }

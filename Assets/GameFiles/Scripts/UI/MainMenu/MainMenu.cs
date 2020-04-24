@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 
-//TODO: change name
 public class MainMenu : MonoBehaviour
 {
     //Unity methods

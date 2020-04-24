@@ -49,11 +49,9 @@ public class ProjectileShooter : MonoBehaviour
             colliderRigidBody.AddExplosionForce(projectile.power, projectileInstance.transform.position,
                 projectile.radius, projectile.upwardRift);
             //Do the damage.
-            //TODO Modify base damage on the basis of impact
             colliderStats.DamageHealth(projectile.baseDamage);
             damageDone += projectile.baseDamage;
         }
-        //TODO I am not making everything FPS consistent so have to remove this deltaTime here to ensure consistency.
         //Move with the local space
         projectileInstance.transform.position += direction * projectile.speed;
     }

@@ -14,7 +14,7 @@ public class Tornado : MonoBehaviour
 
     void Update()
     {
-        //TODO readjust the prefab to remove this kind of thing.
+        //In future adjust the prefab so that we don't have to write this messy piece of code.
         //Tornado is the grand-child of main particle system.
         Destroy(transform.parent.transform.parent.gameObject, duration);
     }

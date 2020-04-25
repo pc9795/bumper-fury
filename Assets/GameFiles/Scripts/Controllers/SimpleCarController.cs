@@ -5,22 +5,36 @@
 public class SimpleCarController : MonoBehaviour
 {
     //Public fields
+    //Wheel colliders for back wheels
     public WheelCollider backRightWheelCollider, backLeftWheelCollider;
+    //Wheel colliders for front wheels
     public WheelCollider frontRightWheelCollider, frontLeftWheelCollider;
+    //Transforms of the back wheels
     public Transform backRightWheel, backLeftWheel;
+    //Transofrms of the front wheels
     public Transform frontRightWheel, frontLeftWheel;
+    //Maximum steering angle in x direction
     public float maxSteerAngle = 30;
+    //Maximum torque in z direction.
     public float motorForce = 500;
+    //Force to apply when no forward force. Ideally it should not be there if friction curve is already in place.
     public float breakingForce = 400;
+    //Turning sensitivity. Not using this right now. Can remove this in future.
     public float turnSensitivity = 1;
+    //Accleration multiplier. Supposed to be used for nitro purposes. Greather than 1 in action.
     public float accMultiplier = 1;
+    //Deaccleration multiplier. Suppose to be used for environments such as swamp where speed is reduced. Less than 1 in action.
     public float deaccMultiplier = 1;
+    //Handbrake force
     public float handbrakeForce = 800;
-    //Calculated using a cube on the modal prefab.
+    //Dimensions of the car.
+    //Current caluclation is done using a cube on the modal prefab.
     public Vector3 carDimensions = new Vector3(1.5f, 1.2f, 3.5f);
 
     //Private fields
+    //Status to control whether to apply handbrake or not.
     private bool handbreak;
+    //Rigidbody to which this script is attached.
     new private Rigidbody rigidbody;
 
     void Start()
@@ -43,6 +57,7 @@ public class SimpleCarController : MonoBehaviour
     public void NitroBoost(float multiplier, float duration)
     {
         accMultiplier = multiplier;
+        //Remove the effects after some time.
         Invoke("ResetAccelerationMultipliers", duration);
     }
 
@@ -56,15 +71,16 @@ public class SimpleCarController : MonoBehaviour
     {
         // Calculate the force from the input.
         float force = verticalInput * motorForce * accMultiplier;
-        // Accelerate the wheel. Only front wheels.
+        // Accelerate the wheel.
         frontLeftWheelCollider.motorTorque = force;
         frontRightWheelCollider.motorTorque = force;
         backLeftWheelCollider.motorTorque = force;
         backRightWheelCollider.motorTorque = force;
         // If motor there is no motor force applied then apply a breaking force to stop the vechicle.
-        force = force == 0 ? breakingForce * deaccMultiplier : 0;
+        force = force == 0 ? breakingForce : 0;
         //Handbreak override default breaking force.
         force = handbreak ? handbrakeForce : force;
+        //Break the wheels
         frontLeftWheelCollider.brakeTorque = force;
         frontRightWheelCollider.brakeTorque = force;
         backLeftWheelCollider.brakeTorque = force;
@@ -78,6 +94,7 @@ public class SimpleCarController : MonoBehaviour
         UpdateWheelPose(backLeftWheelCollider, backLeftWheel);
     }
 
+    //Update the physical wheel according to collider.
     private void UpdateWheelPose(WheelCollider collider, Transform transform)
     {
         Vector3 pos = transform.position;
@@ -98,16 +115,5 @@ public class SimpleCarController : MonoBehaviour
     public void ReleaseHandBrake()
     {
         handbreak = false;
-    }
-
-    public void Drift(bool drifting, float horizontalInput)
-    {
-
-    }
-
-    //Map a value from one range to other.
-    private float RemapRange(float value, float oldMin, float oldMax, float newMin, float newMax)
-    {
-        return (((value - oldMin) / (oldMax - oldMin)) * (newMax - newMin)) + newMin;
     }
 }

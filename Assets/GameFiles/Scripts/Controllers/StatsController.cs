@@ -3,13 +3,20 @@
 public class StatsController : MonoBehaviour
 {
     //Public fields
+    //Display name of the contenstant. Work as an id of the object.
     public string displayName;
+    //Maximum helath
     public float maxHealth = 100;
+    //Current health
     public float health = 100;
+    //Current energy
     public float energy;
+    //Maximum energy
     public float maxEnergy = 100;
+    //Current score.
     [HideInInspector]
     public float score;
+    //Field to indicate if out of level.
     [HideInInspector]
     public bool isOutOflevel;
 
@@ -23,6 +30,7 @@ public class StatsController : MonoBehaviour
         {
             return;
         }
+        //It just not look right place for this functionality. Move it somewhere in future.
         Bounds levelBounds = GameManager.INSTANCE.levelBounds;
         Bounds bounds = GetMaxBounds();
         if (!(levelBounds.Contains(bounds.min) && levelBounds.Contains(bounds.max)))
@@ -75,7 +83,6 @@ public class StatsController : MonoBehaviour
         return this.health == this.maxHealth;
     }
 
-    //In future can adjust this mehtod to adjust according to difficulty
     public bool IsHealthCritical()
     {
         return this.health <= this.maxHealth / 2;
@@ -100,6 +107,8 @@ public class StatsController : MonoBehaviour
         }
     }
 
+    //Calculate bound by iterating all the children.
+    //Can it be done one time and cached?
     public Bounds GetMaxBounds()
     {
         var b = new Bounds(transform.position, Vector3.zero);

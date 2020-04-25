@@ -379,7 +379,7 @@ public class PlayerCar : MonoBehaviour
                 break;
             }
         }
-        int damage = GameManager.INSTANCE.GetDamageFromCollisonRelativeVelcoity(collision.relativeVelocity.magnitude);
+        float damage = GameManager.INSTANCE.GetDamageFromCollisonRelativeVelcoity(collision.relativeVelocity.magnitude);
         if (performedBySelf)
         {
             stats.AddScore(GameManager.INSTANCE.GetScoreFromDamage(damage));

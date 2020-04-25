@@ -19,7 +19,7 @@ public class HUD : MonoBehaviour
             playerStats = player.GetComponent<StatsController>();
         }
         //Need values in 0 - 1 scale.
-        energyBar.fillAmount = playerStats.energy / playerStats.maxEnergy;
-        healthBar.fillAmount = playerStats.health / playerStats.maxHealth;
+        energyBar.fillAmount = playerStats.GetEnergyRatio();
+        healthBar.fillAmount = playerStats.GetHealthRatio();
     }
 }

@@ -36,7 +36,7 @@ public class DamageBehavior : MonoBehaviour
         }
         else
         {
-            if (stats.health == 0)
+            if (stats.health <= 0)
             {
                 if (halfDamageIndicatorInstance)
                 {
@@ -48,7 +48,7 @@ public class DamageBehavior : MonoBehaviour
                         Instantiate(fullDamageIndicator, transform.position, Quaternion.identity, transform);
                 }
             }
-            if (stats.health > 0 && stats.health <= 50)
+            if (stats.IsHealthCritical())
             {
                 if (fullDamageIndicationDurationInstance)
                 {
@@ -60,7 +60,7 @@ public class DamageBehavior : MonoBehaviour
                         Instantiate(halfDamageIndicator, transform.position, Quaternion.identity, transform);
                 }
             }
-            if (stats.health > 50 && stats.health <= 100)
+            if (stats.IsHealthFine())
             {
                 if (halfDamageIndicatorInstance)
                 {

@@ -9,7 +9,7 @@ public class StatsController : MonoBehaviour
     public float energy;
     public float maxEnergy = 100;
     [HideInInspector]
-    public int score;
+    public float score;
     [HideInInspector]
     public bool isOutOflevel;
 
@@ -41,6 +41,16 @@ public class StatsController : MonoBehaviour
         }
     }
 
+    public float GetHealthRatio()
+    {
+        return this.health / this.maxHealth;
+    }
+
+    public float GetEnergyRatio()
+    {
+        return this.energy / this.maxHealth;
+    }
+
     public void CollectHealth(float health)
     {
         this.health += health;
@@ -50,7 +60,7 @@ public class StatsController : MonoBehaviour
         }
     }
 
-    public void AddScore(int score)
+    public void AddScore(float score)
     {
         this.score += score;
     }
@@ -69,6 +79,11 @@ public class StatsController : MonoBehaviour
     public bool IsHealthCritical()
     {
         return this.health <= this.maxHealth / 2;
+    }
+
+    public bool IsHealthFine()
+    {
+        return this.health > this.maxHealth/2;
     }
 
     public void ConsumeEnergy()

@@ -252,19 +252,19 @@ public class GameManager : MonoBehaviour
         inGame = false;
     }
 
-    public int GetDamageFromCollisonRelativeVelcoity(float relativeVelocity)
+    public float GetDamageFromCollisonRelativeVelcoity(float relativeVelocity)
     {
-        return (int)relativeVelocity / 2;
+        return relativeVelocity / 2;
     }
 
-    public int GetScoreFromDamage(float damage)
+    public float GetScoreFromDamage(float damage)
     {
-        return (int)damage / 2;
+        return damage / 2;
     }
 
-    public int GetEnergyFromDamage(int damage)
+    public int GetEnergyFromDamage(float damage)
     {
-        return damage * 2;
+        return (int)Mathf.Ceil(damage * 2);
     }
 
     private void LoadPlayer()

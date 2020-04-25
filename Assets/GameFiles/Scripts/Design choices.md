@@ -3,3 +3,5 @@
 * Awake life cycle is only used by singletons.
 * No classes without any variable. No marker classes. If want to mark a specific object use tags.
 * Use `none` as value for button's `navigation`.
+* Keep everything in `float` your life will be easy.
+* Use prefabs

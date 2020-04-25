@@ -47,7 +47,7 @@ public class Scoreboard : MonoBehaviour
         List<ScoreBoardEntry> scores = new List<ScoreBoardEntry>();
         if (playerStats != null)
         {
-            scores.Add(new ScoreBoardEntry(playerDisplayName, playerStats.score));
+            scores.Add(new ScoreBoardEntry(playerDisplayName, (int)playerStats.score));
         }
         else
         {
@@ -58,7 +58,7 @@ public class Scoreboard : MonoBehaviour
         {
             if (keyValuePair.Value != null)
             {
-                scores.Add(new ScoreBoardEntry(keyValuePair.Key, keyValuePair.Value.score));
+                scores.Add(new ScoreBoardEntry(keyValuePair.Key, (int)keyValuePair.Value.score));
             }
             else
             {

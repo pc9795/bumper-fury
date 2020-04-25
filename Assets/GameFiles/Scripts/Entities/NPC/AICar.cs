@@ -61,6 +61,7 @@ public class AICar : MonoBehaviour
             GameManager.INSTANCE.PushNotification(stats.displayName + " Eliminated!");
             Destroy(this.gameObject, GameManager.INSTANCE.deathTimer);
             stats.Die();
+            AIManager.INSTANCE.NotifyDeath(stats.displayName);
         }
         carController.ReleaseHandBrake();
         //AI Behaviors
@@ -297,7 +298,8 @@ public class AICar : MonoBehaviour
             }
         }
 
-        int damage = GameManager.INSTANCE.GetDamageFromCollisonRelativeVelcoity(collision.relativeVelocity.magnitude);
+        float damage = GameManager.INSTANCE.GetDamageFromCollisonRelativeVelcoity(collision.relativeVelocity.magnitude)*
+            AIManager.INSTANCE.damageMultiplier;
         if (performedBySelf)
         {
             stats.AddScore(GameManager.INSTANCE.GetScoreFromDamage(damage));
@@ -340,9 +342,8 @@ public class AICar : MonoBehaviour
         }
         else
         {
-            if (IsReachedWayPoint() || (Time.time - lastWayPointTime) > AIManager.INSTANCE.wayPointReachingThresholdInSecs)
+            if (IsReachedWayPoint())
             {
-                lastWayPointTime = Time.time;
                 DecideWayPoint();
             }
             MoveToWayPoint();
@@ -462,10 +463,10 @@ public class AICar : MonoBehaviour
             ReactToSense(Sensor.CENTER, hit, sensorPos);
         }
         //Back sesnor
+        //Not tested properly.
         sensorPos -= 2 * transform.forward * (carController.carDimensions.z / 2);
         if (Physics.Raycast(sensorPos, -transform.forward, out hit, sensorLength))
         {
-
             if (AIManager.INSTANCE.IsInvisibleBoundary(hit.collider))
             {
                 if (reversing)
@@ -570,18 +571,33 @@ public class AICar : MonoBehaviour
 
     private bool IsReachedWayPoint()
     {
+        bool reached = false;
         //Reached at the waypoint
         if (currWaypoint == null)
         {
-            return true;
+            reached = true;
         }
-        if (currWaypoint.containsTransform && currWaypoint.transform == null)
+        else if (currWaypoint.containsTransform && currWaypoint.transform == null)
         {
-            return true;
+            reached = true;
         }
-        return Vector3.Distance(
-                transform.position, currWaypoint.containsTransform ? currWaypoint.transform.position : currWaypoint.vector
-                ) <= AIManager.INSTANCE.wayPointDistanceThreshold;
+        else if (currWaypoint.wayPointType != AIManager.WayPointType.PLAYER &&
+            currWaypoint.wayPointType != AIManager.WayPointType.AI_CAR &&
+            Time.time - lastWayPointTime > AIManager.INSTANCE.wayPointReachingThresholdInSecs)
+        {
+            reached = true;
+        }
+        else
+        {
+            reached = Vector3.Distance(
+                    transform.position, currWaypoint.containsTransform ? currWaypoint.transform.position : currWaypoint.vector
+                    ) <= AIManager.INSTANCE.wayPointDistanceThreshold;
+        }
+        if (reached)
+        {
+            lastWayPointTime = Time.time;
+        }
+        return reached;
     }
 
     //Right now I am not adding them to look for energy and nitro as it can cause weired race between AIs. Can add this in future.

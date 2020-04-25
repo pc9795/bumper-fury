@@ -51,12 +51,13 @@ public class AIManager : MonoBehaviour
     public float maxSteerAngle = 20;
     public float motorForce = 500;
     public float invisibleBoundarySpeed = 2;
-    public float wayPointReachingThresholdInSecs = 7;
+    public float wayPointReachingThresholdInSecs = 10;
     public float flipThreshold = 0.70f;
     public float reversingThreshold = 0;
     public float speedCheckTimeIntervalInSecs = 3;
     public float stuckThreshold = 1f;
     public float wayPointDistanceThreshold = 1;
+    public float damageMultiplier = 1.5f;
 
     //Needed this class as we can't view normal dictionaries in Unity inspector.
     [Serializable]
@@ -141,6 +142,11 @@ public class AIManager : MonoBehaviour
             attackedInfo.Add(participant, 0);
             attackingInfo.Add(participant, null);
         }
+    }
+
+    public void NotifyDeath(string identifier)
+    {
+        CheckAndDecrementAttackingCount(identifier);
     }
 
     private void CheckAndDecrementAttackingCount(string identifier)

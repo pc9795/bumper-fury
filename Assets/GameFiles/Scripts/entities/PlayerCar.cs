@@ -80,8 +80,7 @@ public class PlayerCar : MonoBehaviour
         Storm storm = collider.GetComponent<Storm>();
         if (storm != null)
         {
-            float force = 10000;
-            rigidbody.AddForce(storm.transform.forward * force);
+            rigidbody.AddForce(storm.transform.forward * storm.force);
             return;
         }
 

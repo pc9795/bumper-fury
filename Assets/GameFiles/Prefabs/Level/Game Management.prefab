@@ -51,6 +51,7 @@ MonoBehaviour:
     m_Center: {x: 0, y: 100, z: 0}
     m_Extent: {x: 125, y: 125, z: 125}
   deathTimer: 3
+  difficulty: 1
   cars:
   - modelPrefab: {fileID: 1048014018787270843, guid: d9dcf39e0f78eca449ebe0b610f9c82e,
       type: 3}
@@ -276,6 +277,10 @@ MonoBehaviour:
   sensorAngle: 45
   smartBoundarySpeed: 5
   stormSpeed: 5
+  maxSteerAngle: 15
+  motorForce: 500
+  _attackedInfo: []
+  _attackingInfo: []
 --- !u!114 &6863654035160358740
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -4,7 +4,7 @@ public class Storm : MonoBehaviour
 {
     //Public variables
     public float speed = 0.2f;
-
+    public float force = 7500f;
     //Private variables
     private int deathTimer = 5;
 

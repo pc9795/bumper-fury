@@ -50,6 +50,7 @@ public class AIManager : MonoBehaviour
     public float stormSpeed = 5;
     public float maxSteerAngle = 20;
     public float motorForce = 500;
+    public float invisibleBoundarySpeed = 2;
 
     //Needed this class as we can't view normal dictionaries in Unity inspector.
     [Serializable]
@@ -225,10 +226,15 @@ public class AIManager : MonoBehaviour
         return GetRandomItemLocation(identifier, Item.ItemType.SPEED_BOOST, WayPointType.NITRO);
     }
 
+    public bool IsInvisibleBoundary(Collider collider)
+    {
+        return collider.CompareTag(GameManager.Tag.INVISIBLE_BOUNDARY);
+    }
+
     public bool IsObstacle(Collider collider)
     {
-        return collider.CompareTag(GameManager.Tag.OBSTACLE) || collider.CompareTag(GameManager.Tag.INVISIBLE_BOUNDARY) ||
-        collider.GetComponent<Lava>() != null || collider.GetComponent<Barel>() != null || collider.GetComponent<Oil>() != null ||
+        return collider.CompareTag(GameManager.Tag.OBSTACLE) || collider.GetComponent<Lava>() != null ||
+        collider.GetComponent<Barel>() != null || collider.GetComponent<Oil>() != null ||
         collider.CompareTag(GameManager.Tag.ROCK);
     }
 

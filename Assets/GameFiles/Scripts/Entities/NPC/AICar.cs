@@ -4,6 +4,11 @@
 //I referenced about AI movements from the above mentioned youtube tutorial on Car AI.
 public class AICar : MonoBehaviour
 {
+    public enum Sensor
+    {
+        LEFT, LEFT_ANGLE, RIGHT, RIGHT_ANGLE, CENTER, BACK
+    }
+
     //Public fields
     public GameObject modelPrefab;
     public Vector3 centreOfMass = new Vector3(0, 0.3f, 0);
@@ -31,6 +36,7 @@ public class AICar : MonoBehaviour
     private Scoreboard scoreboard;
     private bool obstacleFound;
     private float obstacleAvoidanceInput;
+    private bool insideTornado;
 
     // Unity methods
     void Start()
@@ -58,6 +64,7 @@ public class AICar : MonoBehaviour
             Destroy(this.gameObject, GameManager.INSTANCE.deathTimer);
             stats.Die();
         }
+        insideTornado = false;
         carController.ReleaseHandBrake();
         //AI Behaviors
         AI();
@@ -80,11 +87,18 @@ public class AICar : MonoBehaviour
 
     void OnTriggerStay(Collider collider)
     {
+        Tornado tornado = collider.GetComponent<Tornado>();
+        if (tornado != null)
+        {
+            stats.DamageHealth(tornado.baseDamage);
+            insideTornado = true;
+            return;
+        }
+
         Storm storm = collider.GetComponent<Storm>();
         if (storm != null)
         {
-            float force = 2500;
-            rigidbody.AddForce(storm.transform.forward * force);
+            rigidbody.AddForce(storm.transform.forward * (storm.force / 2));
 
             if (rigidbody.velocity.magnitude > AIManager.INSTANCE.stormSpeed)
             {
@@ -105,6 +119,33 @@ public class AICar : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+        if (collision.collider.CompareTag(GameManager.Tag.ROCK))
+        {
+            foreach (ContactPoint contact in collision.contacts)
+            {
+                if (Mathf.Abs(Vector3.Dot(transform.up, contact.normal)) > 0.90)
+                {
+                    //Rock will have a rigid body
+                    float mass = collision.collider.GetComponent<Rigidbody>().mass;
+                    float relativeVelocity = collision.relativeVelocity.magnitude;
+
+                    //Found using experimentaion.
+                    float powerFactor = 50;
+                    float maxForce = 200000;
+                    float radius = 40;
+                    float upwardRift = 2;
+
+                    //When weight of the rock is 1000 and then this value is coming in the range of approx 1000-15000
+                    //If the value of rock weight change then update this accordingly.
+                    float damage = (mass * relativeVelocity) / 1000;
+                    float force = Mathf.Clamp(mass * relativeVelocity * powerFactor, 0, maxForce);
+                    stats.DamageHealth(damage);
+                    rigidbody.AddExplosionForce(force, transform.position, radius, upwardRift);
+                    break;
+                }
+            }
+            return;
+        }
         if (CheckPlayerCollision(collision))
         {
             return;
@@ -310,6 +351,47 @@ public class AICar : MonoBehaviour
         }
     }
 
+    //Not handling Center sensor cases here.
+    private void ReactToSense(Sensor sensor, RaycastHit hit, Vector3 sensorPos)
+    {
+        if (AIManager.INSTANCE.IsInvisibleBoundary(hit.collider))
+        {
+            if (this.rigidbody.velocity.magnitude > AIManager.INSTANCE.invisibleBoundarySpeed)
+            {
+                this.carController.ApplyHandBrake();
+            }
+            this.obstacleFound = true;
+            this.obstacleAvoidanceInput += GetObstacleAvoidanceInput(sensor, hit);
+            Debug.DrawLine(sensorPos, hit.point, Color.yellow);
+        }
+        else if (AIManager.INSTANCE.IsObstacle(hit.collider))
+        {
+            obstacleFound = true;
+            obstacleAvoidanceInput += GetObstacleAvoidanceInput(sensor, hit);
+            Debug.DrawLine(sensorPos, hit.point, Color.yellow);
+        }
+        //Can't shoot with angle sensors and when inside tornado
+        else if (sensor != Sensor.LEFT_ANGLE && sensor != Sensor.RIGHT_ANGLE && !insideTornado &&
+            projectileShooter.CanShoot() && stats.IsEnergyFull() && AIManager.INSTANCE.IsShootable(hit.collider))
+        {
+            projectileShooter.Shoot();
+        }
+    }
+
+    private float GetObstacleAvoidanceInput(Sensor sensor, RaycastHit hit)
+    {
+        switch (sensor)
+        {
+            case Sensor.RIGHT: return -1;
+            case Sensor.RIGHT_ANGLE: return -0.5f;
+            case Sensor.LEFT: return 1;
+            case Sensor.LEFT_ANGLE: return 0.5f;
+            case Sensor.CENTER: return hit.normal.x < 0 ? -1 : 1f;
+        }
+        Debug.LogError("Getting an unconfigured sensor in method GetObstacleAvoidanceInput");
+        return 0;
+    }
+
     private void SenseEnv()
     {
         float sensorLength = AIManager.INSTANCE.sensorLength;
@@ -329,26 +411,12 @@ public class AICar : MonoBehaviour
         sensorPos += transform.right * carController.carDimensions.x / 2;
         if (Physics.Raycast(sensorPos, transform.forward, out hit, sensorLength))
         {
-            if (AIManager.INSTANCE.IsObstacle(hit.collider))
-            {
-                obstacleFound = true;
-                obstacleAvoidanceInput -= 1f;
-                Debug.DrawLine(sensorPos, hit.point, Color.yellow);
-            }
-            else if (AIManager.INSTANCE.IsShootable(hit.collider) && projectileShooter.CanShoot() && stats.IsEnergyFull())
-            {
-                projectileShooter.Shoot();
-            }
+            ReactToSense(Sensor.RIGHT, hit, sensorPos);
         }
         //Front right angle sensor
         else if (Physics.Raycast(sensorPos, Quaternion.AngleAxis(sensorAngle, transform.up) * transform.forward, out hit, sensorLength))
         {
-            if (AIManager.INSTANCE.IsObstacle(hit.collider))
-            {
-                obstacleFound = true;
-                obstacleAvoidanceInput -= 0.5f;
-                Debug.DrawLine(sensorPos, hit.point, Color.yellow);
-            }
+            ReactToSense(Sensor.RIGHT_ANGLE, hit, sensorPos);
         }
 
         //Checking Left Obstacles
@@ -357,49 +425,30 @@ public class AICar : MonoBehaviour
         sensorPos -= 2 * transform.right * (carController.carDimensions.x / 2);
         if (Physics.Raycast(sensorPos, transform.forward, out hit, sensorLength))
         {
-            if (AIManager.INSTANCE.IsObstacle(hit.collider))
-            {
-                obstacleFound = true;
-                obstacleAvoidanceInput += 1f;
-                Debug.DrawLine(sensorPos, hit.point, Color.yellow);
-            }
-            else if (AIManager.INSTANCE.IsShootable(hit.collider) && projectileShooter.CanShoot() && stats.IsEnergyFull())
-            {
-                projectileShooter.Shoot();
-            }
+            ReactToSense(Sensor.LEFT, hit, sensorPos);
         }
         //Front left angle sensor
-        if (Physics.Raycast(sensorPos, Quaternion.AngleAxis(-sensorAngle, transform.up) * transform.forward, out hit, sensorLength))
+        else if (Physics.Raycast(sensorPos, Quaternion.AngleAxis(-sensorAngle, transform.up) * transform.forward, out hit, sensorLength))
         {
-            if (AIManager.INSTANCE.IsObstacle(hit.collider))
-            {
-                obstacleFound = true;
-                obstacleAvoidanceInput += 0.5f;
-                Debug.DrawLine(sensorPos, hit.point, Color.yellow);
-            }
+            ReactToSense(Sensor.LEFT_ANGLE, hit, sensorPos);
         }
 
         //If we have a narrow obstacle(missed by left and right sensor) or obstacle on both sides(components from left and right
         //sensors got cancelled.). Use front sensor in this situation.
         //Front sensor
-        if (obstacleAvoidanceInput == 0 && Physics.Raycast(sensorPos, transform.forward, out hit, sensorLength))
+        sensorPos += transform.right * carController.carDimensions.x / 2;
+        if (this.obstacleAvoidanceInput == 0 && Physics.Raycast(sensorPos, transform.forward, out hit, sensorLength))
         {
-            if (AIManager.INSTANCE.IsObstacle(hit.collider))
+            ReactToSense(Sensor.CENTER, hit, sensorPos);
+        }
+        //Back sesnor
+        sensorPos -= 2 * transform.forward * (carController.carDimensions.z / 2);
+        if (Physics.Raycast(sensorPos, -transform.forward, out hit, sensorLength))
+        {
+            if (AIManager.INSTANCE.IsInvisibleBoundary(hit.collider) && reversing)
             {
-                obstacleFound = true;
+                reversing = false;
                 Debug.DrawLine(sensorPos, hit.point, Color.yellow);
-                if (hit.normal.x < 0)
-                {
-                    obstacleAvoidanceInput = -1f;
-                }
-                else
-                {
-                    obstacleAvoidanceInput = 1f;
-                }
-            }
-            else if (AIManager.INSTANCE.IsShootable(hit.collider) && projectileShooter.CanShoot() && stats.IsEnergyFull())
-            {
-                projectileShooter.Shoot();
             }
         }
     }
@@ -483,7 +532,7 @@ public class AICar : MonoBehaviour
             flipped = true;
             return;
         }
-        
+
         if (reversing)
         {
             //If already reversing and stuck

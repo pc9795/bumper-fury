@@ -198,6 +198,7 @@ public class GameManager : MonoBehaviour
 
     public void PushNotification(string message)
     {
+        print(message);
         messageQueue.Enqueue(new Notification(message, Time.time));
     }
 

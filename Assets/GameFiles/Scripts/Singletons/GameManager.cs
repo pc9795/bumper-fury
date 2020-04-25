@@ -93,7 +93,7 @@ public class GameManager : MonoBehaviour
     public List<Elemental> elementals = new List<Elemental>();
     [HideInInspector]
     public int selectedCarIndex;
-    [HideInInspector]
+    //TODO hide in inspector
     public int selectedElementalIndex;
     [HideInInspector]
     public Level mainMenu;

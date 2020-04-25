@@ -23,6 +23,13 @@ public class EarthLevel : MonoBehaviour
         //Game starts at paused state because of level start screen.
         Time.timeScale = 0f;
         GameManager.INSTANCE.InitLevel();
+        //On handheld devices rock shower is having a considerable amount of lag. So trying to compensantate this.
+        if (SystemInfo.deviceType == DeviceType.Handheld)
+        {
+            //These settings are according to default values. Have to make it configurable in future.
+            this.rockShowerRocksPerSecs = 1;
+            this.rockShowerDurationInSecs = 3;
+        }
         InvokeRepeating("RockShower", 0, rockShowerIntervalInSecs);
     }
 

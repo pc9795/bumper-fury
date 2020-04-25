@@ -3,5 +3,5 @@
 public class Lava : MonoBehaviour
 {
     //Public variables
-    public float baseDamage = 0.3f;
+    public float baseDamage = 0.1f;
 }

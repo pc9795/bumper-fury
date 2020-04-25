@@ -165,7 +165,7 @@ MonoBehaviour:
   displayName: Player
   maxHealth: 100
   health: 100
-  energy: 0
+  energy: 100
   maxEnergy: 100
   energyChargingRate: 1
   score: 0

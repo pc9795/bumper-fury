@@ -124,12 +124,12 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: 7a2c2bde99b372e49866a3507fad42e1, type: 3}
   - prefab: {fileID: 1323933383960778334, guid: b8930be77a93a3e42b999ec1775b37c2,
       type: 3}
-    powerPrefab: {fileID: 8653119836572959423, guid: 825d7e6b935441544a97652c0937b76d,
+    powerPrefab: {fileID: 1686698304007568523, guid: 6262168f76681b04c8d4c3cfea8e107f,
       type: 3}
     name: Water
     sprite: {fileID: 21300000, guid: ed02f83f4169eee43b00c188e7e3ee81, type: 3}
   selectedCarIndex: 0
-  selectedElementalIndex: 0
+  selectedElementalIndex: 3
   countOfOpponents: 5
   inGame: 0
   levelLengthInSeconds: 120

@@ -128,7 +128,7 @@ MonoBehaviour:
   selectedElementalIndex: 0
   countOfOpponents: 5
   inGame: 0
-  levelLengthInSeconds: 120
+  levelLengthInSeconds: 100
   trapPoints: []
   handheldAxisMax: {x: 0.5, y: 0.2, z: 0}
   handHeldAxisMin: {x: -0.5, y: -0.9, z: 0}
@@ -279,6 +279,13 @@ MonoBehaviour:
   stormSpeed: 5
   maxSteerAngle: 15
   motorForce: 500
+  invisibleBoundarySpeed: 2
+  wayPointReachingThresholdInSecs: 7
+  flipThreshold: 0.7
+  reversingThreshold: 0
+  speedCheckTimeIntervalInSecs: 3
+  stuckThreshold: 1
+  wayPointDistanceThreshold: 1
   _attackedInfo: []
   _attackingInfo: []
 --- !u!114 &6863654035160358740
@@ -295,5 +302,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collisionRelativeVelocityThreshold: 10
   collisionRelativeVectorZThreshold: 1.5
-  flipThreshold: 0.7
-  reversingThreshold: 0.9

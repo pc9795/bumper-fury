@@ -6,8 +6,6 @@ public class PhysicsManager : MonoBehaviour
     public static PhysicsManager INSTANCE;
     public float collisionRelativeVelocityThreshold = 15f;
     public float collisionRelativeVectorZThreshold = 1.5f;
-    public float flipThreshold = 0.70f;
-    public float reversingThreshold = 0.90f;
 
     //Unity methods
     void Awake()

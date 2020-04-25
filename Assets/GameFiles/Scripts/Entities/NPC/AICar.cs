@@ -28,15 +28,13 @@ public class AICar : MonoBehaviour
     private bool reversing;
     private Vector3 reverseDirection;
     private float lastSpeedCheckTime;
-    private float speedCheckTimeIntervalInSecs = 2;
-    private float stuckThreshold = 2f;
-    private float wayPointDistanceThreshold = 1;
     private bool flipped;
     private bool wasOutsideSmartBoundary;
     private Scoreboard scoreboard;
     private bool obstacleFound;
     private float obstacleAvoidanceInput;
     private bool insideTornado;
+    private float lastWayPointTime;
 
     // Unity methods
     void Start()
@@ -64,7 +62,6 @@ public class AICar : MonoBehaviour
             Destroy(this.gameObject, GameManager.INSTANCE.deathTimer);
             stats.Die();
         }
-        insideTornado = false;
         carController.ReleaseHandBrake();
         //AI Behaviors
         AI();
@@ -75,6 +72,7 @@ public class AICar : MonoBehaviour
         //Collect any score done by the current projectile if exists.
         float damageDoneWithProjectile = projectileShooter.CollectDamageDone();
         stats.AddScore(GameManager.INSTANCE.GetScoreFromDamage(damageDoneWithProjectile));
+        insideTornado = false;
     }
 
     void OnTriggerEnter(Collider collider)
@@ -325,6 +323,12 @@ public class AICar : MonoBehaviour
 
     private void AI()
     {
+        if (insideTornado)
+        {
+            horizontalInput = 0;
+            verticalInput = 0;
+            return;
+        }
         StuckingCheck();
         if (flipped)
         {
@@ -336,8 +340,9 @@ public class AICar : MonoBehaviour
         }
         else
         {
-            if (IsReachedWayPoint())
+            if (IsReachedWayPoint() || (Time.time - lastWayPointTime) > AIManager.INSTANCE.wayPointReachingThresholdInSecs)
             {
+                lastWayPointTime = Time.time;
                 DecideWayPoint();
             }
             MoveToWayPoint();
@@ -356,19 +361,34 @@ public class AICar : MonoBehaviour
     {
         if (AIManager.INSTANCE.IsInvisibleBoundary(hit.collider))
         {
-            if (this.rigidbody.velocity.magnitude > AIManager.INSTANCE.invisibleBoundarySpeed)
+            if (sensor == Sensor.CENTER)
             {
-                this.carController.ApplyHandBrake();
+                StartReversing();
             }
-            this.obstacleFound = true;
-            this.obstacleAvoidanceInput += GetObstacleAvoidanceInput(sensor, hit);
+            else
+            {
+                if (this.rigidbody.velocity.magnitude > AIManager.INSTANCE.invisibleBoundarySpeed)
+                {
+                    this.carController.ApplyHandBrake();
+                }
+                this.obstacleFound = true;
+                this.obstacleAvoidanceInput += GetObstacleAvoidanceInput(sensor, hit);
+            }
             Debug.DrawLine(sensorPos, hit.point, Color.yellow);
         }
         else if (AIManager.INSTANCE.IsObstacle(hit.collider))
         {
-            obstacleFound = true;
-            obstacleAvoidanceInput += GetObstacleAvoidanceInput(sensor, hit);
-            Debug.DrawLine(sensorPos, hit.point, Color.yellow);
+
+            if (sensor == Sensor.CENTER)
+            {
+                StartReversing();
+            }
+            else
+            {
+                obstacleFound = true;
+                obstacleAvoidanceInput += GetObstacleAvoidanceInput(sensor, hit);
+                Debug.DrawLine(sensorPos, hit.point, Color.yellow);
+            }
         }
         //Can't shoot with angle sensors and when inside tornado
         else if (sensor != Sensor.LEFT_ANGLE && sensor != Sensor.RIGHT_ANGLE && !insideTornado &&
@@ -445,10 +465,14 @@ public class AICar : MonoBehaviour
         sensorPos -= 2 * transform.forward * (carController.carDimensions.z / 2);
         if (Physics.Raycast(sensorPos, -transform.forward, out hit, sensorLength))
         {
-            if (AIManager.INSTANCE.IsInvisibleBoundary(hit.collider) && reversing)
+
+            if (AIManager.INSTANCE.IsInvisibleBoundary(hit.collider))
             {
-                reversing = false;
-                Debug.DrawLine(sensorPos, hit.point, Color.yellow);
+                if (reversing)
+                {
+                    StopReversing();
+                    Debug.DrawLine(sensorPos, hit.point, Color.yellow);
+                }
             }
         }
     }
@@ -488,8 +512,7 @@ public class AICar : MonoBehaviour
         {
             if (!wasOutsideSmartBoundary)
             {
-                reversing = true;
-                reverseDirection = -transform.forward;
+                StartReversing();
             }
             if (rigidbody.velocity.magnitude > AIManager.INSTANCE.smartBoundarySpeed)
             {
@@ -514,20 +537,20 @@ public class AICar : MonoBehaviour
     {
         float now = Time.time;
         //Do checks at regular intervals not every frame.
-        if (now - lastSpeedCheckTime <= speedCheckTimeIntervalInSecs)
+        if (now - lastSpeedCheckTime <= AIManager.INSTANCE.speedCheckTimeIntervalInSecs)
         {
             return;
         }
         lastSpeedCheckTime = now;
         float currSpeed = rigidbody.velocity.magnitude;
         //Check vehicle is stucked or not.
-        if (currSpeed >= stuckThreshold)
+        if (currSpeed >= AIManager.INSTANCE.stuckThreshold)
         {
             return;
         }
         //Check vehicle is flipped or not.
         float flipIndicator = Vector3.Dot(transform.up, Vector3.down);
-        if (flipIndicator >= PhysicsManager.INSTANCE.flipThreshold)
+        if (flipIndicator >= AIManager.INSTANCE.flipThreshold)
         {
             flipped = true;
             return;
@@ -536,13 +559,12 @@ public class AICar : MonoBehaviour
         if (reversing)
         {
             //If already reversing and stuck
-            reversing = false;
+            StopReversing();
         }
         else
         {
             //If vechile is stucked and not flipped then reverse.
-            reverseDirection = -transform.forward;
-            reversing = true;
+            StartReversing();
         }
     }
 
@@ -559,7 +581,7 @@ public class AICar : MonoBehaviour
         }
         return Vector3.Distance(
                 transform.position, currWaypoint.containsTransform ? currWaypoint.transform.position : currWaypoint.vector
-                ) <= wayPointDistanceThreshold;
+                ) <= AIManager.INSTANCE.wayPointDistanceThreshold;
     }
 
     //Right now I am not adding them to look for energy and nitro as it can cause weired race between AIs. Can add this in future.
@@ -686,16 +708,27 @@ public class AICar : MonoBehaviour
         verticalInput = rigidbody.velocity.magnitude > topSpeed ? 0 : 1;
     }
 
+    private void StartReversing()
+    {
+        reversing = true;
+        reverseDirection = -transform.forward;
+    }
+
+    private void StopReversing()
+    {
+        reversing = false;
+    }
+
     private void Reverse()
     {
         //We don't want the height component.
         Vector2 reversedDirection2D = new Vector2(reverseDirection.x, reverseDirection.z);
         Vector2 forward2D = new Vector2(transform.forward.x, transform.forward.z);
 
-        if (Vector2.Dot(reversedDirection2D, forward2D) > PhysicsManager.INSTANCE.reversingThreshold)
+        if (Vector2.Dot(reversedDirection2D, forward2D) > AIManager.INSTANCE.reversingThreshold)
         {
             DecideWayPoint();
-            reversing = false;
+            StopReversing();
             return;
         }
         //Turn with maximum steer angle.

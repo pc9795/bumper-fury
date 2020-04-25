@@ -51,6 +51,12 @@ public class AIManager : MonoBehaviour
     public float maxSteerAngle = 20;
     public float motorForce = 500;
     public float invisibleBoundarySpeed = 2;
+    public float wayPointReachingThresholdInSecs = 7;
+    public float flipThreshold = 0.70f;
+    public float reversingThreshold = 0;
+    public float speedCheckTimeIntervalInSecs = 3;
+    public float stuckThreshold = 1f;
+    public float wayPointDistanceThreshold = 1;
 
     //Needed this class as we can't view normal dictionaries in Unity inspector.
     [Serializable]

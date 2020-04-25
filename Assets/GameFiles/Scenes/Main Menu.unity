@@ -1435,9 +1435,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: '3 retries.
-
-'
+  m_Text: "3 retries. \n"
 --- !u!222 &329652222
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2043,7 +2041,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 5 retries. You will get a health boost and energy multiplier.
+  m_Text: 5 retries. You will get a health boost and energy multiplier. Opponents
+    will have reduced skills.
 --- !u!222 &393238709
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6147,6 +6146,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Single retry. You opponents will get a health boost and energy multiplier.
+    They will be more aggresssive and level time is significantly reduced.
 --- !u!222 &2117682920
 CanvasRenderer:
   m_ObjectHideFlags: 0

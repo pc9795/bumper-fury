@@ -272,6 +272,23 @@ public class GameManager : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         PlayerCar car = player.GetComponent<PlayerCar>();
 
+        //Setting name of the ai character.
+        StatsController stats = car.GetComponent<StatsController>();
+
+        //Health buffs.
+        switch (difficulty)
+        {
+            case Difficulty.EASY:
+                stats.energyChargingRate = 1.5f;
+                break;
+            case Difficulty.MEDIUM:
+                break;
+            case Difficulty.HARD:
+                stats.maxHealth = 0.8f * stats.maxHealth;
+                stats.health = stats.maxHealth;
+                break;
+        }
+
         ElementalContainer elementalContainer = car.GetComponent<ElementalContainer>();
         elementalContainer.element = elementals[selectedElementalIndex].prefab;
         elementalContainer.Init();
@@ -310,6 +327,21 @@ public class GameManager : MonoBehaviour
             //Setting name of the ai character.
             StatsController stats = car.GetComponent<StatsController>();
             stats.displayName = aiNames[aiNameIndex];
+
+            //Health buffs.
+            switch (difficulty)
+            {
+                case Difficulty.EASY:
+                    stats.maxHealth = 0.8f * stats.maxHealth;
+                    stats.health = stats.maxHealth;
+                    break;
+                case Difficulty.MEDIUM:
+                    break;
+                case Difficulty.HARD:
+                    stats.energyChargingRate = 1.5f;
+                    break;
+            }
+
             //Cycle names
             aiNameIndex++;
             aiNameIndex %= aiNames.Length;

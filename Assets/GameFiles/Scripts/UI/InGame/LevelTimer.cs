@@ -12,6 +12,16 @@ public class LevelTimer : MonoBehaviour
     {
         text = GetComponent<Text>();
         timeLeftInSecs = GameManager.INSTANCE.levelLengthInSeconds;
+        switch (GameManager.INSTANCE.difficulty)
+        {
+            case GameManager.Difficulty.EASY:
+                break;
+            case GameManager.Difficulty.MEDIUM:
+                break;
+            case GameManager.Difficulty.HARD:
+                timeLeftInSecs = (int)(0.8f * timeLeftInSecs);
+                break;
+        }
         InvokeRepeating("UpdateTimer", 1, 1);
     }
 

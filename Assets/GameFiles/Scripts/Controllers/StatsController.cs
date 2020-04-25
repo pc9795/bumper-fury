@@ -13,6 +13,8 @@ public class StatsController : MonoBehaviour
     public float energy;
     //Maximum energy
     public float maxEnergy = 100;
+    //Act as the energy buff applied to the contestant.
+    public float energyChargingRate = 1;
     //Current score.
     [HideInInspector]
     public float score;
@@ -42,7 +44,7 @@ public class StatsController : MonoBehaviour
     // Custom methods
     public void CollectEnergy(float energy)
     {
-        this.energy += energy;
+        this.energy += (energy * this.energyChargingRate);
         if (this.energy > this.maxEnergy)
         {
             this.energy = this.maxEnergy;
@@ -90,7 +92,7 @@ public class StatsController : MonoBehaviour
 
     public bool IsHealthFine()
     {
-        return this.health > this.maxHealth/2;
+        return this.health > this.maxHealth / 2;
     }
 
     public void ConsumeEnergy()

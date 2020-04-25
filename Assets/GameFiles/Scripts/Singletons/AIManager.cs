@@ -142,6 +142,21 @@ public class AIManager : MonoBehaviour
             attackedInfo.Add(participant, 0);
             attackingInfo.Add(participant, null);
         }
+        switch (GameManager.INSTANCE.difficulty)
+        {
+            case GameManager.Difficulty.EASY:
+                //Reduce sensor length.
+                this.sensorLength = this.sensorLength * 0.8f;
+                break;
+            case GameManager.Difficulty.MEDIUM:
+                break;
+            case GameManager.Difficulty.HARD:
+                //Increase senosr length
+                this.sensorLength = this.sensorLength * 1.2f;
+                //More aggressive
+                this.playerAttackingProb = 0.5f;
+                break;
+        }
     }
 
     public void NotifyDeath(string identifier)

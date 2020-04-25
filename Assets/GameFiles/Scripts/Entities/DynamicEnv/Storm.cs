@@ -3,9 +3,14 @@
 public class Storm : MonoBehaviour
 {
     //Public variables
+    
+    //Speed of the storm
     public float speed = 0.2f;
+    //Force of the storm.
     public float force = 7500f;
+    
     //Private variables
+    //Duration of the storm
     private int deathTimer = 5;
 
     void Start()
@@ -16,6 +21,7 @@ public class Storm : MonoBehaviour
     //Unity methods.
     void Update()
     {
+        //Check if out of bounds.
         Bounds levelBounds = GameManager.INSTANCE.levelBounds;
         if (!levelBounds.Contains(transform.position))
         {

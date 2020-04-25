@@ -3,7 +3,10 @@
 public class Tornado : MonoBehaviour
 {
     //Public variables
+
+    //Duration of the tornado
     public int duration = 5;
+    //Damage done by the tornado
     public float baseDamage = 0.1f;
 
     //Unity methods.

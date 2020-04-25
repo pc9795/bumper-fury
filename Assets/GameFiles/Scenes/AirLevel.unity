@@ -1990,6 +1990,18 @@ Transform:
   m_Father: {fileID: 297192082}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &573155708 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3718576744543537175, guid: 0190e62e3fcca6744bd5c4fca1786171,
+    type: 3}
+  m_PrefabInstance: {fileID: 1235446761}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &617110505 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1354148583250018530, guid: 2197ae66e4a8ef940bae2139180da1d9,
@@ -3992,7 +4004,7 @@ PrefabInstance:
     - target: {fileID: 1821596912540168350, guid: eecf093306aa9b942a44659a12bb340a,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.7492251
+      value: -9.2
       objectReference: {fileID: 0}
     - target: {fileID: 1821596912540168350, guid: eecf093306aa9b942a44659a12bb340a,
         type: 3}
@@ -4002,7 +4014,7 @@ PrefabInstance:
     - target: {fileID: 1821596912540168350, guid: eecf093306aa9b942a44659a12bb340a,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -58.7
+      value: -38.2
       objectReference: {fileID: 0}
     - target: {fileID: 1821596912540168350, guid: eecf093306aa9b942a44659a12bb340a,
         type: 3}
@@ -4730,6 +4742,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3718576744543537175, guid: 0190e62e3fcca6744bd5c4fca1786171,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3984210822472902841, guid: 0190e62e3fcca6744bd5c4fca1786171,
         type: 3}
       propertyPath: m_Text
@@ -8429,6 +8446,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 1354148583250018558, guid: 2197ae66e4a8ef940bae2139180da1d9,
+        type: 3}
+      propertyPath: damageScreen
+      value: 
+      objectReference: {fileID: 573155708}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2197ae66e4a8ef940bae2139180da1d9, type: 3}
 --- !u!1 &2061322522

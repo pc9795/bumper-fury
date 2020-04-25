@@ -167,6 +167,7 @@ MonoBehaviour:
   health: 100
   energy: 0
   maxEnergy: 100
+  energyChargingRate: 1
   score: 0
   isOutOflevel: 0
 --- !u!114 &1354148583250018558
@@ -184,6 +185,11 @@ MonoBehaviour:
   modelPrefab: {fileID: 1141737773037995874, guid: 62f59bbcbf2b92645975938ad2013e2f,
     type: 3}
   centreOfMass: {x: 0, y: 0, z: 0}
+  topSpeed: 40
+  projectilePushBackSpeed: 18
+  damageScreen: {fileID: 0}
+  damageFlashSpeed: 0.02
+  damageColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &1354148583250018529
 MonoBehaviour:
   m_ObjectHideFlags: 0

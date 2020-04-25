@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerCar : MonoBehaviour
 {
@@ -7,6 +8,12 @@ public class PlayerCar : MonoBehaviour
     public Vector3 centreOfMass = new Vector3(0, 0.3f, 0);
     public float topSpeed = 40;
     public float projectilePushBackSpeed = 18;
+    //Image that will have blood splatter everywhere.
+    public Image damageScreen;
+    //Speed with which damage screen fades out.
+    public float damageFlashSpeed;
+    //The color to show when damaged.
+    public Color damageColor;
 
     //Private fields
     private float horizontalInput;
@@ -17,8 +24,11 @@ public class PlayerCar : MonoBehaviour
     private bool initialized;
     private GameObject modelInstance;
     private UIButtonManager uIButtonManager;
-    private bool drifting;
     new private Rigidbody rigidbody;
+    //Indicates whether player took damage in this frame or not.
+    private bool damaged;
+    private bool insideWater;
+
 
     //Unity methods
     void Start()
@@ -41,6 +51,7 @@ public class PlayerCar : MonoBehaviour
         {
             stats.Die();
         }
+        insideWater = false;
         carController.ReleaseHandBrake();
         ProcessInput();
         //Move the car
@@ -54,6 +65,25 @@ public class PlayerCar : MonoBehaviour
         //Collect any score done by the current projectile if exists.
         float damageDoneWithProjectile = projectileShooter.CollectDamageDone();
         stats.AddScore(GameManager.INSTANCE.GetScoreFromDamage(damageDoneWithProjectile));
+        //Handling damage screen behavior
+        if (damaged)
+        {
+            damageScreen.color = damageColor;
+        }
+        damageScreen.color = Color.Lerp(damageScreen.color, Color.clear, damageFlashSpeed);
+        //Reset damage.
+        damaged = false;
+        if (insideWater)
+        {
+            AudioManager.INSTANCE.PlayIfNotPlaying(AudioManager.AudioTrack.INSIDE_WATER);
+        }
+        else
+        {
+            AudioManager.INSTANCE.Stop(AudioManager.AudioTrack.INSIDE_WATER);
+        }
+        //Setting it to false. If inside water then this will updated by the trigger. It is based on the assumption that 
+        //`OnTriggerStay` is called before `LateUpdate`.
+        insideWater = false;
     }
 
     void OnTriggerEnter(Collider collider)
@@ -66,20 +96,14 @@ public class PlayerCar : MonoBehaviour
 
     void OnTriggerStay(Collider collider)
     {
-        Tornado tornado = collider.GetComponent<Tornado>();
-        if (tornado != null)
+        if (CheckTornadoTrigger(collider))
         {
-            stats.DamageHealth(tornado.baseDamage);
             return;
         }
-
-        Storm storm = collider.GetComponent<Storm>();
-        if (storm != null)
+        if (CheckStormTrigger(collider))
         {
-            rigidbody.AddForce(storm.transform.forward * storm.force);
             return;
         }
-
         if (CheckLavaTrigger(collider))
         {
             return;
@@ -93,31 +117,8 @@ public class PlayerCar : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.CompareTag(GameManager.Tag.ROCK))
+        if (CheckRockCollision(collision))
         {
-            foreach (ContactPoint contact in collision.contacts)
-            {
-                if (Mathf.Abs(Vector3.Dot(transform.up, contact.normal)) > 0.90)
-                {
-                    //Rock will have a rigid body
-                    float mass = collision.collider.GetComponent<Rigidbody>().mass;
-                    float relativeVelocity = collision.relativeVelocity.magnitude;
-
-                    //Found using experimentaion.
-                    float powerFactor = 50;
-                    float maxForce = 200000;
-                    float radius = 40;
-                    float upwardRift = 2;
-
-                    //When weight of the rock is 1000 and then this value is coming in the range of approx 1000-15000
-                    //If the value of rock weight change then update this accordingly.
-                    float damage = (mass * relativeVelocity) / 1000;
-                    float force = Mathf.Clamp(mass * relativeVelocity * powerFactor, 0, maxForce);
-                    stats.DamageHealth(damage);
-                    rigidbody.AddExplosionForce(force, transform.position, radius, upwardRift);
-                    break;
-                }
-            }
             return;
         }
         if (CheckAICollision(collision))
@@ -311,6 +312,29 @@ public class PlayerCar : MonoBehaviour
         return true;
     }
 
+    private bool CheckTornadoTrigger(Collider collider)
+    {
+        Tornado tornado = collider.GetComponent<Tornado>();
+        if (tornado == null)
+        {
+            return false;
+        }
+        stats.DamageHealth(tornado.baseDamage);
+        damaged = true;
+        return true;
+    }
+
+    private bool CheckStormTrigger(Collider collider)
+    {
+        Storm storm = collider.GetComponent<Storm>();
+        if (storm == null)
+        {
+            return false;
+        }
+        rigidbody.AddForce(storm.transform.forward * storm.force);
+        return true;
+    }
+
     private bool CheckLavaTrigger(Collider collider)
     {
         Lava lava = collider.GetComponent<Lava>();
@@ -319,6 +343,7 @@ public class PlayerCar : MonoBehaviour
             return false;
         }
         stats.DamageHealth(lava.baseDamage);
+        damaged = true;
         return true;
     }
 
@@ -330,7 +355,43 @@ public class PlayerCar : MonoBehaviour
             return false;
         }
         stats.DamageHealth(water.baseDamage);
+        insideWater = true;
+        damaged = true;
         return true;
+    }
+    private bool CheckRockCollision(Collision collision)
+    {
+        if (!collision.collider.CompareTag(GameManager.Tag.ROCK))
+        {
+            return false;
+        }
+        foreach (ContactPoint contact in collision.contacts)
+        {
+            if (Mathf.Abs(Vector3.Dot(transform.up, contact.normal)) <= 0.90)
+            {
+                continue;
+            }
+            //Rock will have a rigid body
+            float mass = collision.collider.GetComponent<Rigidbody>().mass;
+            float relativeVelocity = collision.relativeVelocity.magnitude;
+
+            //Found using experimentaion.
+            float powerFactor = 50;
+            float maxForce = 200000;
+            float radius = 40;
+            float upwardRift = 2;
+
+            //When weight of the rock is 1000 and then this value is coming in the range of approx 1000-15000
+            //If the value of rock weight change then update this accordingly.
+            float damage = (mass * relativeVelocity) / 1000;
+            float force = Mathf.Clamp(mass * relativeVelocity * powerFactor, 0, maxForce);
+
+            stats.DamageHealth(damage);
+            rigidbody.AddExplosionForce(force, transform.position, radius, upwardRift);
+            damaged = true;
+            return true;
+        }
+        return false;
     }
 
     private bool CheckAICollision(Collision collision)
@@ -389,6 +450,7 @@ public class PlayerCar : MonoBehaviour
         }
         AudioManager.INSTANCE.Play(AudioManager.AudioTrack.BAREL_EXPLODE);
         barel.Explode();
+        damaged = true;
         return true;
     }
 

@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour
         public static string OBSTACLE = "Obstacle";
         public static string INVISIBLE_BOUNDARY = "Invisible Boundary";
         public static string ROCK = "Rock";
+        public static string LEVEL_FLOOR = "Level Floor";
     }
 
     public class Level

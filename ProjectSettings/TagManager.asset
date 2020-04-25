@@ -12,6 +12,7 @@ TagManager:
   - Obstacle
   - Invisible Boundary
   - Rock
+  - Level Floor
   layers:
   - Default
   - TransparentFX

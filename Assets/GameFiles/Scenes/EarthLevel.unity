@@ -250,6 +250,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0190e62e3fcca6744bd5c4fca1786171, type: 3}
+--- !u!114 &27860404 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3718576744543537175, guid: 0190e62e3fcca6744bd5c4fca1786171,
+    type: 3}
+  m_PrefabInstance: {fileID: 27860403}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &77382709
 GameObject:
   m_ObjectHideFlags: 0
@@ -4953,6 +4965,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 1354148583250018558, guid: 2197ae66e4a8ef940bae2139180da1d9,
+        type: 3}
+      propertyPath: damageScreen
+      value: 
+      objectReference: {fileID: 27860404}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2197ae66e4a8ef940bae2139180da1d9, type: 3}
 --- !u!4 &1236188634 stripped
@@ -7249,7 +7266,7 @@ GameObject:
   - component: {fileID: 2073555022}
   m_Layer: 0
   m_Name: Terrain_0_0_51c1fe5c-a5a2-47be-8dca-d538fa885ba9
-  m_TagString: Untagged
+  m_TagString: Level Floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295

@@ -238,6 +238,12 @@ MonoBehaviour:
     source: {fileID: 0}
   - name: Hurricane
     clip: {fileID: 8300000, guid: eafb7fac2652b2b4992282d7c79ac015, type: 3}
+    volume: 0.2
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: Inside water
+    clip: {fileID: 8300000, guid: 3278da7eacc3a7444914d967725720c8, type: 3}
     volume: 1
     pitch: 1
     loop: 1

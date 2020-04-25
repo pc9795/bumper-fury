@@ -40,6 +40,8 @@ public class AudioManager : MonoBehaviour
         // REF: https://www.freesoundeffects.com/free-sounds/wind-sounds-10041/
         public static string HURRICANE = "Hurricane";
         public static string WIND = "Wind";
+        // REF: http://soundbible.com/2032-Water.html
+        public static string INSIDE_WATER = "Inside water";
     }
 
     //Public fields
@@ -80,6 +82,21 @@ public class AudioManager : MonoBehaviour
     public void Play(string name)
     {
         Sound sound = soundsDict[name];
+        if (sound == null)
+        {
+            print("Requested sound:" + name + " not found!");
+            return;
+        }
+        sound.source.Play();
+    }
+
+    public void PlayIfNotPlaying(string name)
+    {
+        Sound sound = soundsDict[name];
+        if (sound.source.isPlaying)
+        {
+            return;
+        }
         if (sound == null)
         {
             print("Requested sound:" + name + " not found!");

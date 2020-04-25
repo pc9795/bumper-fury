@@ -280,23 +280,22 @@ MonoBehaviour:
   smartLevelBounds:
     m_Center: {x: 0, y: 100, z: 0}
     m_Extent: {x: 85, y: 125, z: 85}
-  maxAttacking: 1
+  maxAttacking: 2
   playerAttackingProb: 0.33
   otherAIAttackcingProb: 0.33
   sensorLength: 12
   sensorAngle: 45
-  smartBoundarySpeed: 5
   stormSpeed: 5
   maxSteerAngle: 15
   motorForce: 500
-  invisibleBoundarySpeed: 2
-  wayPointReachingThresholdInSecs: 10
+  wayPointReachingThresholdInSecs: 15
   flipThreshold: 0.7
-  reversingThreshold: 0
+  reversingThreshold: 0.9
   speedCheckTimeIntervalInSecs: 3
   stuckThreshold: 1
   wayPointDistanceThreshold: 1
   damageMultiplier: 1.5
+  safteySpeed: 3
   _attackedInfo: []
   _attackingInfo: []
 --- !u!114 &6863654035160358740

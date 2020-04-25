@@ -58,6 +58,8 @@ public class AICar : MonoBehaviour
     private bool insideTornado;
     //What was the last time when a way point was reached
     private float lastWayPointTime;
+    //A variable to indicate waling safely.
+    private bool walkSafely;
 
     // Unity methods
     void Start()
@@ -84,6 +86,8 @@ public class AICar : MonoBehaviour
         //Clear if there is some input from the previous sense iteration.
         obstacleFound = false;
         obstacleAvoidanceInput = 0f;
+        //Clear this by default. It will be reseted in the `AI` if needed.
+        walkSafely = false;
         //Release handbrakes by default. If needed it will be set down the flow again.
         carController.ReleaseHandBrake();
         //AI Behaviors
@@ -94,7 +98,11 @@ public class AICar : MonoBehaviour
             horizontalInput = obstacleAvoidanceInput;
         }
         //Move the car
-        carController.Steer(horizontalInput);
+        if (walkSafely && rigidbody.velocity.magnitude > AIManager.INSTANCE.safteySpeed)
+        {
+            carController.ApplyHandBrake();
+        }
+        carController.Steer(horizontalInput * extraSteeringMultiplier);
         carController.Move(verticalInput);
         carController.UpdateWheelPoses();
         //Collect any score done by the current projectile if exists.
@@ -241,11 +249,7 @@ public class AICar : MonoBehaviour
         }
         //Decrease storm force as AI is not very good at manuvering.
         rigidbody.AddForce(storm.transform.forward * (storm.force / 2));
-        //Slow down the AI in storm.
-        if (rigidbody.velocity.magnitude > AIManager.INSTANCE.stormSpeed)
-        {
-            carController.ApplyHandBrake();
-        }
+        walkSafely = true;
         return true;
     }
 
@@ -416,28 +420,24 @@ public class AICar : MonoBehaviour
                 DecideWayPoint();
             }
             MoveToWayPoint();
-            //We are not checking smart boundary for cases when car is reversing. This is a serious issue so fix in future.
-            SmartBoundaryDetection();
-            SenseEnv();
         }
+
+        SenseEnv();
+        SmartBoundaryDetection();
     }
 
     private void ReactToSense(Sensor sensor, RaycastHit hit, Vector3 sensorPos)
     {
         if (AIManager.INSTANCE.IsInvisibleBoundary(hit.collider))
         {
+            walkSafely = true;
             if (sensor == Sensor.CENTER)
             {
                 StartReversing();
             }
             else
             {
-                //Slow down on invisible boundary
-                if (this.rigidbody.velocity.magnitude > AIManager.INSTANCE.invisibleBoundarySpeed)
-                {
-                    this.carController.ApplyHandBrake();
-                }
-                //Update obstacle avoidance.
+                //Update obstacle avoidance
                 this.obstacleFound = true;
                 this.obstacleAvoidanceInput += GetObstacleAvoidanceInput(sensor, hit);
             }
@@ -445,7 +445,6 @@ public class AICar : MonoBehaviour
         }
         else if (AIManager.INSTANCE.IsObstacle(hit.collider))
         {
-
             if (sensor == Sensor.CENTER)
             {
                 StartReversing();
@@ -455,13 +454,20 @@ public class AICar : MonoBehaviour
                 //Update obstacle avoidance.
                 obstacleFound = true;
                 obstacleAvoidanceInput += GetObstacleAvoidanceInput(sensor, hit);
-                Debug.DrawLine(sensorPos, hit.point, Color.yellow);
             }
+            Debug.DrawLine(sensorPos, hit.point, Color.yellow);
         }
-        //Will not shoot if detected by angle sensors.
-        else if (sensor != Sensor.LEFT_ANGLE && sensor != Sensor.RIGHT_ANGLE &&
-            projectileShooter.CanShoot() && stats.IsEnergyFull() && AIManager.INSTANCE.IsShootable(hit.collider))
+        else if (AIManager.INSTANCE.IsEnvironment(hit.collider))
         {
+            // Update obstacle avoidance.
+            obstacleFound = true;
+            obstacleAvoidanceInput += GetObstacleAvoidanceInput(sensor, hit);
+            Debug.DrawLine(sensorPos, hit.point, Color.yellow);
+        }
+        else if (sensor != Sensor.LEFT_ANGLE && sensor != Sensor.RIGHT_ANGLE && projectileShooter.CanShoot()
+             && stats.IsEnergyFull() && AIManager.INSTANCE.IsShootable(hit.collider))
+        {
+            //Will not shoot if detected by angle sensors.
             projectileShooter.Shoot();
         }
     }
@@ -532,11 +538,12 @@ public class AICar : MonoBehaviour
         {
             if (AIManager.INSTANCE.IsInvisibleBoundary(hit.collider))
             {
+                walkSafely = true;
                 if (reversing)
                 {
                     StopReversing();
-                    Debug.DrawLine(sensorPos, hit.point, Color.yellow);
                 }
+                Debug.DrawLine(sensorPos, hit.point, Color.yellow);
             }
         }
     }
@@ -570,23 +577,36 @@ public class AICar : MonoBehaviour
         }
     }
 
+    private float extraSteeringMultiplier = 1f;
+    private float smartBoundaryExtraSteeringInterval = 5;
+
     private void SmartBoundaryDetection()
     {
         bool outsideSmartBoundary = IsOutsideSmartBoundary();
-        if (outsideSmartBoundary)
+
+        if (!outsideSmartBoundary)
         {
-            //Reverse first time when outside smart boundary.
-            if (!wasOutsideSmartBoundary)
-            {
-                StartReversing();
-            }
-            //Slow down the speed.
-            if (rigidbody.velocity.magnitude > AIManager.INSTANCE.smartBoundarySpeed)
-            {
-                carController.ApplyHandBrake();
-            }
+            return;
         }
-        wasOutsideSmartBoundary = outsideSmartBoundary;
+
+        walkSafely = true;
+
+        if (extraSteeringMultiplier > 1)
+        {
+            return;
+        }
+        //If obstacle found overwriting that.
+        obstacleFound = false;
+
+        MoveTowardsSafteyPoint();
+
+        extraSteeringMultiplier = 3f;
+        Invoke("ResetExtraSteering", smartBoundaryExtraSteeringInterval);
+    }
+
+    private void ResetExtraSteering()
+    {
+        extraSteeringMultiplier = 1f;
     }
 
     private bool IsOutsideSmartBoundary()
@@ -667,6 +687,28 @@ public class AICar : MonoBehaviour
             lastWayPointTime = Time.time;
         }
         return reached;
+    }
+
+    private void MoveTowardsSafteyPoint()
+    {
+        //Try to collect health;
+        if (!stats.IsHealthFull() && TrySelectingHealthWaypoint())
+        {
+            return;
+        }
+        //Try to collect energy
+        if (!stats.IsEnergyFull() && TrySelectingEnergyWaypoint())
+        {
+            return;
+        }
+        //Try selecting Nitro.
+        if (TrySelectingNitroWaypoint())
+        {
+            return;
+        }
+        //Move to a safe place decided by AI manager
+        currWaypoint = AIManager.INSTANCE.GetSafteyPoint(stats.displayName);
+        DebugWaypointSelection();
     }
 
     //Right now I am not adding them to look for energy and nitro as it can cause weired race between AIs. Can add this in future.

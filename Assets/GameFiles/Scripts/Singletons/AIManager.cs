@@ -46,18 +46,17 @@ public class AIManager : MonoBehaviour
     public float otherAIAttackcingProb = 0.33f;
     public float sensorLength = 12;
     public float sensorAngle = 45;
-    public float smartBoundarySpeed = 5;
     public float stormSpeed = 5;
     public float maxSteerAngle = 20;
     public float motorForce = 500;
-    public float invisibleBoundarySpeed = 2;
-    public float wayPointReachingThresholdInSecs = 10;
+    public float wayPointReachingThresholdInSecs = 15;
     public float flipThreshold = 0.70f;
     public float reversingThreshold = 0;
     public float speedCheckTimeIntervalInSecs = 3;
     public float stuckThreshold = 1f;
     public float wayPointDistanceThreshold = 1;
     public float damageMultiplier = 1.5f;
+    public float safteySpeed = 3;
 
     //Needed this class as we can't view normal dictionaries in Unity inspector.
     [Serializable]
@@ -260,9 +259,13 @@ public class AIManager : MonoBehaviour
 
     public bool IsObstacle(Collider collider)
     {
-        return collider.CompareTag(GameManager.Tag.OBSTACLE) || collider.GetComponent<Lava>() != null ||
-        collider.GetComponent<Barel>() != null || collider.GetComponent<Oil>() != null ||
-        collider.CompareTag(GameManager.Tag.ROCK);
+        return collider.CompareTag(GameManager.Tag.OBSTACLE);
+    }
+
+    public bool IsEnvironment(Collider collider)
+    {
+        return collider.GetComponent<Lava>() != null || collider.GetComponent<Oil>() != null ||
+            collider.GetComponent<Rock>() != null || collider.GetComponent<Barel>() != null;
     }
 
     public bool IsShootable(Collider collider)

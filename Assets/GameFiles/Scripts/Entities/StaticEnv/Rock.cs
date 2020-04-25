@@ -25,6 +25,7 @@ public class Rock : MonoBehaviour
         if (collision.collider.CompareTag(GameManager.Tag.LEVEL_FLOOR) && !massUpdated)
         {
             rigidbody.mass = rigidbody.mass * massMultiplier;
+            massUpdated = true;
         }
     }
 }

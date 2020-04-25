@@ -129,11 +129,12 @@ public class GameManager : MonoBehaviour
     {
         Init();
 
+        //TODO fix this
         //Configuring levels.
         //Can look on better way to configure this.
         levels.Add(new Level("FireLevel", AudioManager.AudioTrack.EDM1, "Lava Grounds", true));
-        levels.Add(new Level("WaterLevel", AudioManager.AudioTrack.EDM2, "Lost Island", false));
         levels.Add(new Level("AirLevel", AudioManager.AudioTrack.EDM3, "Sky Temple", false));
+        levels.Add(new Level("WaterLevel", AudioManager.AudioTrack.EDM2, "Lost Island", false));
         levels.Add(new Level("EarthLevel", AudioManager.AudioTrack.EDM1, "Forgotten Lands", true));
         levels.Add(new Level("GameEnding", AudioManager.AudioTrack.CHARGED_UP));
         mainMenu = new Level("Main Menu", AudioManager.AudioTrack.THEME);
@@ -224,6 +225,7 @@ public class GameManager : MonoBehaviour
     //It is supposed to be called by inidividual levels when they loaded. Not responsibility of manager to load levels.
     public void InitLevel()
     {
+        useDpad = false;
         spawnPoints = GameObject.FindGameObjectsWithTag(Tag.SPAWN_POINT);
         trapPoints = GameObject.FindGameObjectsWithTag(Tag.TRAP_POINT);
         itemPoints = GameObject.FindGameObjectsWithTag(Tag.ITEM_POINT);

@@ -109,21 +109,25 @@ MonoBehaviour:
     powerPrefab: {fileID: 1060718018706899589, guid: 3949a310cfdef3446b8b1cb7d49a1db6,
       type: 3}
     name: Air
+    sprite: {fileID: 21300000, guid: 86e1734cb7e67914eb52a06752a90c6b, type: 3}
   - prefab: {fileID: 1909791520952839478, guid: 9700a62fc689c9944b0ce49caad3099b,
       type: 3}
     powerPrefab: {fileID: 5709941357763597725, guid: 605abede527ddd14facdd125087db58b,
       type: 3}
     name: Earth
+    sprite: {fileID: 21300000, guid: 9ba8aced94f3b3a4db76ca2be4489f07, type: 3}
   - prefab: {fileID: 1570590446640267102, guid: 04ef3e0d2776931459413edb51408215,
       type: 3}
     powerPrefab: {fileID: 7604017484036466910, guid: 44d8abc34d7aaf94f9e973cf4c772082,
       type: 3}
     name: Fire
+    sprite: {fileID: 21300000, guid: 7a2c2bde99b372e49866a3507fad42e1, type: 3}
   - prefab: {fileID: 1323933383960778334, guid: b8930be77a93a3e42b999ec1775b37c2,
       type: 3}
     powerPrefab: {fileID: 8653119836572959423, guid: 825d7e6b935441544a97652c0937b76d,
       type: 3}
     name: Water
+    sprite: {fileID: 21300000, guid: ed02f83f4169eee43b00c188e7e3ee81, type: 3}
   selectedCarIndex: 0
   selectedElementalIndex: 0
   countOfOpponents: 5
@@ -286,6 +290,7 @@ MonoBehaviour:
   speedCheckTimeIntervalInSecs: 3
   stuckThreshold: 1
   wayPointDistanceThreshold: 1
+  damageMultiplier: 1.5
   _attackedInfo: []
   _attackingInfo: []
 --- !u!114 &6863654035160358740

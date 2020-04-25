@@ -78,6 +78,7 @@ public class GameManager : MonoBehaviour
         public GameObject prefab;
         public GameObject powerPrefab;
         public string name;
+        public Sprite sprite;
     }
 
     //Public fields
@@ -275,7 +276,7 @@ public class GameManager : MonoBehaviour
         //Setting name of the ai character.
         StatsController stats = car.GetComponent<StatsController>();
 
-        //Health buffs.
+        //Health and energy buffs.
         switch (difficulty)
         {
             case Difficulty.EASY:
@@ -328,7 +329,7 @@ public class GameManager : MonoBehaviour
             StatsController stats = car.GetComponent<StatsController>();
             stats.displayName = aiNames[aiNameIndex];
 
-            //Health buffs.
+            //Health and energy buffs.
             switch (difficulty)
             {
                 case Difficulty.EASY:
@@ -397,6 +398,11 @@ public class GameManager : MonoBehaviour
     public Level CurrLevel()
     {
         return levels[currLevel];
+    }
+
+    public Elemental SelectedElemental()
+    {
+        return elementals[selectedElementalIndex];
     }
 
     private int GetMaxRetries()

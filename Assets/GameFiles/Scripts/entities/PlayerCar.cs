@@ -6,6 +6,7 @@ public class PlayerCar : MonoBehaviour
     public GameObject modelPrefab;
     public Vector3 centreOfMass = new Vector3(0, 0.3f, 0);
     public float topSpeed = 40;
+    public float projectilePushBackSpeed = 18;
 
     //Private fields
     private float horizontalInput;
@@ -30,13 +31,8 @@ public class PlayerCar : MonoBehaviour
 
     void LateUpdate()
     {
-        //No Updates if not initialized
-        if (!initialized)
-        {
-            return;
-        }
-        //No updates if dead.
-        if (!stats.IsAlive())
+        //No Updates if not initialized or dead
+        if (!initialized || !stats.IsAlive())
         {
             return;
         }
@@ -45,6 +41,7 @@ public class PlayerCar : MonoBehaviour
         {
             stats.Die();
         }
+        carController.ReleaseHandBrake();
         ProcessInput();
         //Move the car
         //We are not clearing `horizontalInput` and `veticalInput` as it is expected to be handeled inside `ProcessInput`.
@@ -162,16 +159,23 @@ public class PlayerCar : MonoBehaviour
             UseAccelrometer();
         }
         //Shoot the projectiile.
-        if ((IsPlayerTouched() || uIButtonManager.IsCirclePressed()) && projectileShooter.CanShoot() && stats.IsEnergyFull())
+        if (IsPlayerTouched() && projectileShooter.CanShoot() && stats.IsEnergyFull())
         {
             stats.ConsumeEnergy();
             projectileShooter.Shoot();
+            rigidbody.velocity = transform.forward * -projectilePushBackSpeed;
         }
         //Reset the car position
         if (uIButtonManager.IsDeltaPressed())
         {
             Reset();
         }
+        if (uIButtonManager.IsCirclePressed())
+        {
+            AudioManager.INSTANCE.Play(AudioManager.AudioTrack.HANDBRAKE);
+            carController.ApplyHandBrake();
+        }
+
     }
 
     private void UseDpad()
@@ -237,31 +241,16 @@ public class PlayerCar : MonoBehaviour
             Reset();
         }
         //Shooting
-        if (Input.GetKeyDown(KeyCode.Tab) && projectileShooter.CanShoot() && stats.IsEnergyFull())
+        if (Input.GetKeyDown(KeyCode.Space) && projectileShooter.CanShoot() && stats.IsEnergyFull())
         {
             stats.ConsumeEnergy();
             projectileShooter.Shoot();
-            rigidbody.velocity = transform.forward * -18;
+            rigidbody.velocity = transform.forward * -projectilePushBackSpeed;
         }
         if (Input.GetKeyDown(KeyCode.Q))
         {
             AudioManager.INSTANCE.Play(AudioManager.AudioTrack.HANDBRAKE);
-        }
-        if (Input.GetKey(KeyCode.Q))
-        {
             carController.ApplyHandBrake();
-        }
-        else
-        {
-            carController.ReleaseHandBrake();
-        }
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            drifting = true;
-        }
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            drifting = false;
         }
     }
 

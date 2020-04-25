@@ -5846,6 +5846,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthBar: {fileID: 6172822390258281582}
   energyBar: {fileID: 6172822390258281577}
+  elementalHolder: {fileID: 6172822390331902010}
 --- !u!1 &6172822390273123975
 GameObject:
   m_ObjectHideFlags: 0
@@ -5937,7 +5938,7 @@ GameObject:
   - component: {fileID: 6172822390331902011}
   - component: {fileID: 6172822390331902010}
   m_Layer: 5
-  m_Name: UserPic
+  m_Name: Elemental Pic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

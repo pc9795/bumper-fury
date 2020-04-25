@@ -6,11 +6,17 @@ public class HUD : MonoBehaviour
     //Public fields
     public Image healthBar;
     public Image energyBar;
+    public Image elementalHolder;
 
     //Private fields
     private StatsController playerStats;
 
     //Unity methods
+    void Start()
+    {
+        elementalHolder.sprite = GameManager.INSTANCE.SelectedElemental().sprite;
+    }
+
     void Update()
     {
         if (playerStats == null)

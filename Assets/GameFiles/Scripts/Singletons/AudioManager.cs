@@ -2,7 +2,7 @@
 using UnityEngine;
 
 //REF: https://www.youtube.com/watch?v=6OT43pvUyfY
-//I referenced above mentioned video on how to add Audion to my game.
+//I referenced above mentioned video on how to add Audio to my game.
 public class AudioManager : MonoBehaviour
 {
     [System.Serializable]

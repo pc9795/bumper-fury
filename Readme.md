@@ -1,4 +1,4 @@
-## BUMPER FURY
+# BUMPER FURY
 
 * Thanks [1001 Fonts](https://www.1001freefonts.com) for excellent fonts.
 * Thanks [Open Game Art](https://opengameart.org/) and [Unity Assets Store](https://assetstore.unity.com/) for amazing assets.
@@ -10,6 +10,8 @@ Thanks to the creators of following videos for excellent tutorials:
 * Car AI - https://www.youtube.com/watch?v=o1XOUkYUDZU&list=PLB9LefPJI-5wH5VdLFPkWfnPjeI6OSys1
 * Game Audio - https://www.youtube.com/watch?v=6OT43pvUyfY
 * Pause Menu - https://www.youtube.com/watch?v=JivuXdrIHK0
+
+**Gameplay Video** - https://www.youtube.com/watch?v=uUo7J69Sr_w&t=52s
 
 ## Theme and Narrative
 
